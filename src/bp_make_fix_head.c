@@ -13,8 +13,8 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-/// @file 	bp_memcpy.c
-/// @brief 	function "bp_memcpy" source file
+/// @file 	bp_make_fix_head.c
+/// @brief 	functions to make fixed header for BP packet source file
 /// 
 /// @version 	0.1
 /// @author 	Ansersion
@@ -22,45 +22,17 @@
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <bp_memcpy.h>
-#include <stdio.h>
+#include <bp_make_fix_head.h>
 
-void * memcpy_bp(void * dst, const void * src, BP_WORD count)
+BP_UINT8 * BP_make_fix_head(BP_UINT8 * pack, BP_UINT8 type_and_flag, BP_UINT8 len)
 {
-	BP_WORD nword, npad;
-	BP_WORD *s, *d;
-	BP_UINT8 *s8, *d8;
-
-	if (dst == BP_NULL || src == BP_NULL)  {
-		return BP_NULL;  
+	if(BP_NULL == pack) {
+		return BP_NULL;
 	}
 
-	if(dst == src) {
-		return dst;
-	}
+	*pack++ = type_and_flag;
+	*pack++ = len;
 
-	nword = count/sizeof(dst);
-	npad = count%sizeof(dst);
-
-	s = (BP_WORD *)src;  
-	d = (BP_WORD *)dst;  
-
-	// printf("word_size = %d\n", sizeof(dst));
-	while(nword--)  
-	{
-		*d++ = *s++;  
-		// printf("%x ", *(d-1));
-	}
-	// printf("\n");
-
-	s8 = (BP_UINT8 *)s;
-	d8 = (BP_UINT8 *)d;
-	while(npad--)  
-	{
-		*d8++ = *s8++;  
-		// printf("%x ", *(d8-1));
-	}
-	// printf("\n");
-
-	return dst;  
+	return pack;
 }
+

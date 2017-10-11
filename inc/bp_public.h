@@ -13,8 +13,8 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-/// @file 	bp_memcpy.c
-/// @brief 	function "bp_memcpy" source file
+/// @file 	bp_public.h
+/// @brief 	public tool functions header file
 /// 
 /// @version 	0.1
 /// @author 	Ansersion
@@ -22,45 +22,22 @@
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <bp_memcpy.h>
-#include <stdio.h>
+#ifndef __BP_PUBLIC_H
+#define __BP_PUBLIC_H
 
-void * memcpy_bp(void * dst, const void * src, BP_WORD count)
-{
-	BP_WORD nword, npad;
-	BP_WORD *s, *d;
-	BP_UINT8 *s8, *d8;
+#include <bpclient_config.h>
 
-	if (dst == BP_NULL || src == BP_NULL)  {
-		return BP_NULL;  
-	}
+#define BP_LEVEL 	0
+#define BP_CLIENT_ID_LEN 	2
 
-	if(dst == src) {
-		return dst;
-	}
+#define BP_SetBig16 	BP_SetNet16
+#define BP_SetBig32 	BP_SetNet32
 
-	nword = count/sizeof(dst);
-	npad = count%sizeof(dst);
+BP_UINT8 * BP_SetNet16(BP_UINT8 * dst, BP_UINT16 val);
+BP_UINT8 * BP_SetNet32(BP_UINT8 * dst, BP_UINT32 val);
 
-	s = (BP_WORD *)src;  
-	d = (BP_WORD *)dst;  
+BP_UINT8 * BP_Set2ByteField(BP_UINT8 * pack, BP_UINT8 * field, BP_UINT16 field_len);
 
-	// printf("word_size = %d\n", sizeof(dst));
-	while(nword--)  
-	{
-		*d++ = *s++;  
-		// printf("%x ", *(d-1));
-	}
-	// printf("\n");
 
-	s8 = (BP_UINT8 *)s;
-	d8 = (BP_UINT8 *)d;
-	while(npad--)  
-	{
-		*d8++ = *s8++;  
-		// printf("%x ", *(d8-1));
-	}
-	// printf("\n");
+#endif
 
-	return dst;  
-}

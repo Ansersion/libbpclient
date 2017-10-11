@@ -13,8 +13,8 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-/// @file 	bp_memcpy.c
-/// @brief 	function "bp_memcpy" source file
+/// @file 	bp_crc32.h
+/// @brief 	functions for CRC32
 /// 
 /// @version 	0.1
 /// @author 	Ansersion
@@ -22,45 +22,12 @@
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <bp_memcpy.h>
-#include <stdio.h>
+#ifndef __BP_CRC32_H
+#define __BP_CRC32_H
 
-void * memcpy_bp(void * dst, const void * src, BP_WORD count)
-{
-	BP_WORD nword, npad;
-	BP_WORD *s, *d;
-	BP_UINT8 *s8, *d8;
+#include <bpclient_config.h>
 
-	if (dst == BP_NULL || src == BP_NULL)  {
-		return BP_NULL;  
-	}
+BP_UINT32 BP_calc_crc32(BP_UINT8 *p, BP_UINT32 bytelength);
 
-	if(dst == src) {
-		return dst;
-	}
+#endif
 
-	nword = count/sizeof(dst);
-	npad = count%sizeof(dst);
-
-	s = (BP_WORD *)src;  
-	d = (BP_WORD *)dst;  
-
-	// printf("word_size = %d\n", sizeof(dst));
-	while(nword--)  
-	{
-		*d++ = *s++;  
-		// printf("%x ", *(d-1));
-	}
-	// printf("\n");
-
-	s8 = (BP_UINT8 *)s;
-	d8 = (BP_UINT8 *)d;
-	while(npad--)  
-	{
-		*d8++ = *s8++;  
-		// printf("%x ", *(d8-1));
-	}
-	// printf("\n");
-
-	return dst;  
-}

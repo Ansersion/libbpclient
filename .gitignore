@@ -54,3 +54,4 @@ dkms.conf
 # custom
 cscope*
 .*swp
+example
