@@ -13,8 +13,8 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-/// @file 	bp_public.h
-/// @brief 	public tool functions header file
+/// @file 	bp_crc16.h
+/// @brief 	functions for CRC16
 /// 
 /// @version 	0.1
 /// @author 	Ansersion
@@ -22,28 +22,12 @@
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BP_PUBLIC_H
-#define __BP_PUBLIC_H
+#ifndef __BP_CRC16_H
+#define __BP_CRC16_H
 
 #include <bpclient_config.h>
 
-#define BP_LEVEL 	0
-#define BP_CLIENT_ID_LEN 	2
+BP_UINT16 BP_calc_crc16(BP_UINT8 *p, BP_WORD len);
 
-#define BP_SetBig16 	BP_SetNet16
-#define BP_SetBig32 	BP_SetNet32
-
-#define BP_GetBig16 	BP_GetNet16
-#define BP_GetBig32 	BP_GetNet32
-
-BP_UINT8 * BP_SetNet16(BP_UINT8 * dst, BP_UINT16 val);
-BP_UINT8 * BP_SetNet32(BP_UINT8 * dst, BP_UINT32 val);
-
-BP_UINT8 * BP_Set2ByteField(BP_UINT8 * pack, BP_UINT8 * field, BP_UINT16 field_len);
-
-BP_UINT8 * BP_GetNet16(BP_UINT8 * src, BP_UINT16 * val);
-BP_UINT8 * BP_GetNet32(BP_UINT8 * src, BP_UINT32 * val);
-
-BP_UINT8 * BP_Get2ByteField(BP_UINT8 * pack, BP_UINT8 * field_buf, BP_UINT16 * field_len);
 #endif
 

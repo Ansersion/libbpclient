@@ -27,7 +27,7 @@
 
 #include <bpclient_config.h>
 
-BP_UINT32 BP_calc_crc32(BP_UINT8 *p, BP_UINT32 bytelength);
+BP_UINT32 BP_calc_crc32(BP_UINT8 *p, BP_WORD bytelength);
 
 #endif
 

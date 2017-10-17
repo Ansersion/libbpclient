@@ -92,10 +92,10 @@ BP_UINT32 poly8_lookup[256] =
 	0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
 };
 
-BP_UINT32 BP_calc_crc32(BP_UINT8 *p, BP_UINT32 bytelength)
+BP_UINT32 BP_calc_crc32(BP_UINT8 *p, BP_WORD len)
 {
 	BP_UINT32 crc = 0xffffffff;
-	while (bytelength-- !=0) crc = poly8_lookup[((BP_UINT8) crc ^ *(p++))] ^ (crc >> 8);
+	while (len-- !=0) crc = poly8_lookup[((BP_UINT8) crc ^ *(p++))] ^ (crc >> 8);
 	return (crc ^ 0xffffffff);
 }
 

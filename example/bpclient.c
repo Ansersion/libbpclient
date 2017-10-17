@@ -96,10 +96,16 @@ int main()
 
 	n=send(conndfd,buf,rmn_len + 2,0);
 
+	n=recv(conndfd,buf,2048, 0);
+	printf("recv %d bytes\n", n);
+	for(i = 0; i < n; i++) {
+		printf("%02x ", buf[i]);
+	}
+	printf("\n");
+
 	while(1) {
 		sleep(1);
 	}
-	// n=recv(conndfd,buf,2048,0);
 
 	// printf("Recv %d byte from Server\n",n);
 	// printf("%s\n",buf);

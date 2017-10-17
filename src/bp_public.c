@@ -54,11 +54,63 @@ BP_UINT8 * BP_SetNet32(BP_UINT8 * dst, BP_UINT32 val)
 BP_UINT8 * BP_Set2ByteField(BP_UINT8 * pack, BP_UINT8 * field, BP_UINT16 field_len)
 {
 	BP_UINT8 * p_pack = pack;
-	if(BP_NULL == pack || BP_NULL == field_len) {
+	if(BP_NULL == pack) {
+		return BP_NULL;
+	}
+	if(0 == field_len) {
 		return BP_NULL;
 	}
 	p_pack = BP_SetBig16(p_pack, field_len);
 	memcpy_bp(p_pack, field, field_len);
 
 	return p_pack+field_len;
+}
+
+BP_UINT8 * BP_GetNet16(BP_UINT8 * src, BP_UINT16 * val)
+{
+	if(BP_NULL == src) {
+		return BP_NULL;
+	}
+	if(BP_NULL == val) {
+		return BP_NULL;
+	}
+	*val = *src++;
+	*val = ((*val & 0x00FF) << 8) | (0xFF & (*src++));
+
+	return src;
+}
+
+BP_UINT8 * BP_GetNet32(BP_UINT8 * src, BP_UINT32 * val)
+{
+	if(BP_NULL == src) {
+		return BP_NULL;
+	}
+	if(BP_NULL == val) {
+		return BP_NULL;
+	}
+	*val = *src++;
+	*val = ((*val & 0x000000FF) << 8) | (0x000000FF & (*src++));
+	*val = ((*val & 0x0000FFFF) << 8) | (0x000000FF & (*src++));
+	*val = ((*val & 0x00FFFFFF) << 8) | (0x000000FF & (*src++));
+
+	return src;
+
+}
+
+BP_UINT8 * BP_Get2ByteField(BP_UINT8 * pack, BP_UINT8 * field_buf, BP_UINT16 * field_len)
+{
+	BP_UINT8 * p_pack = pack;
+	if(BP_NULL == pack) {
+		return BP_NULL;
+	}
+	if(BP_NULL == field_buf) {
+		return BP_NULL;
+	}
+	if(BP_NULL == field_len) {
+		return BP_NULL;
+	}
+	p_pack = BP_GetBig16(p_pack, field_len);
+	memcpy_bp(field_buf, p_pack, *field_len);
+
+	return p_pack+(*field_len);
 }
