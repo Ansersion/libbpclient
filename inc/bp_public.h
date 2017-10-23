@@ -36,6 +36,27 @@
 #define BP_GetBig16 	BP_GetNet16
 #define BP_GetBig32 	BP_GetNet32
 
+typedef struct VrbHead_CONNECT {
+	BP_UINT16 	Level;
+	BP_UINT8 	Flags;
+	BP_UINT16 	ClntId;
+	BP_UINT16 	AlvTime;
+	BP_UINT8 	Timeout;
+} VrbHead_CONNECT;
+
+typedef struct VrbHead_DISCONN {
+	BP_UINT16 	ClntId;
+} VrbHead_DISCONN;
+
+typedef union vrbU {
+	VrbHead_CONNECT 	CONNECT;
+	VrbHead_DISCONN 	DISCONN;
+}vrbU; 
+
+typedef struct BPPackVrbHead {
+	vrbU u;
+} BPPackVrbHead;
+
 BP_UINT8 * BP_SetNet16(BP_UINT8 * dst, BP_UINT16 val);
 BP_UINT8 * BP_SetNet32(BP_UINT8 * dst, BP_UINT32 val);
 

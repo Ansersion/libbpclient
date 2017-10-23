@@ -10,6 +10,7 @@
 #include <bpclient_config.h>
 #include <bp_public.h>
 #include <bp_make_fix_head.h>
+#include <bp_make_vrb_head.h>
 #include <bp_pack_type.h>
 #include <bp_vrb_flags.h>
 #include <bp_crc32.h>
@@ -29,7 +30,7 @@ int main()
 	BP_UINT8 * password = "a123456";
 
 	BP_UINT8 buf[2048+1];
-	BP_UINT8 * pbuf = buf;
+	BP_UINT8 * pbuf = buf, * pbuf_old;
 	BP_UINT16 client_id = 0;
 	BP_UINT16 alive_time = 0x000f;
 	BP_UINT8 timeout = 0xC;
@@ -53,21 +54,31 @@ int main()
 
 
 	pbuf = BP_make_fix_head(pbuf, BP_PACK_TYPE_CONNECT_MSK, 0);
+	pbuf_old = pbuf;
 
-	*pbuf++ = BP_LEVEL;
-	rmn_len++;
+	BPPackVrbHead vrb_head;
+	vrb_head.u.CONNECT.Level = BP_LEVEL;
+	vrb_head.u.CONNECT.Flags = BP_VRB_FLAG_USER_NAME_MSK | BP_VRB_FLAG_PASSWORD_MSK | BP_VRB_FLAG_DEV_CLNT_MSK;
+	vrb_head.u.CONNECT.ClntId = client_id;
+	vrb_head.u.CONNECT.AlvTime = alive_time;
+	vrb_head.u.CONNECT.Timeout = timeout;
+	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_CONNECT);
+	rmn_len += (BP_WORD)(pbuf-pbuf_old);
 
-	*pbuf++ = BP_VRB_FLAG_USER_NAME_MSK | BP_VRB_FLAG_PASSWORD_MSK | BP_VRB_FLAG_DEV_CLNT_MSK;
-	rmn_len++;
+	// *pbuf++ = BP_LEVEL;
+	// rmn_len++;
 
-	pbuf = BP_SetBig16(pbuf, client_id);
-	rmn_len += 2;
+	// *pbuf++ = BP_VRB_FLAG_USER_NAME_MSK | BP_VRB_FLAG_PASSWORD_MSK | BP_VRB_FLAG_DEV_CLNT_MSK;
+	// rmn_len++;
 
-	pbuf = BP_SetBig16(pbuf, alive_time);
-	rmn_len += 2;
+	// pbuf = BP_SetBig16(pbuf, client_id);
+	// rmn_len += 2;
 
-	*pbuf++ = timeout;
-	rmn_len++;
+	// pbuf = BP_SetBig16(pbuf, alive_time);
+	// rmn_len += 2;
+
+	// *pbuf++ = timeout;
+	// rmn_len++;
 
 	pbuf = BP_Set2ByteField(pbuf, user_name, strlen(user_name));
 	rmn_len += strlen(user_name) + 2;
@@ -141,10 +152,14 @@ int main()
 
 	pbuf = buf;
 	pbuf = BP_make_fix_head(pbuf, BP_PACK_TYPE_DISCONN_MSK, 0);
+	pbuf_old = pbuf;
 	rmn_len = 0;
 
-	pbuf = BP_SetBig16(pbuf, client_id);
-	rmn_len += 2;
+	vrb_head.u.DISCONN.ClntId = client_id;
+	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_DISCONN);
+	rmn_len += (BP_WORD)(pbuf-pbuf_old);
+	// pbuf = BP_SetBig16(pbuf, client_id);
+	// rmn_len += 2;
 
 	pbuf = buf;
 	rmn_len += 4;
@@ -164,6 +179,20 @@ int main()
 		printf("%02x ", buf[i]);
 	}
 	printf("\n");
+
+	// Initialize BP_PACKET struct with/without type
+
+	// set fixed header
+	// make fixed header
+
+	// set variable header
+	// make variable header
+
+	// set payload
+	// make payload
+
+	// Pack BP_PACKET struct
+
 
 	close(conndfd);
 	return 0;
