@@ -29,6 +29,7 @@
 
 #define BP_LEVEL 	0
 #define BP_CLIENT_ID_LEN 	2
+#define BP_CLIENT_ID_APPLY 	0
 
 #define BP_SetBig16 	BP_SetNet16
 #define BP_SetBig32 	BP_SetNet32
@@ -36,6 +37,7 @@
 #define BP_GetBig16 	BP_GetNet16
 #define BP_GetBig32 	BP_GetNet32
 
+// variable struct
 typedef struct VrbHead_CONNECT {
 	BP_UINT16 	Level;
 	BP_UINT8 	Flags;
@@ -56,6 +58,29 @@ typedef union vrbU {
 typedef struct BPPackVrbHead {
 	vrbU u;
 } BPPackVrbHead;
+
+// payload
+typedef struct Payload_CONNECT {
+	BP_UINT8 	NameLen;
+	BP_UINT8 * 	Name;
+	BP_UINT8  	PwdLen;
+	BP_UINT8 * 	Pwd;
+	BP_UINT8  	ClntIdLen;
+	BP_UINT16 	ClntId;
+} Payload_CONNECT;
+
+// typedef struct Payload_DISCONN {
+// 	FIELD_NULL();
+// } Payload_DISCONN;
+
+typedef union pldU {
+	Payload_CONNECT 	CONNECT;
+	// Payload_DISCONN 	DISCONN;
+}pldU; 
+
+typedef struct BPPackPayload {
+	pldU u;
+} BPPackPayload;
 
 BP_UINT8 * BP_SetNet16(BP_UINT8 * dst, BP_UINT16 val);
 BP_UINT8 * BP_SetNet32(BP_UINT8 * dst, BP_UINT32 val);

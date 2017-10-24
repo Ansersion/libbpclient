@@ -11,6 +11,7 @@
 #include <bp_public.h>
 #include <bp_make_fix_head.h>
 #include <bp_make_vrb_head.h>
+#include <bp_make_payload.h>
 #include <bp_pack_type.h>
 #include <bp_vrb_flags.h>
 #include <bp_crc32.h>
@@ -56,6 +57,7 @@ int main()
 	pbuf = BP_make_fix_head(pbuf, BP_PACK_TYPE_CONNECT_MSK, 0);
 	pbuf_old = pbuf;
 
+	// variable header
 	BPPackVrbHead vrb_head;
 	vrb_head.u.CONNECT.Level = BP_LEVEL;
 	vrb_head.u.CONNECT.Flags = BP_VRB_FLAG_USER_NAME_MSK | BP_VRB_FLAG_PASSWORD_MSK | BP_VRB_FLAG_DEV_CLNT_MSK;
@@ -63,34 +65,17 @@ int main()
 	vrb_head.u.CONNECT.AlvTime = alive_time;
 	vrb_head.u.CONNECT.Timeout = timeout;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_CONNECT);
+
+	// payload
+	BPPackPayload payload;
+	payload.u.CONNECT.NameLen = strlen(user_name);
+	payload.u.CONNECT.Name = user_name;
+	payload.u.CONNECT.PwdLen = strlen(password);
+	payload.u.CONNECT.Pwd = password;
+	payload.u.CONNECT.ClntIdLen = BP_CLIENT_ID_LEN;
+	payload.u.CONNECT.ClntId = BP_CLIENT_ID_APPLY;
+	pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_CONNECT);
 	rmn_len += (BP_WORD)(pbuf-pbuf_old);
-
-	// *pbuf++ = BP_LEVEL;
-	// rmn_len++;
-
-	// *pbuf++ = BP_VRB_FLAG_USER_NAME_MSK | BP_VRB_FLAG_PASSWORD_MSK | BP_VRB_FLAG_DEV_CLNT_MSK;
-	// rmn_len++;
-
-	// pbuf = BP_SetBig16(pbuf, client_id);
-	// rmn_len += 2;
-
-	// pbuf = BP_SetBig16(pbuf, alive_time);
-	// rmn_len += 2;
-
-	// *pbuf++ = timeout;
-	// rmn_len++;
-
-	pbuf = BP_Set2ByteField(pbuf, user_name, strlen(user_name));
-	rmn_len += strlen(user_name) + 2;
-
-	pbuf = BP_Set2ByteField(pbuf, password, strlen(password));
-	rmn_len += strlen(password) + 2;
-
-	*pbuf++ = BP_CLIENT_ID_LEN;
-	rmn_len++;
-
-	BP_SetNet16(pbuf, 0);
-	rmn_len += 2;
 
 	pbuf = buf;
 	rmn_len += 4;
