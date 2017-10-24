@@ -37,6 +37,16 @@
 #define BP_GetBig16 	BP_GetNet16
 #define BP_GetBig32 	BP_GetNet32
 
+typedef struct PackBuf {
+	// BP_UINT8 FxHdType;
+	// BP_UINT8 FxHdRmnLen[2];
+	BP_UINT8 * Buf;
+	BP_WORD RmnLen;
+	BP_UINT8 * PackStart;
+	BP_WORD MsgSize;
+	BP_WORD BufSize;
+} PackBuf;
+
 // variable struct
 typedef struct VrbHead_CONNECT {
 	BP_UINT16 	Level;

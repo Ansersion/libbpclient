@@ -12,6 +12,7 @@
 #include <bp_make_fix_head.h>
 #include <bp_make_vrb_head.h>
 #include <bp_make_payload.h>
+#include <bp_make_pack.h>
 #include <bp_pack_type.h>
 #include <bp_vrb_flags.h>
 #include <bp_crc32.h>
@@ -38,6 +39,8 @@ int main()
 	BP_WORD rmn_len = 0;
 	BP_UINT32 crc = 0;
 
+	PackBuf pack_buf;
+
 	if(-1==(conndfd=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP))) {
 		printf("Create Socket Error\n");
 	}
@@ -53,8 +56,9 @@ int main()
 		exit(0);
 	}
 
+	BP_InitPack(&pack_buf, BP_PACK_TYPE_CONNECT_MSK, pbuf, 2048);
 
-	pbuf = BP_make_fix_head(pbuf, BP_PACK_TYPE_CONNECT_MSK, 0);
+	pbuf = pack_buf.PackStart;
 	pbuf_old = pbuf;
 
 	// variable header
@@ -75,24 +79,19 @@ int main()
 	payload.u.CONNECT.ClntIdLen = BP_CLIENT_ID_LEN;
 	payload.u.CONNECT.ClntId = BP_CLIENT_ID_APPLY;
 	pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_CONNECT);
-	rmn_len += (BP_WORD)(pbuf-pbuf_old);
 
-	pbuf = buf;
-	rmn_len += 4;
-	BP_make_fix_head(pbuf, BP_PACK_TYPE_CONNECT_MSK, rmn_len);
+	// set remaining length and pack the packet
+	rmn_len = (BP_WORD)(pbuf-pbuf_old);
+	pack_buf.RmnLen = rmn_len;
+	pbuf = BP_ToPack(&pack_buf);
 
-	pbuf = buf;
-	crc = BP_calc_crc32(pbuf, rmn_len-4+2);
-
-	BP_SetBig32((buf+rmn_len+2-4), crc);
-
-	for(i = 0; i < rmn_len + 2; i++) {
-		printf("%02x ", buf[i]);
+	for(i = 0; i < pack_buf.MsgSize; i++) {
+		printf("%02x ", pbuf[i]);
 	}
 	printf("\n");
 
-	n=send(conndfd,buf,rmn_len + 2,0);
-	if(n != rmn_len + 2) {
+	n=send(conndfd,pbuf,pack_buf.MsgSize,0);
+	if(n != pack_buf.MsgSize) {
 		close(conndfd);
 		perror("Send error");
 		return -1;
@@ -135,35 +134,30 @@ int main()
 	BP_GetBig16(buf + 6, &client_id);
 	printf("client id = %d\n", client_id);
 
-	pbuf = buf;
-	pbuf = BP_make_fix_head(pbuf, BP_PACK_TYPE_DISCONN_MSK, 0);
+	BP_ReinitPack(&pack_buf, BP_PACK_TYPE_DISCONN_MSK);
+
+	pbuf = pack_buf.PackStart;
 	pbuf_old = pbuf;
-	rmn_len = 0;
 
 	vrb_head.u.DISCONN.ClntId = client_id;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_DISCONN);
-	rmn_len += (BP_WORD)(pbuf-pbuf_old);
-	// pbuf = BP_SetBig16(pbuf, client_id);
-	// rmn_len += 2;
 
-	pbuf = buf;
-	rmn_len += 4;
-	BP_make_fix_head(pbuf, BP_PACK_TYPE_DISCONN_MSK, rmn_len);
-	pbuf = buf;
-	crc = BP_calc_crc32(pbuf, rmn_len-4+2);
-	BP_SetBig32((buf+rmn_len+2-4), crc);
+	// set remaining length and pack the packet
+	rmn_len = (BP_WORD)(pbuf-pbuf_old);
+	pack_buf.RmnLen = rmn_len;
+	pbuf = BP_ToPack(&pack_buf);
 
-	n=send(conndfd,buf,rmn_len + 2,0);
-	if(n != rmn_len + 2) {
+	for(i = 0; i < pack_buf.MsgSize; i++) {
+		printf("%02x ", pbuf[i]);
+	}
+	printf("\n");
+
+	n=send(conndfd,pbuf,pack_buf.MsgSize,0);
+	if(n != pack_buf.MsgSize) {
 		close(conndfd);
 		perror("Send error");
 		return -3;
 	}
-
-	for(i = 0; i < rmn_len + 2; i++) {
-		printf("%02x ", buf[i]);
-	}
-	printf("\n");
 
 	// Initialize BP_PACKET struct with/without type
 
@@ -177,7 +171,6 @@ int main()
 	// make payload
 
 	// Pack BP_PACKET struct
-
 
 	close(conndfd);
 	return 0;

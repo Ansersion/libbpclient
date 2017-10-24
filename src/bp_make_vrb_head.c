@@ -26,6 +26,9 @@
 #include <bp_public.h>
 #include <bp_pack_type.h>
 
+// std 
+#include <stdio.h>
+
 BP_UINT8 * make_vrb_cnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_discnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 
@@ -39,6 +42,7 @@ BP_UINT8 * BP_make_vrb_head(BP_UINT8 * pack, BPPackVrbHead * vrb_head, BP_UINT8 
 		return BP_NULL;
 	}
 
+	// printf("bp_type=%d\n", bp_type);
 	switch(bp_type) {
 		case BP_PACK_TYPE_CONNECT: 	
 			pack = make_vrb_cnct(pack, vrb_head);
@@ -99,7 +103,8 @@ BP_UINT8 * make_vrb_cnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 
 BP_UINT8 * make_vrb_discnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 {
-	pack = BP_SetBig16(pack, vrb_head->u.CONNECT.ClntId);
+	pack = BP_SetBig16(pack, vrb_head->u.DISCONN.ClntId);
+	// printf("make_vrb_discnct: %p\n", pack);
 	return pack;
 }
 

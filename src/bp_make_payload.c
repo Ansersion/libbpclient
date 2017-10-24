@@ -26,6 +26,9 @@
 #include <bp_public.h>
 #include <bp_pack_type.h>
 
+// std
+#include <stdio.h>
+
 BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload);
 
 BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp_type)
