@@ -121,6 +121,9 @@ int main()
 
 	n += recv(conndfd,buf+3,len, MSG_WAITALL);
 
+	crc = BP_calc_crc32(buf, len+3-4);
+	printf("len+3-4=%d, crc=%x\n", len+3-4, crc);
+
 	if(n != len + 3) {
 		close(conndfd);
 		printf("Recv error 2");
@@ -131,6 +134,7 @@ int main()
 		printf("%02x ", buf[i]);
 	}
 	printf("\n");
+
 	BP_GetBig16(buf + 6, &client_id);
 	printf("client id = %d\n", client_id);
 
@@ -139,8 +143,12 @@ int main()
 	pbuf = pack_buf.PackStart;
 	pbuf_old = pbuf;
 
+	// variable header
 	vrb_head.u.DISCONN.ClntId = client_id;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_DISCONN);
+
+	// payload
+	pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_DISCONN);
 
 	// set remaining length and pack the packet
 	rmn_len = (BP_WORD)(pbuf-pbuf_old);
@@ -157,6 +165,22 @@ int main()
 		close(conndfd);
 		perror("Send error");
 		return -3;
+	}
+
+	while(!loop) {
+		check flags(timeout);
+		if(get post flag) {
+			recv post, timeout;
+			send ack, timeout;
+		}
+		if(get send flag) {
+			send request, timeout;
+			recv ack, timeout;
+		}
+		if(get ping flag) {
+			send request, timeout;
+			recv ack, timeout;
+		}
 	}
 
 	// Initialize BP_PACKET struct with/without type

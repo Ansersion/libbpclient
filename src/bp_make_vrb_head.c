@@ -30,6 +30,8 @@
 #include <stdio.h>
 
 BP_UINT8 * make_vrb_cnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
+BP_UINT8 * make_vrb_ping(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
+BP_UINT8 * make_vrb_pingack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_discnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 
 BP_UINT8 * BP_make_vrb_head(BP_UINT8 * pack, BPPackVrbHead * vrb_head, BP_UINT8 bp_type)
@@ -69,10 +71,10 @@ BP_UINT8 * BP_make_vrb_head(BP_UINT8 * pack, BPPackVrbHead * vrb_head, BP_UINT8 
 			printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_PING: 		
-			printf("Err: unsupported BP type\n");
+			pack = make_vrb_ping(pack, vrb_head);
 			break;
 		case BP_PACK_TYPE_PINGACK: 	
-			printf("Err: unsupported BP type\n");
+			pack = make_vrb_pingack(pack, vrb_head);
 			break;
 		case BP_PACK_TYPE_PUSH:
 			printf("Err: unsupported BP type\n");
@@ -98,6 +100,22 @@ BP_UINT8 * make_vrb_cnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 	pack = BP_SetBig16(pack, vrb_head->u.CONNECT.ClntId);
 	pack = BP_SetBig16(pack, vrb_head->u.CONNECT.AlvTime);
 	*pack++ = vrb_head->u.CONNECT.Timeout;
+	return pack;
+}
+
+BP_UINT8 * make_vrb_ping(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
+{
+	*pack++ = vrb_head->u.PING.Flags;
+	pack = BP_SetBig16(pack, vrb_head->u.PING.ClntId);
+	pack = BP_SetBig16(pack, vrb_head->u.PING.SeqID);
+	return pack;
+}
+
+BP_UINT8 * make_vrb_pingack(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
+{
+	*pack++ = vrb_head->u.PINGACK.Flags;
+	pack = BP_SetBig16(pack, vrb_head->u.PINGACK.ClntId);
+	pack = BP_SetBig16(pack, vrb_head->u.PINGACK.SeqID);
 	return pack;
 }
 

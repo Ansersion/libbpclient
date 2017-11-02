@@ -67,10 +67,10 @@ BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp
 			printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_PING: 		
-			printf("Err: unsupported BP type\n");
+			// No payload
 			break;
 		case BP_PACK_TYPE_PINGACK: 	
-			printf("Err: unsupported BP type\n");
+			// No payload
 			break;
 		case BP_PACK_TYPE_PUSH:
 			printf("Err: unsupported BP type\n");
@@ -79,7 +79,7 @@ BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp
 			printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_DISCONN:
-			printf("Err: unsupported BP type\n");
+			// No payload
 			break;
 		default:
 			printf("Err: unsupported BP type: %d\n", bp_type);

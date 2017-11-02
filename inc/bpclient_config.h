@@ -38,6 +38,7 @@
 	#define BP_INT32 	int
 	#define BP_UINT64 	unsigned long
 	#define BP_INT64 	long
+	#define BP_FLOAT 	float
 	#define BP_WORD 	BP_UINT64
 
 #elif defined BP_CPU32
@@ -56,6 +57,7 @@
 	#define BP_INT16 	short
 	#define BP_UINT32 	unsigned long
 	#define BP_INT32 	long
+	#define BP_FLOAT 	float
 	#define BP_WORD 	BP_UINT16
 
 #elif defined BP_CPU8
@@ -65,6 +67,7 @@
 	#define BP_INT16 	short
 	#define BP_UINT32 	unsigned long
 	#define BP_INT32 	long
+	#define BP_FLOAT 	float
 	#define BP_WORD 	BP_UINT8
 
 #else

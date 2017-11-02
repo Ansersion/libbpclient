@@ -56,6 +56,18 @@ typedef struct VrbHead_CONNECT {
 	BP_UINT8 	Timeout;
 } VrbHead_CONNECT;
 
+typedef struct VrbHead_PING {
+	BP_UINT8 	Flags;
+	BP_UINT16 	ClntId;
+	BP_UINT16 	SeqID;
+} VrbHead_PING;
+
+typedef struct VrbHead_PINGACK {
+	BP_UINT8 	Flags;
+	BP_UINT16 	ClntId;
+	BP_UINT16 	SeqID;
+} VrbHead_PINGACK;
+
 typedef struct VrbHead_DISCONN {
 	BP_UINT16 	ClntId;
 } VrbHead_DISCONN;
@@ -63,6 +75,8 @@ typedef struct VrbHead_DISCONN {
 typedef union vrbU {
 	VrbHead_CONNECT 	CONNECT;
 	VrbHead_DISCONN 	DISCONN;
+	VrbHead_PING 		PING;
+	VrbHead_PINGACK 	PINGACK;
 }vrbU; 
 
 typedef struct BPPackVrbHead {
