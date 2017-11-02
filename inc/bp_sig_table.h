@@ -38,15 +38,21 @@ typedef union SigTypeU {
 } SigTypeU;
 
 typedef struct BP_SysSigTable {
+	// 0-t_u32;
+	// 1-t_u16;
+	// 2-t_i32;
+	// 3-t_i16;
+	// 4-t_enm;
+	// 5-t_flt;
+	// 6-t_str;
 	BP_UINT32 SigType:4;
 	BP_UINT32 EnStatics:1;
 	BP_UINT32 Accuracy:3;
 	// BP_UINT32 EnAlarm:1;
 	// BP_UINT32 AlmClass:3;
 	BP_UINT32 Reserved:24;
-	SigTypeU SigVal;
 	SigTypeU MinVal;
-	SigTypeU MinVal;
+	SigTypeU MaxVal;
 	SigTypeU DefVal;
 } BP_SysSigTable;
 

@@ -167,21 +167,21 @@ int main()
 		return -3;
 	}
 
-	while(!loop) {
-		check flags(timeout);
-		if(get post flag) {
-			recv post, timeout;
-			send ack, timeout;
-		}
-		if(get send flag) {
-			send request, timeout;
-			recv ack, timeout;
-		}
-		if(get ping flag) {
-			send request, timeout;
-			recv ack, timeout;
-		}
-	}
+	// while(!loop) {
+	// 	check flags(timeout);
+	// 	if(get post flag) {
+	// 		recv post, timeout;
+	// 		send ack, timeout;
+	// 	}
+	// 	if(get send flag) {
+	// 		send request, timeout;
+	// 		recv ack, timeout;
+	// 	}
+	// 	if(get ping flag) {
+	// 		send request, timeout;
+	// 		recv ack, timeout;
+	// 	}
+	// }
 
 	// Initialize BP_PACKET struct with/without type
 

@@ -24,7 +24,7 @@ $(OBJ):%.o:%.c
 	$(CC) $(CFLAGS) $< -o $@ -MMD -MF $*.d -MP
 
 clean:
-	-rm -rf *.$(OBJ) $(ALL) core *.core *~ inc/*~ src/*.d
+	-rm -rf *.$(OBJ) $(ALL) *.d core *.core *~ inc/*~ src/*.d
 
 install:
 	@echo "install not supported\n"
