@@ -31,6 +31,10 @@
 #define BP_CLIENT_ID_LEN 	2
 #define BP_CLIENT_ID_APPLY 	0
 
+#define BP_BUF_SIZE 	1024
+#define BP_NAME_SIZE 	64
+#define BP_PASSWORD_SIZE 	64
+
 #define BP_SetBig16 	BP_SetNet16
 #define BP_SetBig32 	BP_SetNet32
 
@@ -105,6 +109,25 @@ typedef union pldU {
 typedef struct BPPackPayload {
 	pldU u;
 } BPPackPayload;
+
+
+extern BP_UINT8 BP_Buf[];
+extern BP_UINT8 BP_Name[BP_NAME_SIZE];
+extern BP_UINT8 BP_Password[BP_PASSWORD_SIZE];
+extern PackBuf BP_Pack_Buf;
+extern BP_UINT16 BP_Client_Id;
+
+// typedef struct BP_Param {
+// 	BP_UINT8 ClientType;
+// 	BP_UINT16 AliveTime;
+// 	BP_UINT8 Timeout;
+// } BP_Param;
+extern BP_UINT8 BP_ClientType;
+extern BP_UINT8 BP_CipherType;
+extern BP_UINT16 BP_AliveTime;
+extern BP_UINT8 BP_Timeout;
+
+
 
 BP_UINT8 * BP_SetNet16(BP_UINT8 * dst, BP_UINT16 val);
 BP_UINT8 * BP_SetNet32(BP_UINT8 * dst, BP_UINT32 val);

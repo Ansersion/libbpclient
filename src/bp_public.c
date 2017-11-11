@@ -25,6 +25,22 @@
 #include <bp_public.h>
 #include <bp_memcpy.h>
 
+BP_UINT8 BP_Buf[BP_BUF_SIZE];
+BP_UINT8 BP_Name[BP_NAME_SIZE];
+BP_UINT8 BP_Password[BP_PASSWORD_SIZE];
+PackBuf BP_Pack_Buf;
+
+// 0-device client, 1-user client; default 0
+BP_UINT8 BP_ClientType = 0;
+// 0-no encryption, 1, 2, 3; default 0
+BP_UINT8 BP_CipherType = 0;
+// ; default 60
+BP_UINT16 BP_AliveTime = 60;
+// ; default 5
+BP_UINT8 BP_Timeout = 5;
+// ; default 0
+BP_UINT16 BP_Client_Id = BP_CLIENT_ID_APPLY;
+
 BP_UINT8 * BP_SetNet16(BP_UINT8 * dst, BP_UINT16 val)
 {
 	if(BP_NULL == dst) {
