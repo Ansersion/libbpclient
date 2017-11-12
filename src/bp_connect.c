@@ -62,7 +62,7 @@ PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 	} else if(1 == BP_ClientType) {
 		vrb_head.u.CONNECT.Flags |= BP_VRB_FLAG_USER_CLNT_MSK;
 	}
-	vrb_head.u.CONNECT.ClntId = BP_Client_Id;
+	vrb_head.u.CONNECT.ClntId = BP_ClientId;
 	vrb_head.u.CONNECT.AlvTime = BP_AliveTime;
 	vrb_head.u.CONNECT.Timeout = BP_Timeout;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_CONNECT);
@@ -74,7 +74,7 @@ PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 	payload.u.CONNECT.PwdLen = strlen(BP_Password);
 	payload.u.CONNECT.Pwd = BP_Password;
 	payload.u.CONNECT.ClntIdLen = BP_CLIENT_ID_LEN;
-	payload.u.CONNECT.ClntId = BP_Client_Id;
+	payload.u.CONNECT.ClntId = BP_ClientId;
 	pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_CONNECT);
 
 	// set remaining length and pack the packet
@@ -82,13 +82,18 @@ PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 	BP_Pack_Buf.RmnLen = rmn_len;
 	pbuf = BP_ToPack(&BP_Pack_Buf);
 
-	for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
-		printf("%02x ", pbuf[i]);
-	}
-	printf("\n");
-
+// 	for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
+// 		printf("%02x ", pbuf[i]);
+// 	}
+// 	printf("\n");
+// 
 	return &BP_Pack_Buf;
 }
+
+// BP_INT8 BP_ParseConnack(BP_UINT8 * msg, BP_UINT16 len)
+// {
+// 	return 0;
+// }
 
 // BP_INT8 BP_Connect_s(BP_UINT8 * name, BP_UINT8 * password)
 // {

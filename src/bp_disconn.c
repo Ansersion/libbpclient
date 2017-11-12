@@ -49,7 +49,7 @@ PackBuf * BP_PackDisconn()
 	pbuf_old = pbuf;
 
 	// variable header
-	vrb_head.u.DISCONN.ClntId = BP_Client_Id;
+	vrb_head.u.DISCONN.ClntId = BP_ClientId;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_DISCONN);
 
 	// payload
@@ -60,10 +60,10 @@ PackBuf * BP_PackDisconn()
 	BP_Pack_Buf.RmnLen = rmn_len;
 	pbuf = BP_ToPack(&BP_Pack_Buf);
 
-	for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
-		printf("%02x ", pbuf[i]);
-	}
-	printf("\n");
+	// for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
+	// 	printf("%02x ", pbuf[i]);
+	// }
+	// printf("\n");
 
 	return &BP_Pack_Buf;
 }

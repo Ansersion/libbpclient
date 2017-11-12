@@ -41,6 +41,9 @@
 #define BP_GetBig16 	BP_GetNet16
 #define BP_GetBig32 	BP_GetNet32
 
+#define MAX_FIX_HEAD_SIZE 	3
+#define MIN_FIX_HEAD_SIZE 	2
+
 typedef struct PackBuf {
 	// BP_UINT8 FxHdType;
 	// BP_UINT8 FxHdRmnLen[2];
@@ -115,17 +118,19 @@ extern BP_UINT8 BP_Buf[];
 extern BP_UINT8 BP_Name[BP_NAME_SIZE];
 extern BP_UINT8 BP_Password[BP_PASSWORD_SIZE];
 extern PackBuf BP_Pack_Buf;
-extern BP_UINT16 BP_Client_Id;
+extern BP_UINT16 BP_ClientId;
 
 // typedef struct BP_Param {
 // 	BP_UINT8 ClientType;
 // 	BP_UINT16 AliveTime;
 // 	BP_UINT8 Timeout;
 // } BP_Param;
+extern BP_UINT8 BP_CrcType;
 extern BP_UINT8 BP_ClientType;
 extern BP_UINT8 BP_CipherType;
 extern BP_UINT16 BP_AliveTime;
 extern BP_UINT8 BP_Timeout;
+extern BP_UINT16 BP_SysSigSetVersion;
 
 
 

@@ -13,8 +13,8 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-/// @file 	bp_init.c
-/// @brief 	initialization functions source file
+/// @file 	bp_parse.h
+/// @brief 	packet parsing functions header file
 /// 
 /// @version 	0.1
 /// @author 	Ansersion
@@ -22,14 +22,22 @@
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <bp_init.h>
+#ifndef __BP_PARSE_H
+#define __BP_PARSE_H
 
-void BP_Init2Default()
-{
-	BP_ClientType = 0;
-	BP_CipherType = 0;
-	BP_AliveTime = 60;
-	BP_Timeout = 5;
-	// TODO: set the newest client id
-	BP_ClientId = BP_CLIENT_ID_APPLY;
-}
+#include <bp_public.h>
+
+typedef struct BP_ConnackStr {
+	BP_UINT8 	RetCode;
+	BP_UINT16 	ClientID;
+	BP_UINT16 	SysSigSetVersion;
+} BP_ConnackStr;
+
+BP_INT8 BP_ParseConnack(BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 len);
+BP_INT16 BP_ParseFixHead(BP_UINT8 * msg, BP_UINT8 * type_and_flags, BP_UINT16 * rmn_len);
+BP_INT8 BP_CheckCRC32(BP_UINT8 * msg, BP_UINT16 len);
+BP_INT8 BP_CheckCRC16(BP_UINT8 * msg, BP_UINT16 len);
+BP_INT8 BP_CheckCRC(BP_UINT8 crc_flags, BP_UINT8 * msg, BP_UINT16 len);
+
+#endif
+
