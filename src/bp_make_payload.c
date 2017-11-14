@@ -30,6 +30,7 @@
 #include <stdio.h>
 
 BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload);
+BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload);
 
 BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp_type)
 {
@@ -61,7 +62,7 @@ BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp
 			printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_REPORT: 	
-			printf("Err: unsupported BP type\n");
+			pack = make_pld_rprt(pack, payload);
 			break;
 		case BP_PACK_TYPE_RPRTACK: 	
 			printf("Err: unsupported BP type\n");
@@ -95,6 +96,23 @@ BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload)
 	pack = BP_Set2ByteField(pack, payload->u.CONNECT.Pwd, payload->u.CONNECT.PwdLen);
 	*pack++ = payload->u.CONNECT.ClntIdLen;
 	pack = BP_SetNet16(pack, payload->u.CONNECT.ClntId);
+	return pack;
+}
+
+BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload)
+{
+	BP_UINT16 i, j;
+	const BP_UINT8 * sig_map;
+	printf("make_pld_rprt: %d\n", payload->u.REPORT.SysSigMapSize);
+	for(i = 0; i < payload->u.REPORT.SysSigMapSize; i++) {
+		*pack++ = payload->u.REPORT.SysSigMap->Dist;
+		sig_map = payload->u.REPORT.SysSigMap->SigMap;
+		printf("make_pld_rprt 2: %d\n", payload->u.REPORT.SysSigMap->SigMapSize);
+
+		for(j = 0; j < payload->u.REPORT.SysSigMap->SigMapSize; j++) {
+			*pack++ = *sig_map++;
+		}
+	}
 	return pack;
 }
 

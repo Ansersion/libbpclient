@@ -54,4 +54,4 @@ dkms.conf
 # custom
 cscope*
 .*swp
-bpclient
+bpclient_dev

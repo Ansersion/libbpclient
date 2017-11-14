@@ -1,7 +1,7 @@
 INCLUDES = -I../inc
 
 CC = cc
-COMPILE_OPTS =		$(INCLUDES) -I. -O2 -c
+COMPILE_OPTS =		$(INCLUDES) -I. -O2 -c -g
 
 MACRO 	=
 MACRO 	= -DBP_CPU64
@@ -14,7 +14,7 @@ OBJ =
 SRC 	+= ${wildcard *.c}
 OBJ 	+= ${patsubst %.c, %.o, $(SRC)}
 
-TARGET = bpclient
+TARGET = bpclient_dev
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
@@ -24,7 +24,7 @@ $(OBJ):%.o:%.c
 	$(CC) $(CFLAGS) $< -o $@ -MMD -MF $*.d -MP
 
 clean:
-	-rm -rf *.$(OBJ) $(ALL) *.d core *.core *~ inc/*~ src/*.d
+	-rm -rf $(TARGET) *.$(OBJ) $(ALL) *.d core *.core *~ inc/*~ src/*.d
 
 install:
 	@echo "install not supported\n"

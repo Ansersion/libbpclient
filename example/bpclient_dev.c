@@ -12,9 +12,9 @@
 
 #include <bpclient_config.h>
 #include <bp_public.h>
-#include <bp_make_fix_head.h>
-#include <bp_make_vrb_head.h>
-#include <bp_make_payload.h>
+// #include <bp_make_fix_head.h>
+// #include <bp_make_vrb_head.h>
+// #include <bp_make_payload.h>
 #include <bp_make_pack.h>
 #include <bp_pack_type.h>
 #include <bp_vrb_flags.h>
@@ -23,6 +23,8 @@
 #include <bp_connect.h>
 #include <bp_disconn.h>
 #include <bp_parse.h>
+#include <bp_sys_sig.h>
+#include <bp_report.h>
 
 #define PORT 8025
 #define SERVER_IP "127.0.0.1"
@@ -91,7 +93,14 @@ int main()
 				if(strncmp(input, "p", 1) == 0) {
 					printf("cmd: p\n");
 				} else if(strncmp(input, "r", 1) == 0){
-					printf("cmd: r\n");
+					p_pack_buf = BP_PackReport(BP_NULL, g_SysSigMap);
+					n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+					if(n != p_pack_buf->MsgSize) {
+						close(conndfd);
+						perror("Send error");
+						return -1;
+					}
+					printf("report\n");
 				} else if(strncmp(input, "i", 1) == 0) {
 					printf("cmd: i\n");
 				} else if(strncmp(input, "c", 1) == 0) {

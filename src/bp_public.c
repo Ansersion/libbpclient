@@ -44,6 +44,12 @@ BP_UINT8 BP_Timeout = 5;
 BP_UINT16 BP_ClientId = BP_CLIENT_ID_APPLY;
 // ; default 0
 BP_UINT16 BP_SysSigSetVersion = 0;
+// ; default 0
+BP_UINT16 BP_SeqIdCommon = 0;
+BP_UINT16 BP_SeqIdGet = 0;
+BP_UINT16 BP_SeqIdPost = 0;
+BP_UINT16 BP_SeqIdReport = 0;
+BP_UINT16 BP_SeqIdPing = 0;
 
 BP_UINT8 * BP_SetNet16(BP_UINT8 * dst, BP_UINT16 val)
 {

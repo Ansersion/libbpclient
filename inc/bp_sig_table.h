@@ -27,6 +27,16 @@
 
 #include <bpclient_config.h>
 
+#define DIST_END_FLAG_MSK 	0x01
+
+#define DIST_CLASS_MSK 		0x0E	
+#define DIST_CLASS_1_MSK 	0x02	
+#define DIST_CLASS_2_MSK 	0x04	
+#define DIST_CLASS_3_MSK 	0x06	
+#define DIST_CLASS_4_MSK 	0x08	
+#define DIST_CLASS_5_MSK 	0x0A	
+#define DIST_CLASS_6_MSK 	0x0C	
+
 typedef union SigTypeU {
 	BP_UINT32 	t_u32;
 	BP_UINT16 	t_u16;
@@ -60,6 +70,12 @@ typedef struct BP_CusSigTable {
 	BP_UINT16 SigID;
 	BP_SysSigTable SigTab;
 } BP_CumSigTable;
+
+typedef struct BP_SysSigMap {
+	BP_UINT8 Dist;
+	BP_UINT8 SigMapSize;
+	const BP_UINT8 * SigMap;
+} BP_SysSigMap;
 
 #endif
 

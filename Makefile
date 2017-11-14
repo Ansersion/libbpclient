@@ -1,7 +1,7 @@
 INCLUDES = -Iinc
 SRC_DIR = src
 
-COMPILE_OPTS =		$(INCLUDES) -I. -O2 -c
+COMPILE_OPTS =		$(INCLUDES) -I. -O2 -c -g
 CC = cc
 
 MACRO 	=
@@ -33,15 +33,17 @@ all: $(ALL)
 
 $(TARGET_STATIC_LIB): $(OBJ) 
 	$(LIBRARY_LINK) $(LINK_OPTS) $@ $(OBJ)
+	cscope -Rbq
 
 $(TARGET_SHARE_LIB): $(OBJ) 
 	$(LIBRARY_SHARE_LINK) $@ $(LIBRARY_SHARE_LINK_OPTS) $(OBJ)
+	cscope -Rbq
 
 $(OBJ):%.o:%.c
 	$(CC) $(CFLAGS) $< -o $@ -MMD -MF $*.d -MP
 
 clean:
-	-rm -rf *.$(OBJ) $(ALL) core *.core *~ inc/*~ src/*.d
+	-rm -rf *.$(OBJ) $(ALL) core *.core *~ inc/*~ src/*.d cscope.*
 
 install:
 	@echo "install not supported\n"

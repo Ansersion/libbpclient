@@ -26,6 +26,7 @@
 #define __BP_PUBLIC_H
 
 #include <bpclient_config.h>
+#include <bp_sig_table.h>
 
 #define BP_LEVEL 	0
 #define BP_CLIENT_ID_LEN 	2
@@ -63,6 +64,12 @@ typedef struct VrbHead_CONNECT {
 	BP_UINT8 	Timeout;
 } VrbHead_CONNECT;
 
+typedef struct VrbHead_REPORT {
+	BP_UINT8 	Flags;
+	BP_UINT16 	ClntId;
+	BP_UINT16 	SeqID;
+} VrbHead_REPORT;
+
 typedef struct VrbHead_PING {
 	BP_UINT8 	Flags;
 	BP_UINT16 	ClntId;
@@ -84,6 +91,7 @@ typedef union vrbU {
 	VrbHead_DISCONN 	DISCONN;
 	VrbHead_PING 		PING;
 	VrbHead_PINGACK 	PINGACK;
+	VrbHead_REPORT 		REPORT;
 }vrbU; 
 
 typedef struct BPPackVrbHead {
@@ -104,8 +112,20 @@ typedef struct Payload_CONNECT {
 // 	FIELD_NULL();
 // } Payload_DISCONN;
 
+// typedef struct BP_SysSigMap {
+// 	BP_UINT8 Dist;
+// 	BP_UINT8 SigMapSize;
+// 	BP_UINT8 *SigMap;
+// } BP_SysSigMap;
+
+typedef struct Payload_REPORT {
+	BP_UINT16 SysSigMapSize;
+	const BP_SysSigMap * SysSigMap;
+} Payload_REPORT;
+
 typedef union pldU {
 	Payload_CONNECT 	CONNECT;
+	Payload_REPORT 		REPORT;
 	// Payload_DISCONN 	DISCONN;
 }pldU; 
 
@@ -131,6 +151,12 @@ extern BP_UINT8 BP_CipherType;
 extern BP_UINT16 BP_AliveTime;
 extern BP_UINT8 BP_Timeout;
 extern BP_UINT16 BP_SysSigSetVersion;
+
+extern BP_UINT16 BP_SeqIdCommon;
+extern BP_UINT16 BP_SeqIdGet;
+extern BP_UINT16 BP_SeqIdPost;
+extern BP_UINT16 BP_SeqIdReport;
+extern BP_UINT16 BP_SeqIdPing;
 
 
 
