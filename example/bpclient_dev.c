@@ -28,6 +28,9 @@
 
 #define PORT 8025
 #define SERVER_IP "127.0.0.1"
+
+BP_UINT8 DEV_NAME[] = "AnsersionDev";
+
 int main()
 {
 	int conndfd;
@@ -35,14 +38,17 @@ int main()
 	int n;
 	int len;
 	int loop = 1;
+	int i;
 	char input[128];
 
 	fd_set rfds;
 	struct timeval tv;
 	int retval;
 
-	BP_UINT8 * user_name = "Ansersion4";
-	BP_UINT8 * password = "ansersion4";
+	// BP_UINT8 * user_name = "2";
+	// BP_UINT8 * password = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456";
+	BP_UINT8 * user_name = "3";
+	BP_UINT8 * password = "123456abcdefghijklmnopqrstuvwxyz";
 
 	BP_UINT8 buf[2048+1];
 	BP_UINT16 left_len;
@@ -93,7 +99,8 @@ int main()
 				if(strncmp(input, "p", 1) == 0) {
 					printf("cmd: p\n");
 				} else if(strncmp(input, "r", 1) == 0){
-					p_pack_buf = BP_PackReport(BP_NULL, g_SysSigMap);
+					// p_pack_buf = BP_PackReport(BP_NULL, g_SysSigMap);
+					p_pack_buf = BP_PackReport(DEV_NAME, g_SysSigMap);
 					n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
 					if(n != p_pack_buf->MsgSize) {
 						close(conndfd);
@@ -155,6 +162,13 @@ int main()
 						BP_ParseConnack(&str_connack, buf, len);
 						printf("client id = %d\n", str_connack.ClientID);
 						printf("system signal set version = %d\n", str_connack.SysSigSetVersion);
+						break;
+					case BP_PACK_TYPE_RPRTACK:
+						printf("RPRTACK:\n");
+						for(i = 0; i < len; i++) {
+							printf("%02x ", buf[i]);
+						}
+						printf("\n");
 						break;
 					default:
 						printf("recv pack unknown\n");

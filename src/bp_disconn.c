@@ -53,7 +53,7 @@ PackBuf * BP_PackDisconn()
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_DISCONN);
 
 	// payload
-	pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_DISCONN);
+	pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_DISCONN, &vrb_head);
 
 	// set remaining length and pack the packet
 	rmn_len = (BP_WORD)(pbuf-pbuf_old);

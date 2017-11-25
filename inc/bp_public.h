@@ -119,6 +119,8 @@ typedef struct Payload_CONNECT {
 // } BP_SysSigMap;
 
 typedef struct Payload_REPORT {
+	BP_UINT8 * DevName;
+	BP_UINT8 DevNameLen;
 	BP_UINT16 SysSigMapSize;
 	const BP_SysSigMap * SysSigMap;
 } Payload_REPORT;
@@ -137,6 +139,7 @@ typedef struct BPPackPayload {
 extern BP_UINT8 BP_Buf[];
 extern BP_UINT8 BP_Name[BP_NAME_SIZE];
 extern BP_UINT8 BP_Password[BP_PASSWORD_SIZE];
+extern BP_UINT8 BP_DEV_NAME[];
 extern PackBuf BP_Pack_Buf;
 extern BP_UINT16 BP_ClientId;
 

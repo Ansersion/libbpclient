@@ -75,7 +75,7 @@ PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 	payload.u.CONNECT.Pwd = BP_Password;
 	payload.u.CONNECT.ClntIdLen = BP_CLIENT_ID_LEN;
 	payload.u.CONNECT.ClntId = BP_ClientId;
-	pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_CONNECT);
+	pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_CONNECT, &vrb_head);
 
 	// set remaining length and pack the packet
 	rmn_len = (BP_WORD)(pbuf-pbuf_old);

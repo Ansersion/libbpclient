@@ -25,14 +25,15 @@
 #include <bp_make_payload.h>
 #include <bp_public.h>
 #include <bp_pack_type.h>
+#include <bp_vrb_flags.h>
 
 // std
 #include <stdio.h>
 
-BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload);
-BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload);
+BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
+BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
 
-BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp_type)
+BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp_type, BPPackVrbHead * vrb_head)
 {
 	if(BP_NULL == pack) {
 		return BP_NULL;
@@ -44,7 +45,7 @@ BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp
 
 	switch(bp_type) {
 		case BP_PACK_TYPE_CONNECT: 	
-			pack = make_pld_cnct(pack, payload);
+			pack = make_pld_cnct(pack, payload, vrb_head);
 			break;
 		case BP_PACK_TYPE_CONNACK: 	
 			printf("Err: unsupported BP type\n");
@@ -62,7 +63,7 @@ BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp
 			printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_REPORT: 	
-			pack = make_pld_rprt(pack, payload);
+			pack = make_pld_rprt(pack, payload, vrb_head);
 			break;
 		case BP_PACK_TYPE_RPRTACK: 	
 			printf("Err: unsupported BP type\n");
@@ -90,7 +91,7 @@ BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp
 	return pack;
 }
 
-BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload)
+BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head)
 {
 	pack = BP_Set2ByteField(pack, payload->u.CONNECT.Name, payload->u.CONNECT.NameLen);
 	pack = BP_Set2ByteField(pack, payload->u.CONNECT.Pwd, payload->u.CONNECT.PwdLen);
@@ -99,11 +100,17 @@ BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload)
 	return pack;
 }
 
-BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload)
+BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head)
 {
 	BP_UINT16 i, j;
 	const BP_UINT8 * sig_map;
 	printf("make_pld_rprt: %d\n", payload->u.REPORT.SysSigMapSize);
+	if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SYS_SIG_SET_MSK) {
+		*pack++ = payload->u.REPORT.DevNameLen;
+		for(i = 0; i < payload->u.REPORT.DevNameLen; i++) {
+			*pack++ = payload->u.REPORT.DevName[i];
+		}
+	}
 	for(i = 0; i < payload->u.REPORT.SysSigMapSize; i++) {
 		*pack++ = payload->u.REPORT.SysSigMap->Dist;
 		sig_map = payload->u.REPORT.SysSigMap->SigMap;

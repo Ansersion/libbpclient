@@ -28,7 +28,7 @@
 #include <bpclient_config.h>
 #include <bp_public.h>
 
-BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp_type);
+BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp_type, BPPackVrbHead * vrb_head);
 
 
 #endif
