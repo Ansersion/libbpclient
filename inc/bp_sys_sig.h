@@ -27,6 +27,8 @@
 
 #include <bpclient_config.h>
 
+#define MAX_SYS_SIG_DIST_NUM 	16
+
 extern const BP_UINT8 g_SysMapDis_0[];
 extern const BP_SysSigMap g_SysSigMap[];
 extern const BP_UINT16 g_SysSigMapSize;

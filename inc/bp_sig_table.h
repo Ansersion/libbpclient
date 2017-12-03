@@ -25,57 +25,10 @@
 #ifndef __BP_SIG_TABLE_H
 #define __BP_SIG_TABLE_H
 
-#include <bpclient_config.h>
+#include <bp_sig_str.h>
 
-#define DIST_END_FLAG_MSK 	0x01
-
-#define DIST_CLASS_MSK 		0x0E	
-#define DIST_CLASS_1_MSK 	0x02	
-#define DIST_CLASS_2_MSK 	0x04	
-#define DIST_CLASS_3_MSK 	0x06	
-#define DIST_CLASS_4_MSK 	0x08	
-#define DIST_CLASS_5_MSK 	0x0A	
-#define DIST_CLASS_6_MSK 	0x0C	
-
-typedef union SigTypeU {
-	BP_UINT32 	t_u32;
-	BP_UINT16 	t_u16;
-	BP_INT32 	t_i32;
-	BP_INT16 	t_i16;
-	BP_UINT16 	t_enm;
-	BP_FLOAT 	t_flt;
-	BP_UINT8* 	t_str;
-} SigTypeU;
-
-typedef struct BP_SysSigTable {
-	// 0-t_u32;
-	// 1-t_u16;
-	// 2-t_i32;
-	// 3-t_i16;
-	// 4-t_enm;
-	// 5-t_flt;
-	// 6-t_str;
-	BP_UINT32 SigType:4;
-	BP_UINT32 EnStatics:1;
-	BP_UINT32 Accuracy:3;
-	// BP_UINT32 EnAlarm:1;
-	// BP_UINT32 AlmClass:3;
-	BP_UINT32 Reserved:24;
-	SigTypeU MinVal;
-	SigTypeU MaxVal;
-	SigTypeU DefVal;
-} BP_SysSigTable;
-
-typedef struct BP_CusSigTable {
-	BP_UINT16 SigID;
-	BP_SysSigTable SigTab;
-} BP_CumSigTable;
-
-typedef struct BP_SysSigMap {
-	BP_UINT8 Dist;
-	BP_UINT8 SigMapSize;
-	const BP_UINT8 * SigMap;
-} BP_SysSigMap;
+#define SIG_SYS_COMM_STATE 			0xE000
+#define SIG_SYS_POWER 				0xE001
 
 #endif
 

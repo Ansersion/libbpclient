@@ -26,7 +26,7 @@
 #define __BP_PUBLIC_H
 
 #include <bpclient_config.h>
-#include <bp_sig_table.h>
+#include <bp_sig_str.h>
 
 #define BP_LEVEL 	0
 #define BP_CLIENT_ID_LEN 	2
