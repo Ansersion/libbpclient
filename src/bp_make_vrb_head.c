@@ -30,6 +30,7 @@
 #include <stdio.h>
 
 BP_UINT8 * make_vrb_cnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
+BP_UINT8 * make_vrb_getack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_rprt(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_ping(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_pingack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
@@ -57,7 +58,7 @@ BP_UINT8 * BP_make_vrb_head(BP_UINT8 * pack, BPPackVrbHead * vrb_head, BP_UINT8 
 			printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_GETACK: 	
-			printf("Err: unsupported BP type\n");
+			pack = make_vrb_getack(pack, vrb_head);
 			break;
 		case BP_PACK_TYPE_POST: 		
 			printf("Err: unsupported BP type\n");
@@ -101,6 +102,15 @@ BP_UINT8 * make_vrb_cnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 	pack = BP_SetBig16(pack, vrb_head->u.CONNECT.ClntId);
 	pack = BP_SetBig16(pack, vrb_head->u.CONNECT.AlvTime);
 	*pack++ = vrb_head->u.CONNECT.Timeout;
+	return pack;
+}
+
+BP_UINT8 * make_vrb_getack(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
+{
+	*pack++ = vrb_head->u.GETACK.Flags;
+	pack = BP_SetBig16(pack, vrb_head->u.GETACK.ClntId);
+	pack = BP_SetBig16(pack, vrb_head->u.GETACK.SeqID);
+	*pack++ = vrb_head->u.GETACK.RetCode;
 	return pack;
 }
 

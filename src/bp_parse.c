@@ -27,6 +27,37 @@
 #include <bp_crc16.h>
 #include <bp_fix_flags.h>
 
+#include <bp_getack.h>
+
+BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len)
+{
+	BP_UINT8 * p_msg;
+	BP_UINT8 i;
+	if(BP_NULL == str_get) {
+		return -0x01;
+	}
+	if(BP_NULL == msg) {
+		return -0x02;
+	}
+	if(len < 127 + MIN_FIX_HEAD_SIZE) {
+		p_msg = msg + MIN_FIX_HEAD_SIZE;
+	} else {
+		p_msg = msg + MAX_FIX_HEAD_SIZE;
+
+	}
+	str_get->Flags = *p_msg++;
+	p_msg = BP_GetBig16(p_msg, &(str_get->ClientID));
+	p_msg = BP_GetBig16(p_msg, &(str_get->SeqId));
+	// str_get->RetCode = *p_msg++;
+	
+	str_get->SigNum = *p_msg++;
+	for(i = 0; i < str_get->SigNum; i++) {
+		p_msg = BP_GetBig16(p_msg, &(g_SigTabArray[i].SigId));
+	}
+	str_get->SigTabArray = g_SigTabArray;
+	return 0;
+}
+
 BP_INT8 BP_ParseConnack(BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 len)
 {
 	if(BP_NULL == str_connack) {

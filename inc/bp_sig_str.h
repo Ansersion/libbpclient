@@ -40,8 +40,8 @@
 typedef enum BP_SigType {
 	SIG_TYPE_U32 = 0, 
 	SIG_TYPE_U16,
-	SIG_TYPE_i32, 
-	SIG_TYPE_i16, 
+	SIG_TYPE_I32, 
+	SIG_TYPE_I16, 
 	SIG_TYPE_ENM, 
 	SIG_TYPE_FLT, 
 	SIG_TYPE_STR, 

@@ -64,6 +64,13 @@ typedef struct VrbHead_CONNECT {
 	BP_UINT8 	Timeout;
 } VrbHead_CONNECT;
 
+typedef struct VrbHead_GETACK {
+	BP_UINT8 	Flags;
+	BP_UINT16 	ClntId;
+	BP_UINT16 	SeqID;
+	BP_UINT8 	RetCode;
+} VrbHead_GETACK;
+
 typedef struct VrbHead_REPORT {
 	BP_UINT8 	Flags;
 	BP_UINT16 	ClntId;
@@ -88,10 +95,11 @@ typedef struct VrbHead_DISCONN {
 
 typedef union vrbU {
 	VrbHead_CONNECT 	CONNECT;
-	VrbHead_DISCONN 	DISCONN;
+	VrbHead_GETACK 		GETACK;
 	VrbHead_PING 		PING;
 	VrbHead_PINGACK 	PINGACK;
 	VrbHead_REPORT 		REPORT;
+	VrbHead_DISCONN 	DISCONN;
 }vrbU; 
 
 typedef struct BPPackVrbHead {
@@ -107,6 +115,12 @@ typedef struct Payload_CONNECT {
 	BP_UINT8  	ClntIdLen;
 	BP_UINT16 	ClntId;
 } Payload_CONNECT;
+
+typedef struct Payload_GETACK {
+	BP_UINT8 	SigTabNum;
+	BP_SigType 	* SigTypeArray;
+	BP_SigId2Val * SigTabArray;
+} Payload_GETACK;
 
 // typedef struct Payload_DISCONN {
 // 	FIELD_NULL();
@@ -127,6 +141,7 @@ typedef struct Payload_REPORT {
 
 typedef union pldU {
 	Payload_CONNECT 	CONNECT;
+	Payload_GETACK 		GETACK;
 	Payload_REPORT 		REPORT;
 	// Payload_DISCONN 	DISCONN;
 }pldU; 

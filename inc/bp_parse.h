@@ -33,6 +33,15 @@ typedef struct BP_ConnackStr {
 	BP_UINT16 	SysSigSetVersion;
 } BP_ConnackStr;
 
+typedef struct BP_GetStr {
+	BP_UINT8 Flags;
+	BP_UINT16 ClientID;
+	BP_UINT16 SeqId;
+	BP_UINT8 SigNum;
+	BP_SigId2Val * SigTabArray;
+} BP_GetStr;
+
+BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len);
 BP_INT8 BP_ParseConnack(BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 len);
 BP_INT16 BP_ParseFixHead(BP_UINT8 * msg, BP_UINT8 * type_and_flags, BP_UINT16 * rmn_len);
 BP_INT8 BP_CheckCRC32(BP_UINT8 * msg, BP_UINT16 len);

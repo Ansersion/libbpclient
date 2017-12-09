@@ -35,7 +35,7 @@
 #define BP_VRB_FLAG_NEW_CLNT_ID_MSK 	(1 << 7)
 #define BP_VRB_FLAG_SNG_DEV_SERV_MSK 	(1 << 6)
 
-// for GET
+// for GET, GETACK
 #define BP_VRB_FLAG_CHINESE_MSK 	(1 << 7)
 #define BP_VRB_FLAG_ENGLISH_MSK 	(1 << 6)
 #define BP_VRB_FLAG_FRENCH_MSK 		(1 << 5)
@@ -43,6 +43,7 @@
 #define BP_VRB_FLAG_ARABIC_MSK 		(1 << 3)
 #define BP_VRB_FLAG_SPANISH_MSK 	(1 << 2)
 #define BP_VRB_FLAG_OTHER_LAN_MSK 	(1 << 1)
+#define BP_VRB_FLAG_SIG_SET_MSK 	(1 << 0)
 
 // for POST
 // #define BP_VRB_FLAG_DEV_CLNT_MSK (1 << 1): the same usage as CONNECT

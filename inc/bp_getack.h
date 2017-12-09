@@ -13,8 +13,8 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-/// @file 	bp_sig_table.h
-/// @brief 	struct for signal table
+/// @file 	bp_getack.h
+/// @brief 	for BP GETACK header file
 /// 
 /// @version 	0.1
 /// @author 	Ansersion
@@ -22,17 +22,16 @@
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BP_SIG_TABLE_H
-#define __BP_SIG_TABLE_H
+#ifndef __BP_GETACK_H
+#define __BP_GETACK_H
 
-#include <bp_sig_str.h>
+#include <bp_public.h>
 
-#define SIG_SYS_COMM_STATE 			0xE000
-#define SIG_SYS_POWER 				0xE001
+#define MAX_GET_ACK_SIG_NUM 	64
 
-extern BP_SigId2Val g_SysSigId2Val[];
-extern const BP_SigTable g_SysSigTable[];
-extern const BP_UINT16 BP_SysSigNum;
+extern BP_SigType g_SigTypeArray[MAX_GET_ACK_SIG_NUM];
+extern BP_SigId2Val g_SigTabArray[MAX_GET_ACK_SIG_NUM];
 
+PackBuf * BP_PackGetack(BP_UINT16 seq_id, BP_UINT8 ret_code, BP_UINT16 * sig_index_array, BP_UINT16 array_num);
 #endif
 
