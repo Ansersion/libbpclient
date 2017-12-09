@@ -47,6 +47,7 @@ int main()
 
 	// BP_UINT8 * user_name = "2";
 	// BP_UINT8 * password = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456";
+	BP_UINT8 * TEST = "TST";
 	BP_UINT8 * user_name = "3";
 	BP_UINT8 * password = "123456abcdefghijklmnopqrstuvwxyz";
 
@@ -58,6 +59,7 @@ int main()
 	PackBuf pack_buf;
 	PackBuf * p_pack_buf;
 	BP_ConnackStr str_connack;
+	BP_GetStr str_get;
 
 	if(-1==(conndfd=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP))) {
 		printf("Create Socket Error\n");
@@ -129,12 +131,19 @@ int main()
 					}
 					printf("disconn\n");
 					loop = 0;
+				} else if(strncmp(input, "t", 1) == 0) {
+					n=send(conndfd,TEST,strlen(TEST),0);
+					printf("START TEST\n");
 				} else {
 					printf("not supported input\n");
 				}
 			}
 			if(FD_ISSET(conndfd, &rfds)) {
 				n=recv(conndfd,buf,MAX_FIX_HEAD_SIZE, MSG_WAITALL);
+				if(strncmp(buf, TEST, 3) == 0) {
+					printf("recv %s\n", TEST);
+					continue;
+				}
 				if(MAX_FIX_HEAD_SIZE != n) {
 					close(conndfd);
 					perror("Recv error 1");
@@ -170,8 +179,28 @@ int main()
 						}
 						printf("\n");
 						break;
+					case BP_PACK_TYPE_GET:
+						printf("GETACK:%d\n", len);
+						for(i = 0; i < len; i++) {
+							printf("%02x ", buf[i]);
+						}
+						printf("\n");
+						BP_ParseGet(&str_get, buf, len);
+						printf("Flags: %x\t", str_get.Flags);
+						printf("ClientID: %x\t", str_get.ClientID);
+						printf("SeqId: %x\t", str_get.SeqId);
+						printf("SigNum: %x\n", str_get.SigNum);
+						for(i = 0; i < str_get.SigNum; i++) {
+							printf("%x ", str_get.SigTabArray[i].SigId);
+						}
+						printf("\n");
+						break;
 					default:
 						printf("recv pack unknown\n");
+						for(i = 0; i < len; i++) {
+							printf("%02x ", buf[i]);
+						}
+						printf("\n");
 				}
 			}
 		}
