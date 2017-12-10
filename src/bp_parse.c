@@ -52,9 +52,9 @@ BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len)
 	
 	str_get->SigNum = *p_msg++;
 	for(i = 0; i < str_get->SigNum; i++) {
-		p_msg = BP_GetBig16(p_msg, &(g_SigTabArray[i].SigId));
+		p_msg = BP_GetBig16(p_msg, &(g_SigArray[i].SigId));
 	}
-	str_get->SigTabArray = g_SigTabArray;
+	str_get->SigTabArray = g_SigArray;
 	return 0;
 }
 

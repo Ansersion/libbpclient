@@ -32,7 +32,7 @@
 
 extern BP_SigId2Val g_SysSigId2Val[];
 extern const BP_SigTable g_SysSigTable[];
-extern const BP_UINT16 BP_SysSigNum;
+extern const BP_UINT16 g_SysSigNum;
 
 #endif
 

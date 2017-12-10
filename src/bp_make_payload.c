@@ -114,8 +114,8 @@ BP_UINT8 * make_pld_getack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHe
 		// not supported
 		return BP_NULL;
 	}
-	printf("make_pld_rprt: %d\n", payload->u.GETACK.SigTabNum);
-	for(i = 0; i < payload->u.GETACK.SigTabNum; i++) {
+	printf("make_pld_getack: %d\n", payload->u.GETACK.SigNum);
+	for(i = 0; i < payload->u.GETACK.SigNum; i++) {
 		switch(payload->u.GETACK.SigTypeArray[i]) {
 			case SIG_TYPE_U32:
 			case SIG_TYPE_I32:
@@ -126,6 +126,7 @@ BP_UINT8 * make_pld_getack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHe
 			case SIG_TYPE_I16:
 			case SIG_TYPE_ENM:
 				t2n++;
+				break;
 			case SIG_TYPE_STR:
 				txn++;
 				break;
@@ -136,56 +137,61 @@ BP_UINT8 * make_pld_getack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHe
 	if(t4n > 0x3F || t2n > 0x3F || txn > 0x3F) {
 		return BP_NULL;
 	}
+	*pack = 0;
 	if(t4n != 0) {
-		pack_4 = pack;
+		pack_4 = (pack+1);
+		*pack += 1;
 		*pack_4++ = 0x80 | t4n;
 	}
 	if(t2n != 0) {
-		pack_2 = pack + ((BP_NULL==pack_4)?0:(1+t4n*(4+2)));
+		pack_2 = (pack+1) + ((BP_NULL==pack_4)?0:(1+t4n*(4+2)));
+		*pack += 1;
 		*pack_2++ = 0x40 | t2n;
 	}
 	if(txn != 0) {
-		pack_x = pack + ((BP_NULL==pack_4)?0:(1+t4n*(4+2))) + ((BP_NULL==pack_2)?0:(1+t2n*(2+2)));
+		pack_x = (pack+1) + ((BP_NULL==pack_4)?0:(1+t4n*(4+2))) + ((BP_NULL==pack_2)?0:(1+t2n*(2+2)));
+		*pack += 1;
 		*pack_x++ = 0xC0 | txn;
 	}
-	for(i = 0; i < payload->u.GETACK.SigTabNum; i++) {
+	for(i = 0; i < payload->u.GETACK.SigNum; i++) {
 		switch(payload->u.GETACK.SigTypeArray[i]) {
 			case SIG_TYPE_U32:
-				pack_4 = BP_SetBig16(pack_4, payload->u.GETACK.SigTabArray[i].SigId);
-				pack_4 = BP_SetBig32(pack_4, payload->u.GETACK.SigTabArray[i].SigVal.t_u32);
+				pack_4 = BP_SetBig16(pack_4, payload->u.GETACK.SigArray[i].SigId);
+				pack_4 = BP_SetBig32(pack_4, payload->u.GETACK.SigArray[i].SigVal.t_u32);
 				break;
 			case SIG_TYPE_I32:
-				pack_4 = BP_SetBig16(pack_4, payload->u.GETACK.SigTabArray[i].SigId);
-				pack_4 = BP_SetBig32(pack_4, payload->u.GETACK.SigTabArray[i].SigVal.t_i32);
+				pack_4 = BP_SetBig16(pack_4, payload->u.GETACK.SigArray[i].SigId);
+				pack_4 = BP_SetBig32(pack_4, payload->u.GETACK.SigArray[i].SigVal.t_i32);
 				break;
 			case SIG_TYPE_FLT:
-				pack_4 = BP_SetBig16(pack_4, payload->u.GETACK.SigTabArray[i].SigId);
-				pack_4 = BP_SetBig32(pack_4, payload->u.GETACK.SigTabArray[i].SigVal.t_flt);
+				pack_4 = BP_SetBig16(pack_4, payload->u.GETACK.SigArray[i].SigId);
+				pack_4 = BP_SetBig32(pack_4, payload->u.GETACK.SigArray[i].SigVal.t_flt);
 				break;
 			case SIG_TYPE_U16:
-				pack_2 = BP_SetBig16(pack_4, payload->u.GETACK.SigTabArray[i].SigId);
-				pack_2 = BP_SetBig32(pack_4, payload->u.GETACK.SigTabArray[i].SigVal.t_u16);
+				pack_2 = BP_SetBig16(pack_2, payload->u.GETACK.SigArray[i].SigId);
+				pack_2 = BP_SetBig16(pack_2, payload->u.GETACK.SigArray[i].SigVal.t_u16);
 				break;
 			case SIG_TYPE_I16:
-				pack_2 = BP_SetBig16(pack_4, payload->u.GETACK.SigTabArray[i].SigId);
-				pack_2 = BP_SetBig32(pack_4, payload->u.GETACK.SigTabArray[i].SigVal.t_i16);
+				pack_2 = BP_SetBig16(pack_2, payload->u.GETACK.SigArray[i].SigId);
+				pack_2 = BP_SetBig16(pack_2, payload->u.GETACK.SigArray[i].SigVal.t_i16);
 				break;
 			case SIG_TYPE_ENM:
-				pack_2 = BP_SetBig16(pack_4, payload->u.GETACK.SigTabArray[i].SigId);
-				pack_2 = BP_SetBig32(pack_4, payload->u.GETACK.SigTabArray[i].SigVal.t_enm);
+				pack_2 = BP_SetBig16(pack_2, payload->u.GETACK.SigArray[i].SigId);
+				pack_2 = BP_SetBig16(pack_2, payload->u.GETACK.SigArray[i].SigVal.t_enm);
 				break;
 			case SIG_TYPE_STR:
 				{
-					BP_UINT8 n = strlen(payload->u.GETACK.SigTabArray[i].SigVal.t_str);
+					BP_UINT8 n = strlen(payload->u.GETACK.SigArray[i].SigVal.t_str);
 					BP_UINT8 j;
-					pack_x = BP_SetBig16(pack_4, payload->u.GETACK.SigTabArray[i].SigId);
+					pack_x = BP_SetBig16(pack_x, payload->u.GETACK.SigArray[i].SigId);
 					for(j = 0; j < n; j++) {
-						*pack_x++ = payload->u.GETACK.SigTabArray[i].SigVal.t_str[i];
+						*pack_x++ = payload->u.GETACK.SigArray[i].SigVal.t_str[i];
 					}
 				}
 				break;
 		}
 	}
+	(pack = pack_x) || (pack = pack_2) || (pack = pack_4);
 	return pack;
 }
 

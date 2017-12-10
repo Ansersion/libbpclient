@@ -25,6 +25,7 @@
 #include <bp_parse.h>
 #include <bp_sys_sig.h>
 #include <bp_report.h>
+#include <bp_getack.h>
 
 #define PORT 8025
 #define SERVER_IP "127.0.0.1"
@@ -194,6 +195,20 @@ int main()
 							printf("%x ", str_get.SigTabArray[i].SigId);
 						}
 						printf("\n");
+
+						p_pack_buf = BP_PackGetack(&str_get);
+						printf("MsgSize: %d\n", p_pack_buf->MsgSize);
+						for(i = 0; i < p_pack_buf->MsgSize; i++) {
+							printf("%02x ", p_pack_buf->PackStart[i]);
+						}
+						printf("\n");
+						n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+						if(n != p_pack_buf->MsgSize) {
+							close(conndfd);
+							perror("Send error");
+							return -1;
+						}
+						printf("getack\n");
 						break;
 					default:
 						printf("recv pack unknown\n");

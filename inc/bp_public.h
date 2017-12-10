@@ -117,9 +117,9 @@ typedef struct Payload_CONNECT {
 } Payload_CONNECT;
 
 typedef struct Payload_GETACK {
-	BP_UINT8 	SigTabNum;
+	BP_UINT8 	SigNum;
 	BP_SigType 	* SigTypeArray;
-	BP_SigId2Val * SigTabArray;
+	BP_SigId2Val * SigArray;
 } Payload_GETACK;
 
 // typedef struct Payload_DISCONN {

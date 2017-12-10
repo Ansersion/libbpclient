@@ -26,12 +26,13 @@
 #define __BP_GETACK_H
 
 #include <bp_public.h>
+#include <bp_parse.h>
 
 #define MAX_GET_ACK_SIG_NUM 	64
 
 extern BP_SigType g_SigTypeArray[MAX_GET_ACK_SIG_NUM];
-extern BP_SigId2Val g_SigTabArray[MAX_GET_ACK_SIG_NUM];
+extern BP_SigId2Val g_SigArray[MAX_GET_ACK_SIG_NUM];
 
-PackBuf * BP_PackGetack(BP_UINT16 seq_id, BP_UINT8 ret_code, BP_UINT16 * sig_index_array, BP_UINT16 array_num);
+PackBuf * BP_PackGetack(BP_GetStr * get_str);
 #endif
 

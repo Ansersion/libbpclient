@@ -37,19 +37,21 @@
 #include <string.h>
 
 BP_SigType g_SigTypeArray[MAX_GET_ACK_SIG_NUM];
-BP_SigId2Val g_SigTabArray[MAX_GET_ACK_SIG_NUM];
+BP_SigId2Val g_SigArray[MAX_GET_ACK_SIG_NUM];
 
-PackBuf * BP_PackGetack(BP_UINT16 seq_id, BP_UINT8 ret_code, BP_UINT16 * sig_index_array, BP_UINT16 array_num)
+// PackBuf * BP_PackGetack(BP_UINT16 seq_id, BP_UINT8 ret_code, BP_UINT16 * sig_index_array, BP_UINT16 array_num)
+PackBuf * BP_PackGetack(BP_GetStr * get_str)
 {
-	BP_WORD i;
+	BP_WORD i, j;
 
 	BP_UINT8 * pbuf, * pbuf_old;
 	BP_WORD rmn_len = 0;
+	BP_UINT8 ret_code = 0;
 
 	BPPackVrbHead vrb_head;
 	BPPackPayload payload;
 
-	if(BP_NULL == sig_index_array) {
+	if(BP_NULL == get_str) {
 		return BP_NULL;
 	}
 
@@ -58,15 +60,35 @@ PackBuf * BP_PackGetack(BP_UINT16 seq_id, BP_UINT8 ret_code, BP_UINT16 * sig_ind
 	pbuf_old = pbuf;
 
 	// vrb_head.u.REPORT.Flags = 0;
-	vrb_head.u.GETACK.Flags = 0;
 	// if(BP_NULL != get_pack_info->sig_set) {
 	// 	// not supported yet
 	// 	vrb_head.u.GETACK.Flags |= BP_VRB_FLAG_SIG_SET_MSK;
 	// 	// TODO: judge the language 
 	// 	return BP_NULL;
 	// }
-	vrb_head.u.GETACK.ClntId = BP_ClientId;
-	vrb_head.u.GETACK.SeqID = seq_id;
+	vrb_head.u.GETACK.Flags = 0;
+	vrb_head.u.GETACK.ClntId = get_str->ClientID;
+	vrb_head.u.GETACK.SeqID = get_str->SeqId;
+	// TODO: judge the ret_code
+
+	if(0 == ret_code) {
+		payload.u.GETACK.SigNum = get_str->SigNum;
+		for(i = 0; i < get_str->SigNum; i++) {
+			for(j = 0; j < g_SysSigNum; j++) {
+				if(g_SysSigTable[j].SigId == get_str->SigTabArray[i].SigId) {
+					g_SigTypeArray[i] = g_SysSigTable[j].SigType;
+					g_SigArray[i] = g_SysSigId2Val[j];
+					break;
+				}
+			}
+			// TODO: unknown signals: get_str->SigTabArray[i]
+			if(g_SysSigNum == j) {
+				vrb_head.u.GETACK.RetCode = 0x01;
+				break;
+			}
+		}
+	}
+
 	vrb_head.u.GETACK.RetCode = ret_code;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_GETACK);
 	printf("debug:\n");
@@ -76,13 +98,8 @@ PackBuf * BP_PackGetack(BP_UINT16 seq_id, BP_UINT8 ret_code, BP_UINT16 * sig_ind
 	printf("\n");
 
 	if(0 == ret_code) {
-		payload.u.GETACK.SigTabNum = array_num;
-		for(i = 0; i < array_num; i++) {
-			g_SigTypeArray[i] = g_SysSigTable[sig_index_array[i]].SigType;
-			g_SigTabArray[i] = g_SysSigId2Val[sig_index_array[i]];
-		}
 		payload.u.GETACK.SigTypeArray = g_SigTypeArray;
-		payload.u.GETACK.SigTabArray = g_SigTabArray;
+		payload.u.GETACK.SigArray = g_SigArray;
 
 		pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_GETACK, &vrb_head);
 		printf("debug2:\n");
