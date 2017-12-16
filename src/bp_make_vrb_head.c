@@ -30,6 +30,7 @@
 #include <stdio.h>
 
 BP_UINT8 * make_vrb_cnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
+BP_UINT8 * make_vrb_postack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_getack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_rprt(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_ping(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
@@ -64,7 +65,7 @@ BP_UINT8 * BP_make_vrb_head(BP_UINT8 * pack, BPPackVrbHead * vrb_head, BP_UINT8 
 			printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_POSTACK: 	
-			printf("Err: unsupported BP type\n");
+			pack = make_vrb_postack(pack, vrb_head);
 			break;
 		case BP_PACK_TYPE_REPORT: 	
 			pack = make_vrb_rprt(pack, vrb_head);
@@ -104,6 +105,16 @@ BP_UINT8 * make_vrb_cnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 	*pack++ = vrb_head->u.CONNECT.Timeout;
 	return pack;
 }
+
+BP_UINT8 * make_vrb_postack(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
+{
+	*pack++ = vrb_head->u.POSTACK.Flags;
+	pack = BP_SetBig16(pack, vrb_head->u.POSTACK.ClntId);
+	pack = BP_SetBig16(pack, vrb_head->u.POSTACK.SeqID);
+	*pack++ = vrb_head->u.POSTACK.RetCode;
+	return pack;
+}
+
 
 BP_UINT8 * make_vrb_getack(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 {

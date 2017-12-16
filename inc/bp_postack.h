@@ -13,8 +13,8 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-/// @file 	bp_sig_table.h
-/// @brief 	struct for signal table
+/// @file 	bp_postack.h
+/// @brief 	for BP POSTACK header file
 /// 
 /// @version 	0.1
 /// @author 	Ansersion
@@ -22,22 +22,12 @@
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BP_SIG_TABLE_H
-#define __BP_SIG_TABLE_H
+#ifndef __BP_POSTACK_H
+#define __BP_POSTACK_H
 
-#include <bp_sig_str.h>
+#include <bp_public.h>
+#include <bp_parse.h>
 
-#define SIG_SYS_COMM_STATE 			0xE000
-#define SIG_SYS_POWER 				0xE001
-
-
-extern BP_SigId2Val g_SysSigId2Val[];
-extern const BP_SigTable g_SysSigTable[];
-extern const BP_UINT16 g_SysSigNum;
-
-BP_UINT16 BP_GetSigIdx(const BP_UINT16 sig_id);
-BP_INT16 BP_SetSigVal(BP_UINT8 sig_num, BP_SigId2Val * sig_array);
-void BP_SigDump(void);
-
+PackBuf * BP_PackPostack(BP_PostStr * post_str);
 #endif
 

@@ -32,6 +32,7 @@
 #include <string.h>
 
 BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
+BP_UINT8 * make_pld_postack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_pld_getack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
 
@@ -62,7 +63,8 @@ BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp
 			printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_POSTACK: 	
-			printf("Err: unsupported BP type\n");
+			pack = make_pld_postack(pack, payload, vrb_head);
+			// printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_REPORT: 	
 			pack = make_pld_rprt(pack, payload, vrb_head);
@@ -192,6 +194,11 @@ BP_UINT8 * make_pld_getack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHe
 		}
 	}
 	(pack = pack_x) || (pack = pack_2) || (pack = pack_4);
+	return pack;
+}
+
+BP_UINT8 * make_pld_postack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head)
+{
 	return pack;
 }
 

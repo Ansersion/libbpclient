@@ -26,6 +26,7 @@
 #include <bp_sys_sig.h>
 #include <bp_report.h>
 #include <bp_getack.h>
+#include <bp_postack.h>
 
 #define PORT 8025
 #define SERVER_IP "127.0.0.1"
@@ -197,19 +198,25 @@ int main()
 						}
 						printf("\n");
 
-						// p_pack_buf = BP_PackGetack(&str_get);
-						// printf("MsgSize: %d\n", p_pack_buf->MsgSize);
-						// for(i = 0; i < p_pack_buf->MsgSize; i++) {
-						// 	printf("%02x ", p_pack_buf->PackStart[i]);
-						// }
-						// printf("\n");
-						// n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
-						// if(n != p_pack_buf->MsgSize) {
-						// 	close(conndfd);
-						// 	perror("Send error");
-						// 	return -1;
-						// }
-						// printf("post\n");
+						if(0 != BP_SetSigVal(str_post.SigNum, str_post.SigArray)) {
+							printf("SetSigVal error\n");
+						} 
+						printf("start dump...\n");
+						BP_SigDump();
+
+						p_pack_buf = BP_PackPostack(&str_post);
+						printf("MsgSize: %d\n", p_pack_buf->MsgSize);
+						for(i = 0; i < p_pack_buf->MsgSize; i++) {
+							printf("%02x ", p_pack_buf->PackStart[i]);
+						}
+						printf("\n");
+						n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+						if(n != p_pack_buf->MsgSize) {
+							close(conndfd);
+							perror("Send error");
+							return -1;
+						}
+						printf("post\n");
 						break;
 					case BP_PACK_TYPE_GET:
 						printf("GETACK:%d\n", len);

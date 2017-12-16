@@ -77,6 +77,13 @@ typedef struct VrbHead_POST {
 	BP_UINT16 	SeqID;
 } VrbHead_POST;
 
+typedef struct VrbHead_POSTACK {
+	BP_UINT8 	Flags;
+	BP_UINT16 	ClntId;
+	BP_UINT16 	SeqID;
+	BP_UINT8 	RetCode;
+} VrbHead_POSTACK;
+
 typedef struct VrbHead_REPORT {
 	BP_UINT8 	Flags;
 	BP_UINT16 	ClntId;
@@ -107,6 +114,7 @@ typedef union vrbU {
 	VrbHead_REPORT 		REPORT;
 	VrbHead_DISCONN 	DISCONN;
 	VrbHead_POST 		POST;
+	VrbHead_POSTACK 	POSTACK;
 }vrbU; 
 
 typedef struct BPPackVrbHead {
@@ -139,6 +147,16 @@ typedef struct Payload_GETACK {
 // 	BP_UINT8 *SigMap;
 // } BP_SysSigMap;
 
+typedef struct Payload_POST {
+	BP_UINT8 	SigNum;
+	BP_SigType 	* SigTypeArray;
+	BP_SigId2Val * SigArray;
+} Payload_POST;
+
+typedef struct Payload_POSTACK {
+	BP_UINT32 Reserved;
+} Payload_POSTACK;
+
 typedef struct Payload_REPORT {
 	BP_UINT8 * DevName;
 	BP_UINT8 DevNameLen;
@@ -146,17 +164,12 @@ typedef struct Payload_REPORT {
 	const BP_SysSigMap * SysSigMap;
 } Payload_REPORT;
 
-typedef struct Payload_POST {
-	BP_UINT8 	SigNum;
-	BP_SigType 	* SigTypeArray;
-	BP_SigId2Val * SigArray;
-} Payload_POST;
-
 typedef union pldU {
 	Payload_CONNECT 	CONNECT;
 	Payload_GETACK 		GETACK;
 	Payload_REPORT 		REPORT;
 	Payload_POST 		POST;
+	Payload_POSTACK 	POSTACK;
 	// Payload_DISCONN 	DISCONN;
 }pldU; 
 

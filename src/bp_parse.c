@@ -69,22 +69,22 @@ BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len)
 			}
 			switch(g_SysSigTable[sig_idx_tmp].SigType) {
 				case SIG_TYPE_U32:
-					BP_GetBig32(p_msg, &(g_SigArray[i].SigVal.t_u32));
+					p_msg = BP_GetBig32(p_msg, &(g_SigArray[i].SigVal.t_u32));
 					break;
 				case SIG_TYPE_I32:
-					BP_GetBig32(p_msg, &(g_SigArray[i].SigVal.t_i32));
+					p_msg = BP_GetBig32(p_msg, &(g_SigArray[i].SigVal.t_i32));
 					break;
 				case SIG_TYPE_FLT:
-					BP_GetBig32(p_msg, (BP_UINT32 *)&(g_SigArray[i].SigVal.t_flt));
+					p_msg = BP_GetBig32(p_msg, (BP_UINT32 *)&(g_SigArray[i].SigVal.t_flt));
 					break;
 				case SIG_TYPE_U16:
-					BP_GetBig16(p_msg, &(g_SigArray[i].SigVal.t_u16));
+					p_msg = BP_GetBig16(p_msg, &(g_SigArray[i].SigVal.t_u16));
 					break;
 				case SIG_TYPE_I16:
-					BP_GetBig16(p_msg, &(g_SigArray[i].SigVal.t_i16));
+					p_msg = BP_GetBig16(p_msg, &(g_SigArray[i].SigVal.t_i16));
 					break;
 				case SIG_TYPE_ENM:
-					BP_GetBig16(p_msg, &(g_SigArray[i].SigVal.t_enm));
+					p_msg = BP_GetBig16(p_msg, &(g_SigArray[i].SigVal.t_enm));
 					break;
 				case SIG_TYPE_STR:
 					sig_str_size = *p_msg++;
