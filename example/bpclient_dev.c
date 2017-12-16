@@ -61,6 +61,7 @@ int main()
 	PackBuf * p_pack_buf;
 	BP_ConnackStr str_connack;
 	BP_GetStr str_get;
+	BP_PostStr str_post;
 
 	if(-1==(conndfd=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP))) {
 		printf("Create Socket Error\n");
@@ -179,6 +180,36 @@ int main()
 							printf("%02x ", buf[i]);
 						}
 						printf("\n");
+						break;
+					case BP_PACK_TYPE_POST:
+						printf("POST:%d\n", len);
+						for(i = 0; i < len; i++) {
+							printf("%02x ", buf[i]);
+						}
+						printf("\n");
+						BP_ParsePost(&str_post, buf, len);
+						printf("Flags: %x\t", str_post.Flags);
+						printf("ClientID: %x\t", str_post.ClientID);
+						printf("SeqId: %x\t", str_post.SeqId);
+						for(i = 0; i < str_post.SigNum; i++) {
+
+							printf("%x->%x ", str_post.SigArray[i].SigId, str_post.SigArray[i].SigVal.t_enm);
+						}
+						printf("\n");
+
+						// p_pack_buf = BP_PackGetack(&str_get);
+						// printf("MsgSize: %d\n", p_pack_buf->MsgSize);
+						// for(i = 0; i < p_pack_buf->MsgSize; i++) {
+						// 	printf("%02x ", p_pack_buf->PackStart[i]);
+						// }
+						// printf("\n");
+						// n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+						// if(n != p_pack_buf->MsgSize) {
+						// 	close(conndfd);
+						// 	perror("Send error");
+						// 	return -1;
+						// }
+						// printf("post\n");
 						break;
 					case BP_PACK_TYPE_GET:
 						printf("GETACK:%d\n", len);

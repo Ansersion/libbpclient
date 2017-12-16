@@ -16,3 +16,14 @@ const BP_SigTable g_SysSigTable[] =
 };
 
 const BP_UINT16 g_SysSigNum = sizeof(g_SysSigId2Val) / sizeof(BP_SigId2Val);
+
+BP_UINT16 BP_GetSigIdx(const BP_UINT16 sig_id)
+{
+	BP_UINT16 i;
+	for(i = 0; i < g_SysSigNum; i++) {
+		if(sig_id == g_SysSigId2Val[i].SigId) {
+			return i;
+		}
+	}
+	return SIG_INDEX_INVALID;
+}

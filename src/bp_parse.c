@@ -26,8 +26,81 @@
 #include <bp_crc32.h>
 #include <bp_crc16.h>
 #include <bp_fix_flags.h>
+#include <bp_sig_table.h>
 
 #include <bp_getack.h>
+
+BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len)
+{
+	BP_UINT8 * p_msg = BP_NULL;
+	BP_UINT8 i = 0, j = 0, k = 0;
+	BP_UINT8 sig_tab_num = 0, sig_num = 0, sig_type = 0;
+	BP_UINT8 sig_str_size = 0;
+	BP_UINT8 sig_idx_tmp = 0;
+	if(BP_NULL == str_post) {
+		return -0x01;
+	}
+	if(BP_NULL == msg) {
+		return -0x02;
+	}
+	if(len < 127 + MIN_FIX_HEAD_SIZE) {
+		p_msg = msg + MIN_FIX_HEAD_SIZE;
+	} else {
+		p_msg = msg + MAX_FIX_HEAD_SIZE;
+
+	}
+	str_post->Flags = *p_msg++;
+	p_msg = BP_GetBig16(p_msg, &(str_post->ClientID));
+	p_msg = BP_GetBig16(p_msg, &(str_post->SeqId));
+	// str_post->RetCode = *p_msg++;
+	
+	// str_post->SigNum = *p_msg++;
+	str_post->SigNum = 0;
+	sig_tab_num = *p_msg++;
+	for(j = 0; j < sig_tab_num; j++) {
+		sig_num = *p_msg++;
+		sig_type = (sig_num & 0xC0);
+		sig_num = (sig_num & 0x3F);
+		for(i = str_post->SigNum; i < str_post->SigNum + sig_num; i++) {
+			p_msg = BP_GetBig16(p_msg, &(g_SigArray[i].SigId));
+			sig_idx_tmp = BP_GetSigIdx(g_SigArray[i].SigId);
+			if(SIG_INDEX_INVALID == sig_idx_tmp) {
+				return -0x11;
+			}
+			switch(g_SysSigTable[sig_idx_tmp].SigType) {
+				case SIG_TYPE_U32:
+					BP_GetBig32(p_msg, &(g_SigArray[i].SigVal.t_u32));
+					break;
+				case SIG_TYPE_I32:
+					BP_GetBig32(p_msg, &(g_SigArray[i].SigVal.t_i32));
+					break;
+				case SIG_TYPE_FLT:
+					BP_GetBig32(p_msg, (BP_UINT32 *)&(g_SigArray[i].SigVal.t_flt));
+					break;
+				case SIG_TYPE_U16:
+					BP_GetBig16(p_msg, &(g_SigArray[i].SigVal.t_u16));
+					break;
+				case SIG_TYPE_I16:
+					BP_GetBig16(p_msg, &(g_SigArray[i].SigVal.t_i16));
+					break;
+				case SIG_TYPE_ENM:
+					BP_GetBig16(p_msg, &(g_SigArray[i].SigVal.t_enm));
+					break;
+				case SIG_TYPE_STR:
+					sig_str_size = *p_msg++;
+					for(k = 0; k < sig_str_size; k++) {
+						g_SigArray[i].SigVal.t_str[k] = *p_msg++;
+					}
+					break;
+				default:
+					return -0x12;
+			}
+		}
+		str_post->SigNum += sig_num;
+	}
+	str_post->SigArray = g_SigArray;
+	return 0;
+}
 
 BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len)
 {

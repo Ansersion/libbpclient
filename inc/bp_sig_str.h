@@ -27,6 +27,8 @@
 
 #include <bpclient_config.h>
 
+#define SIG_INDEX_INVALID 			0xFFFF
+
 #define DIST_END_FLAG_MSK 	0x01
 
 #define DIST_CLASS_MSK 		0x0E	
@@ -84,10 +86,13 @@ typedef struct BP_SigTable {
 	/* SIG_PERM_RO = 0, */
 	/* SIG_PERM_RW, */
 	BP_UINT16 Perm:1;
-	BP_UINT16 Reserved:7;
+	BP_UINT16 Reserved:4;
 	SigTypeU * MinVal;
 	SigTypeU * MaxVal;
 	SigTypeU * DefVal;
+
+	// /* Other info*/
+	// BP_UINT16 SigSize:3;
 } BP_SigTable;
 
 typedef struct BP_CusSigTable {
