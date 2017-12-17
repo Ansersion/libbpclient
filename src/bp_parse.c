@@ -30,6 +30,27 @@
 
 #include <bp_getack.h>
 
+BP_INT8 BP_ParsePingack(BP_PingackStr * str_pingack, BP_UINT8 * msg, BP_UINT16 len)
+{
+	BP_UINT8 * p_msg = BP_NULL;
+	if(BP_NULL == str_pingack) {
+		return -0x01;
+	}
+	if(BP_NULL == msg) {
+		return -0x02;
+	}
+	if(len < 127 + MIN_FIX_HEAD_SIZE) {
+		p_msg = msg + MIN_FIX_HEAD_SIZE;
+	} else {
+		p_msg = msg + MAX_FIX_HEAD_SIZE;
+
+	}
+	str_pingack->Flags = *p_msg++;
+	p_msg = BP_GetBig16(p_msg, &(str_pingack->ClientID));
+	p_msg = BP_GetBig16(p_msg, &(str_pingack->SeqId));
+	return 0;
+}
+
 BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len)
 {
 	BP_UINT8 * p_msg = BP_NULL;

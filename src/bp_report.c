@@ -67,7 +67,7 @@ PackBuf * BP_PackReport(BP_UINT8 * dev_name, const BP_SysSigMap * sys_sig_map)
 	}
 	vrb_head.u.REPORT.ClntId = BP_ClientId;
 	BP_SeqIdReport = BP_SeqIdCommon++;
-	vrb_head.u.REPORT.SeqID = BP_SeqIdReport;
+	vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
 
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_REPORT);
 	printf("debug:\n");

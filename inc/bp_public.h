@@ -67,39 +67,39 @@ typedef struct VrbHead_CONNECT {
 typedef struct VrbHead_GETACK {
 	BP_UINT8 	Flags;
 	BP_UINT16 	ClntId;
-	BP_UINT16 	SeqID;
+	BP_UINT16 	SeqId;
 	BP_UINT8 	RetCode;
 } VrbHead_GETACK;
 
 typedef struct VrbHead_POST {
 	BP_UINT8 	Flags;
 	BP_UINT16 	ClntId;
-	BP_UINT16 	SeqID;
+	BP_UINT16 	SeqId;
 } VrbHead_POST;
 
 typedef struct VrbHead_POSTACK {
 	BP_UINT8 	Flags;
 	BP_UINT16 	ClntId;
-	BP_UINT16 	SeqID;
+	BP_UINT16 	SeqId;
 	BP_UINT8 	RetCode;
 } VrbHead_POSTACK;
 
 typedef struct VrbHead_REPORT {
 	BP_UINT8 	Flags;
 	BP_UINT16 	ClntId;
-	BP_UINT16 	SeqID;
+	BP_UINT16 	SeqId;
 } VrbHead_REPORT;
 
 typedef struct VrbHead_PING {
 	BP_UINT8 	Flags;
 	BP_UINT16 	ClntId;
-	BP_UINT16 	SeqID;
+	BP_UINT16 	SeqId;
 } VrbHead_PING;
 
 typedef struct VrbHead_PINGACK {
 	BP_UINT8 	Flags;
 	BP_UINT16 	ClntId;
-	BP_UINT16 	SeqID;
+	BP_UINT16 	SeqId;
 } VrbHead_PINGACK;
 
 typedef struct VrbHead_DISCONN {
@@ -157,6 +157,10 @@ typedef struct Payload_POSTACK {
 	BP_UINT32 Reserved;
 } Payload_POSTACK;
 
+typedef struct Payload_PING {
+	BP_UINT32 Reserved;
+} Payload_PING;
+
 typedef struct Payload_REPORT {
 	BP_UINT8 * DevName;
 	BP_UINT8 DevNameLen;
@@ -170,6 +174,7 @@ typedef union pldU {
 	Payload_REPORT 		REPORT;
 	Payload_POST 		POST;
 	Payload_POSTACK 	POSTACK;
+	Payload_PING 		PING;
 	// Payload_DISCONN 	DISCONN;
 }pldU; 
 

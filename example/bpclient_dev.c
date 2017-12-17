@@ -27,6 +27,9 @@
 #include <bp_report.h>
 #include <bp_getack.h>
 #include <bp_postack.h>
+#include <bp_ping.h>
+#include <bp_sig_table.h>
+
 
 #define PORT 8025
 #define SERVER_IP "127.0.0.1"
@@ -61,6 +64,7 @@ int main()
 	PackBuf pack_buf;
 	PackBuf * p_pack_buf;
 	BP_ConnackStr str_connack;
+	BP_PingackStr str_pingack;
 	BP_GetStr str_get;
 	BP_PostStr str_post;
 
@@ -101,8 +105,8 @@ int main()
 					printf("fgets error\n");
 					exit(1);
 				}
-				if(strncmp(input, "p", 1) == 0) {
-					printf("cmd: p\n");
+				if(strncmp(input, "o", 1) == 0) {
+					printf("cmd: o\n");
 				} else if(strncmp(input, "r", 1) == 0){
 					// p_pack_buf = BP_PackReport(BP_NULL, g_SysSigMap);
 					p_pack_buf = BP_PackReport(DEV_NAME, g_SysSigMap);
@@ -134,6 +138,15 @@ int main()
 					}
 					printf("disconn\n");
 					loop = 0;
+				} else if(strncmp(input, "p", 1) == 0) {
+					p_pack_buf = BP_PackPing();
+					n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+					if(n != p_pack_buf->MsgSize) {
+						close(conndfd);
+						perror("Send error");
+						return -3;
+					}
+					printf("ping\n");
 				} else if(strncmp(input, "t", 1) == 0) {
 					n=send(conndfd,TEST,strlen(TEST),0);
 					printf("START TEST\n");
@@ -181,6 +194,17 @@ int main()
 							printf("%02x ", buf[i]);
 						}
 						printf("\n");
+						break;
+					case BP_PACK_TYPE_PINGACK:
+						printf("PINGACK:\n");
+						for(i = 0; i < len; i++) {
+							printf("%02x ", buf[i]);
+						}
+						printf("\n");
+						BP_ParsePingack(&str_pingack, buf, len);
+						printf("flags = %d\n", str_pingack.Flags);
+						printf("client id = %d\n", str_pingack.ClientID);
+						printf("seq id = %d\n", str_pingack.SeqId);
 						break;
 					case BP_PACK_TYPE_POST:
 						printf("POST:%d\n", len);

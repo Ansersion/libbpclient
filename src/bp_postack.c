@@ -58,7 +58,7 @@ PackBuf * BP_PackPostack(BP_PostStr * post_str)
 
 	vrb_head.u.POSTACK.Flags = 0;
 	vrb_head.u.POSTACK.ClntId = post_str->ClientID;
-	vrb_head.u.POSTACK.SeqID = post_str->SeqId;
+	vrb_head.u.POSTACK.SeqId = post_str->SeqId;
 	// TODO: judge the ret_code
 
 	if(0 == ret_code) {

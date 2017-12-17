@@ -68,7 +68,7 @@ PackBuf * BP_PackGetack(BP_GetStr * get_str)
 	// }
 	vrb_head.u.GETACK.Flags = 0;
 	vrb_head.u.GETACK.ClntId = get_str->ClientID;
-	vrb_head.u.GETACK.SeqID = get_str->SeqId;
+	vrb_head.u.GETACK.SeqId = get_str->SeqId;
 	// TODO: judge the ret_code
 
 	if(0 == ret_code) {
