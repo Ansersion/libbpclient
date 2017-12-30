@@ -54,7 +54,8 @@ int main()
 	// BP_UINT8 * password = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456";
 	BP_UINT8 * TEST = "TST";
 	BP_UINT8 * user_name = "3";
-	BP_UINT8 * password = "123456abcdefghijklmnopqrstuvwxyz";
+	// BP_UINT8 * password = "123456abcdefghijklmnopqrstuvwxyz";
+	BP_UINT8 * password = "123456abcdefghijklmnopqrstuvwxy";
 
 	BP_UINT8 buf[2048+1];
 	BP_UINT16 left_len;
@@ -185,6 +186,8 @@ int main()
 				switch((type_and_flags >> 4) & 0x0F) {
 					case BP_PACK_TYPE_CONNACK:
 						BP_ParseConnack(&str_connack, buf, len);
+						printf("CONNACK:\n");
+						printf("RetCode = %d\n", str_connack.RetCode);
 						printf("client id = %d\n", str_connack.ClientID);
 						printf("system signal set version = %d\n", str_connack.SysSigSetVersion);
 						break;

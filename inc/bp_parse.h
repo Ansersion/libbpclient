@@ -26,6 +26,7 @@
 #define __BP_PARSE_H
 
 #include <bp_public.h>
+#include <bp_connack.h>
 
 typedef struct BP_ConnackStr {
 	BP_UINT8 	RetCode;

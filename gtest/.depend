@@ -1,0 +1,4 @@
+test_connect.o: test_connect.cpp ../inc/bp_connect.h ../inc/bp_public.h \
+ ../inc/bpclient_config.h ../inc/bp_sig_str.h ../inc/bp_make_pack.h \
+ ../inc/bp_pack_type.h ../inc/bp_vrb_flags.h ../inc/bp_parse.h \
+ ../inc/bp_connack.h ../inc/bp_crc32.h ../inc/bp_init.h
