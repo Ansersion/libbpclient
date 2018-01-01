@@ -62,6 +62,7 @@ PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 	} else if(1 == BP_ClientType) {
 		vrb_head.u.CONNECT.Flags |= BP_VRB_FLAG_USER_CLNT_MSK;
 	}
+
 	vrb_head.u.CONNECT.ClntId = BP_ClientId;
 	vrb_head.u.CONNECT.AlvTime = BP_AliveTime;
 	vrb_head.u.CONNECT.Timeout = BP_Timeout;

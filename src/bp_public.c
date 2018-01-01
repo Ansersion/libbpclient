@@ -84,9 +84,9 @@ BP_UINT8 * BP_Set2ByteField(BP_UINT8 * pack, BP_UINT8 * field, BP_UINT16 field_l
 	if(BP_NULL == pack) {
 		return BP_NULL;
 	}
-	if(0 == field_len) {
-		return BP_NULL;
-	}
+	// if(0 == field_len) {
+	// 	return BP_NULL;
+	// }
 	p_pack = BP_SetBig16(p_pack, field_len);
 	memcpy_bp(p_pack, field, field_len);
 
