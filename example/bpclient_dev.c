@@ -54,8 +54,7 @@ int main()
 	// BP_UINT8 * password = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456";
 	BP_UINT8 * TEST = "TST";
 	BP_UINT8 * user_name = "3";
-	// BP_UINT8 * password = "123456abcdefghijklmnopqrstuvwxyz";
-	BP_UINT8 * password = "123456abcdefghijklmnopqrstuvwxy";
+	BP_UINT8 * password = "123456abcdefghijklmnopqrstuvwxyz";
 
 	BP_UINT8 buf[2048+1];
 	BP_UINT16 left_len;
@@ -208,6 +207,7 @@ int main()
 						printf("flags = %d\n", str_pingack.Flags);
 						printf("client id = %d\n", str_pingack.ClientID);
 						printf("seq id = %d\n", str_pingack.SeqId);
+						printf("ret code = %d\n", str_pingack.RetCode);
 						break;
 					case BP_PACK_TYPE_POST:
 						printf("POST:%d\n", len);

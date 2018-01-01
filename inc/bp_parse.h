@@ -55,6 +55,7 @@ typedef struct BP_PingackStr {
 	BP_UINT8 Flags;
 	BP_UINT16 ClientID;
 	BP_UINT16 SeqId;
+	BP_UINT8 RetCode;
 } BP_PingackStr;
 
 BP_INT8 BP_ParsePingack(BP_PingackStr * str_pingack, BP_UINT8 * msg, BP_UINT16 len);

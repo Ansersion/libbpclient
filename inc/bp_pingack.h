@@ -13,8 +13,8 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-/// @file 	bp_init.h
-/// @brief 	initialization functions header file
+/// @file 	bp_pingack.h
+/// @brief 	for BP PINGACK header file
 /// 
 /// @version 	0.1
 /// @author 	Ansersion
@@ -22,12 +22,11 @@
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BP_INIT_H
-#define __BP_INIT_H
+#ifndef __BP_PINGACK_H
+#define __BP_PINGACK_H
 
-#include <bp_public.h>
+#define RET_CODE_PINGACK_OK 				0x00
+#define RET_CODE_PINGACK_CLNT_ID_INVALID 	0x02
 
-void BP_Init2Default();
-void BP_Init(BP_UINT8 clnt_type, BP_UINT8 cipher_type, BP_UINT16 alive_time, BP_UINT8 timeout, BP_UINT16 clnt_id);
 #endif
 

@@ -48,6 +48,7 @@ BP_INT8 BP_ParsePingack(BP_PingackStr * str_pingack, BP_UINT8 * msg, BP_UINT16 l
 	str_pingack->Flags = *p_msg++;
 	p_msg = BP_GetBig16(p_msg, &(str_pingack->ClientID));
 	p_msg = BP_GetBig16(p_msg, &(str_pingack->SeqId));
+	str_pingack->RetCode = *p_msg++;
 	return 0;
 }
 

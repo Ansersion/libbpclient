@@ -30,6 +30,14 @@ void BP_Init2Default()
 	BP_CipherType = 0;
 	BP_AliveTime = 60;
 	BP_Timeout = 5;
-	// TODO: set the newest client id
 	BP_ClientId = BP_CLIENT_ID_APPLY;
+}
+
+void BP_Init(BP_UINT8 clnt_type, BP_UINT8 cipher_type, BP_UINT16 alive_time, BP_UINT8 timeout, BP_UINT16 clnt_id)
+{
+	BP_ClientType = clnt_type;
+	BP_CipherType = cipher_type;
+	BP_AliveTime = alive_time;
+	BP_Timeout = timeout;
+	BP_ClientId = clnt_id;
 }

@@ -35,24 +35,28 @@ extern "C"
 #include <bp_getack.h>
 #include <bp_postack.h>
 #include <bp_ping.h>
+#include <bp_pingack.h>
 #include <bp_sig_table.h>
 }
 
 
 /*****************************
  * Test Case ID: 0001
- * Test Case Number: 1.1.1
+ * Test Case Number: 1.3.1
  * Author: 	Ansersion
  * Date: 	2018-01-01
  * Description:
- * 	Test the CONNECT packet if all inputs are OK
+ * 	Test the PING packet if all inputs are OK
 */
 
-TEST(CONNECT_OK, USR_NAME_PWD_OK)
+TEST(PING_OK, PING_OK)
 {
 	int n = 0;
 	int len = 0;
 	int conndfd;
+	int test_times = 2;
+	BP_UINT16 alive_time = 10;
+	BP_UINT16 timeout = 5;
 	BP_UINT8 buf[2048+1];
 	BP_UINT16 left_len;
 	BP_UINT8 type_and_flags;
@@ -61,6 +65,9 @@ TEST(CONNECT_OK, USR_NAME_PWD_OK)
 
 	PackBuf * p_pack_buf;
 	BP_ConnackStr str_connack;
+	BP_PingackStr str_pingack;
+
+	BP_Init(0, 0, alive_time, timeout, BP_CLIENT_ID_APPLY);
 
 	memset(buf, 0, sizeof(buf));
 
@@ -83,7 +90,27 @@ TEST(CONNECT_OK, USR_NAME_PWD_OK)
 
 	BP_ParseConnack(&str_connack, buf, len);
 
-	EXPECT_EQ(RET_CODE_CONNACK_OK, str_connack.RetCode);
+	ASSERT_EQ(RET_CODE_CONNACK_OK, str_connack.RetCode);
+
+	for(int i = 0; i < test_times; i++) {
+		sleep(alive_time-timeout);
+		p_pack_buf = BP_PackPing();
+		n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+		ASSERT_EQ(n, p_pack_buf->MsgSize);
+
+		n=recv(conndfd,buf,MAX_FIX_HEAD_SIZE, MSG_WAITALL);
+		BP_ParseFixHead(buf, &type_and_flags, &left_len);
+		len = left_len;
+		n += recv(conndfd,buf+MAX_FIX_HEAD_SIZE,len, MSG_WAITALL);
+		len += MAX_FIX_HEAD_SIZE;
+
+		ASSERT_EQ(n, len);
+		ASSERT_EQ(0, BP_CheckCRC(type_and_flags, buf, len));
+
+		BP_ParsePingack(&str_pingack, buf, len);
+
+		EXPECT_EQ(RET_CODE_PINGACK_OK, str_pingack.RetCode);
+	}
 
 	close(conndfd);
 }
