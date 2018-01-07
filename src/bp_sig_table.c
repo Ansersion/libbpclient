@@ -1,4 +1,5 @@
 #include <bp_sig_table.h>
+#include <stdio.h>
 
 const BP_UINT16 SIG_SYS_COMM_STATE_MIN = 0, SIG_SYS_COMM_STATE_MAX = 2, SIG_SYS_COMM_STATE_DEF = 2;
 const BP_UINT16 SIG_SYS_POWER_MIN = 0, SIG_SYS_POWER_MAX = 1, SIG_SYS_POWER_DEF = 0;

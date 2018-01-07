@@ -51,14 +51,22 @@ typedef struct BP_PostStr {
 	BP_SigId2Val * SigArray;
 } BP_PostStr;
 
+typedef struct BP_RprtackStr {
+	// BP_UINT8 Flags;
+	// BP_UINT16 ClientID;
+	BP_UINT16 SeqId;
+	BP_UINT8 RetCode;
+} BP_RprtackStr;
+
 typedef struct BP_PingackStr {
 	BP_UINT8 Flags;
-	BP_UINT16 ClientID;
+	// BP_UINT16 ClientID;
 	BP_UINT16 SeqId;
 	BP_UINT8 RetCode;
 } BP_PingackStr;
 
 BP_INT8 BP_ParsePingack(BP_PingackStr * str_pingack, BP_UINT8 * msg, BP_UINT16 len);
+BP_INT8 BP_ParseRprtack(BP_RprtackStr * str_rprtack, BP_UINT8 * msg, BP_UINT16 len);
 BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len);
 BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len);
 BP_INT8 BP_ParseConnack(BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 len);

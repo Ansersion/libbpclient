@@ -109,7 +109,7 @@ int main()
 					printf("cmd: o\n");
 				} else if(strncmp(input, "r", 1) == 0){
 					// p_pack_buf = BP_PackReport(BP_NULL, g_SysSigMap);
-					p_pack_buf = BP_PackReport(DEV_NAME, g_SysSigMap);
+					p_pack_buf = BP_PackReport(DEV_NAME, g_SysSigMap, BP_NULL, g_SysSigMapSize);
 					n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
 					if(n != p_pack_buf->MsgSize) {
 						close(conndfd);
@@ -205,7 +205,7 @@ int main()
 						printf("\n");
 						BP_ParsePingack(&str_pingack, buf, len);
 						printf("flags = %d\n", str_pingack.Flags);
-						printf("client id = %d\n", str_pingack.ClientID);
+						// printf("client id = %d\n", str_pingack.ClientID);
 						printf("seq id = %d\n", str_pingack.SeqId);
 						printf("ret code = %d\n", str_pingack.RetCode);
 						break;

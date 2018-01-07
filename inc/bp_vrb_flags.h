@@ -53,6 +53,7 @@
 #define BP_VRB_FLAG_DEV_NAME_MSK 	(1 << 7)
 #define BP_VRB_FLAG_SYS_SIG_SET_MSK 	(1 << 6)
 #define BP_VRB_FLAG_CUS_SIG_SET_MSK 	(1 << 5)
+#define BP_VRB_FLAG_SIG_VAL_SET_MSK 	(1 << 4)
 
 #endif
 

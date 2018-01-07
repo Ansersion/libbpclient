@@ -13,8 +13,8 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-/// @file 	bp_make_payload.h
-/// @brief 	functions to make payload for BP packet header file
+/// @file 	bp_rprtack.h
+/// @brief 	for BP RPRTACK header file
 /// 
 /// @version 	0.1
 /// @author 	Ansersion
@@ -22,17 +22,11 @@
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BP_MAKE_PAYLOAD_HEAD_H
-#define __BP_MAKE_PAYLOAD_HEAD_H
+#ifndef __BP_RPRTACK_H
+#define __BP_RPRTACK_H
 
-#include <bpclient_config.h>
-#include <bp_public.h>
-
-extern BP_SigType g_SigTypeArray[];
-extern BP_SigId2Val g_SigArray[];
-
-BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp_type, BPPackVrbHead * vrb_head);
-
+#define RET_CODE_RPRTACK_OK 				0x00
+#define RET_CODE_RPRTACK_CLNT_ID_INVALID 	0x02
 
 #endif
 

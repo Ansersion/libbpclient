@@ -164,7 +164,9 @@ typedef struct Payload_PING {
 typedef struct Payload_REPORT {
 	BP_UINT8 * DevName;
 	BP_UINT8 DevNameLen;
-	BP_UINT16 SysSigMapSize;
+	BP_UINT16 EleNum;
+	BP_SigType 	* SigTypeArray;
+	const BP_SigId2Val * SigArray;
 	const BP_SysSigMap * SysSigMap;
 } Payload_REPORT;
 

@@ -27,6 +27,14 @@
 
 #include <bp_public.h>
 
-PackBuf * BP_PackReport(BP_UINT8 * dev_name, const BP_SysSigMap * sys_sig_map);
+// PackBuf * BP_PackReport(BP_UINT8 * dev_name, const BP_SysSigMap * sys_sig_map);
+// PackBuf * BP_PackReport(BP_UINT8 * dev_name, const BP_SysSigMap * sys_sig_map, const BP_UINT16 sys_sig_map_size);
+/**************
+ * Parse the REPORT packet.
+ * 	@Note:
+ * 		if(null == sig_array) dev_name/sys_sig_map must not be null
+ * 		else dev_name & sys_sig_map must be null
+***************/
+PackBuf * BP_PackReport(BP_UINT8 * dev_name, const BP_SysSigMap * sys_sig_map, const BP_SigId2Val * sig_array, const BP_UINT16 num);
 #endif
 
