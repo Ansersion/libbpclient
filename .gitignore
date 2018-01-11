@@ -56,3 +56,5 @@ cscope*
 .*swp
 bpclient_dev
 myTest
+gtest/backup
+gtest/backup/*

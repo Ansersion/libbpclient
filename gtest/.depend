@@ -1,10 +1,3 @@
-test_ping_ok.o: test_ping_ok.cpp util.h ../inc/bpclient_config.h \
- ../inc/bp_public.h ../inc/bp_sig_str.h ../inc/bp_make_pack.h \
- ../inc/bp_pack_type.h ../inc/bp_vrb_flags.h ../inc/bp_crc32.h \
- ../inc/bp_init.h ../inc/bp_connect.h ../inc/bp_disconn.h \
- ../inc/bp_parse.h ../inc/bp_connack.h ../inc/bp_sys_sig.h \
- ../inc/bp_report.h ../inc/bp_getack.h ../inc/bp_postack.h \
- ../inc/bp_ping.h ../inc/bp_pingack.h ../inc/bp_sig_table.h
 test_connect_err.o: test_connect_err.cpp util.h ../inc/bpclient_config.h \
  ../inc/bp_public.h ../inc/bp_sig_str.h ../inc/bp_make_pack.h \
  ../inc/bp_pack_type.h ../inc/bp_vrb_flags.h ../inc/bp_crc32.h \
@@ -12,6 +5,27 @@ test_connect_err.o: test_connect_err.cpp util.h ../inc/bpclient_config.h \
  ../inc/bp_parse.h ../inc/bp_connack.h ../inc/bp_sys_sig.h \
  ../inc/bp_report.h ../inc/bp_getack.h ../inc/bp_postack.h \
  ../inc/bp_ping.h ../inc/bp_sig_table.h
+test_ping_ok.o: test_ping_ok.cpp util.h ../inc/bpclient_config.h \
+ ../inc/bp_public.h ../inc/bp_sig_str.h ../inc/bp_make_pack.h \
+ ../inc/bp_pack_type.h ../inc/bp_vrb_flags.h ../inc/bp_crc32.h \
+ ../inc/bp_init.h ../inc/bp_connect.h ../inc/bp_disconn.h \
+ ../inc/bp_parse.h ../inc/bp_connack.h ../inc/bp_sys_sig.h \
+ ../inc/bp_report.h ../inc/bp_getack.h ../inc/bp_postack.h \
+ ../inc/bp_ping.h ../inc/bp_pingack.h ../inc/bp_sig_table.h
+test_disconn_ok.o: test_disconn_ok.cpp util.h ../inc/bpclient_config.h \
+ ../inc/bp_public.h ../inc/bp_sig_str.h ../inc/bp_make_pack.h \
+ ../inc/bp_pack_type.h ../inc/bp_vrb_flags.h ../inc/bp_crc32.h \
+ ../inc/bp_init.h ../inc/bp_connect.h ../inc/bp_disconn.h \
+ ../inc/bp_parse.h ../inc/bp_connack.h ../inc/bp_sys_sig.h \
+ ../inc/bp_report.h ../inc/bp_getack.h ../inc/bp_postack.h \
+ ../inc/bp_ping.h ../inc/bp_pingack.h ../inc/bp_sig_table.h
+test_report_err.o: test_report_err.cpp util.h ../inc/bpclient_config.h \
+ ../inc/bp_public.h ../inc/bp_sig_str.h ../inc/bp_make_pack.h \
+ ../inc/bp_pack_type.h ../inc/bp_vrb_flags.h ../inc/bp_crc32.h \
+ ../inc/bp_init.h ../inc/bp_connect.h ../inc/bp_disconn.h \
+ ../inc/bp_parse.h ../inc/bp_connack.h ../inc/bp_sys_sig.h \
+ ../inc/bp_report.h ../inc/bp_getack.h ../inc/bp_postack.h \
+ ../inc/bp_rprtack.h ../inc/bp_ping.h ../inc/bp_sig_table.h
 test_ping_err.o: test_ping_err.cpp util.h ../inc/bpclient_config.h \
  ../inc/bp_public.h ../inc/bp_sig_str.h ../inc/bp_make_pack.h \
  ../inc/bp_pack_type.h ../inc/bp_vrb_flags.h ../inc/bp_crc32.h \

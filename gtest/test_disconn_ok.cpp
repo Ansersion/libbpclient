@@ -35,24 +35,28 @@ extern "C"
 #include <bp_getack.h>
 #include <bp_postack.h>
 #include <bp_ping.h>
+#include <bp_pingack.h>
 #include <bp_sig_table.h>
 }
 
 
 /*****************************
  * Test Case ID: 0001
- * Test Case Number: 1.1.1
+ * Test Case Number: 1.4.1
  * Author: 	Ansersion
- * Date: 	2018-01-01
+ * Date: 	2018-01-12
  * Description:
- * 	Test the CONNECT packet if all inputs are OK
+ * 	Test the DISCONN packet if all inputs are OK
 */
 
-TEST(CONNECT_OK, USR_NAME_PWD_OK)
+TEST(DISCONN_OK, DISCONN_OK)
 {
 	int n = 0;
 	int len = 0;
 	int conndfd;
+	int test_times = 2;
+	BP_UINT16 alive_time = 10;
+	BP_UINT16 timeout = 5;
 	BP_UINT8 buf[2048+1];
 	BP_UINT16 left_len;
 	BP_UINT8 type_and_flags;
@@ -61,6 +65,9 @@ TEST(CONNECT_OK, USR_NAME_PWD_OK)
 
 	PackBuf * p_pack_buf;
 	BP_ConnackStr str_connack;
+	BP_PingackStr str_pingack;
+
+	BP_Init(0, 0, alive_time, timeout, BP_CLIENT_ID_APPLY);
 
 	memset(buf, 0, sizeof(buf));
 
@@ -83,7 +90,11 @@ TEST(CONNECT_OK, USR_NAME_PWD_OK)
 
 	BP_ParseConnack(&str_connack, buf, len);
 
-	EXPECT_EQ(RET_CODE_CONNACK_OK, str_connack.RetCode);
+	ASSERT_EQ(RET_CODE_CONNACK_OK, str_connack.RetCode);
+
+	p_pack_buf = BP_PackDisconn();
+	n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+	EXPECT_EQ(n, p_pack_buf->MsgSize);
 
 	close(conndfd);
 }
