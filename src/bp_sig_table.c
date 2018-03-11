@@ -52,25 +52,25 @@ void BP_SigDump(void)
 	for(i = 0; i < g_SysSigNum; i++) {
 		switch(g_SysSigTable[i].SigType) {
 			case SIG_TYPE_U32:
-				printf("U32: %04x=>%d\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_u32);
+				// printf("U32: %04x=>%d\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_u32);
 				break;
 			case SIG_TYPE_I32:
-				printf("I32: %04x=>%d\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_i32);
+				// printf("I32: %04x=>%d\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_i32);
 				break;
 			case SIG_TYPE_U16:
-				printf("U16: %04x=>%d\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_u16);
+				// printf("U16: %04x=>%d\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_u16);
 				break;
 			case SIG_TYPE_I16:
-				printf("I16: %04x=>%d\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_i16);
+				// printf("I16: %04x=>%d\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_i16);
 				break;
 			case SIG_TYPE_ENM:
-				printf("ENM: %04x=>%d\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_enm);
+				// printf("ENM: %04x=>%d\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_enm);
 				break;
 			case SIG_TYPE_FLT:
-				printf("FLT: %04x=>%f\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_flt);
+				// printf("FLT: %04x=>%f\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_flt);
 				break;
 			case SIG_TYPE_STR:
-				printf("str: %04x=>%s\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_str);
+				// printf("str: %04x=>%s\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_str);
 				break;
 		}
 	}

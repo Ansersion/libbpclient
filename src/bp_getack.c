@@ -91,22 +91,22 @@ PackBuf * BP_PackGetack(BP_GetStr * get_str)
 
 	vrb_head.u.GETACK.RetCode = ret_code;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_GETACK);
-	printf("debug:\n");
-	for(i = 0; i < (BP_WORD)(pbuf-pbuf_old); i++) {
-		printf("%02x ", pbuf_old[i]);
-	}
-	printf("\n");
+	// printf("debug:\n");
+	// for(i = 0; i < (BP_WORD)(pbuf-pbuf_old); i++) {
+	// 	printf("%02x ", pbuf_old[i]);
+	// }
+	// printf("\n");
 
 	if(0 == ret_code) {
 		payload.u.GETACK.SigTypeArray = g_SigTypeArray;
 		payload.u.GETACK.SigArray = g_SigArray;
 
 		pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_GETACK, &vrb_head);
-		printf("debug2:\n");
-		for(i = 0; i < (BP_WORD)(pbuf-pbuf_old); i++) {
-			printf("%02x ", pbuf_old[i]);
-		}
-		printf("\n");
+		// printf("debug2:\n");
+		// for(i = 0; i < (BP_WORD)(pbuf-pbuf_old); i++) {
+		// 	printf("%02x ", pbuf_old[i]);
+		// }
+		// printf("\n");
 	}
 
 	// set remaining length and pack the packet
@@ -114,10 +114,10 @@ PackBuf * BP_PackGetack(BP_GetStr * get_str)
 	BP_Pack_Buf.RmnLen = rmn_len;
 	pbuf = BP_ToPack(&BP_Pack_Buf);
 
-	for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
-		printf("%02x ", pbuf[i]);
-	}
-	printf("\n");
+	// for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
+	// 	printf("%02x ", pbuf[i]);
+	// }
+	// printf("\n");
 
 	return &BP_Pack_Buf;
 }

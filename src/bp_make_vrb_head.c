@@ -53,16 +53,16 @@ BP_UINT8 * BP_make_vrb_head(BP_UINT8 * pack, BPPackVrbHead * vrb_head, BP_UINT8 
 			pack = make_vrb_cnct(pack, vrb_head);
 			break;
 		case BP_PACK_TYPE_CONNACK: 	
-			printf("Err: unsupported BP type\n");
+			// printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_GET: 		
-			printf("Err: unsupported BP type\n");
+			// printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_GETACK: 	
 			pack = make_vrb_getack(pack, vrb_head);
 			break;
 		case BP_PACK_TYPE_POST: 		
-			printf("Err: unsupported BP type\n");
+			// printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_POSTACK: 	
 			pack = make_vrb_postack(pack, vrb_head);
@@ -71,7 +71,7 @@ BP_UINT8 * BP_make_vrb_head(BP_UINT8 * pack, BPPackVrbHead * vrb_head, BP_UINT8 
 			pack = make_vrb_rprt(pack, vrb_head);
 			break;
 		case BP_PACK_TYPE_RPRTACK: 	
-			printf("Err: unsupported BP type\n");
+			// printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_PING: 		
 			pack = make_vrb_ping(pack, vrb_head);
@@ -80,16 +80,16 @@ BP_UINT8 * BP_make_vrb_head(BP_UINT8 * pack, BPPackVrbHead * vrb_head, BP_UINT8 
 			pack = make_vrb_pingack(pack, vrb_head);
 			break;
 		case BP_PACK_TYPE_PUSH:
-			printf("Err: unsupported BP type\n");
+			// printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_PUSHACK:
-			printf("Err: unsupported BP type\n");
+			// printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_DISCONN:
 			pack = make_vrb_discnct(pack, vrb_head);
 			break;
 		default:
-			printf("Err: unsupported BP type: %d\n", bp_type);
+			// printf("Err: unsupported BP type: %d\n", bp_type);
 			break;
 	}
 
