@@ -48,6 +48,7 @@
 	#define BP_INT16 	short
 	#define BP_UINT32 	unsigned int
 	#define BP_INT32 	int
+	#define BP_FLOAT 	float
 	#define BP_WORD 	BP_UINT32
 
 #elif defined BP_CPU16
