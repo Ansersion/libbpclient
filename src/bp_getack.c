@@ -33,8 +33,8 @@
 #include <bp_getack.h>
 #include <bp_sig_table.h>
 
-#include <stdio.h>
-#include <string.h>
+// #include <stdio.h>
+// #include <string.h>
 
 BP_SigType g_SigTypeArray[MAX_GET_ACK_SIG_NUM];
 BP_SigId2Val g_SigArray[MAX_GET_ACK_SIG_NUM];

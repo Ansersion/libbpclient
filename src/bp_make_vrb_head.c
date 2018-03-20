@@ -27,7 +27,7 @@
 #include <bp_pack_type.h>
 
 // std 
-#include <stdio.h>
+// #include <stdio.h>
 
 BP_UINT8 * make_vrb_cnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_postack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);

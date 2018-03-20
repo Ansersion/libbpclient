@@ -28,8 +28,9 @@
 #include <bp_vrb_flags.h>
 
 // std
-#include <stdio.h>
-#include <string.h>
+// #include <stdio.h>
+// #include <string.h>
+#include <bp_strlen.h>
 
 BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_pld_postack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
@@ -184,7 +185,7 @@ BP_UINT8 * make_pld_getack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHe
 				break;
 			case SIG_TYPE_STR:
 				{
-					BP_UINT8 n = strlen(payload->u.GETACK.SigArray[i].SigVal.t_str);
+					BP_UINT8 n = strlen_bp(payload->u.GETACK.SigArray[i].SigVal.t_str);
 					BP_UINT8 j;
 					pack_x = BP_SetBig16(pack_x, payload->u.GETACK.SigArray[i].SigId);
 					for(j = 0; j < n; j++) {
@@ -278,7 +279,7 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 					break;
 				case SIG_TYPE_STR:
 					{
-						BP_UINT8 n = strlen(payload->u.REPORT.SigArray[i].SigVal.t_str);
+						BP_UINT8 n = strlen_bp(payload->u.REPORT.SigArray[i].SigVal.t_str);
 						BP_UINT8 j;
 						pack_x = BP_SetBig16(pack_x, payload->u.REPORT.SigArray[i].SigId);
 						for(j = 0; j < n; j++) {

@@ -33,8 +33,10 @@
 #include <bp_report.h>
 #include <bp_sig_table.h>
 
-#include <stdio.h>
-#include <string.h>
+// #include <stdio.h>
+// #include <string.h>
+#include <bp_strlen.h>
+#include <bp_memcpy.h>
 
 // PackBuf * BP_PackReport(BP_UINT8 * dev_name, const BP_SysSigMap * sys_sig_map, const BP_UINT16 sys_sig_map_size)
 PackBuf * BP_PackReport(BP_UINT8 * dev_name, const BP_SysSigMap * sys_sig_map, const BP_SigId2Val * sig_array, const BP_UINT16 num)
@@ -63,9 +65,10 @@ PackBuf * BP_PackReport(BP_UINT8 * dev_name, const BP_SysSigMap * sys_sig_map, c
 	payload.u.REPORT.EleNum = 0;
 	if(BP_NULL != dev_name) {
 		vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_DEV_NAME_MSK;
-		strcpy(BP_DEV_NAME, dev_name);
+		// strcpy(BP_DEV_NAME, dev_name);
+		memcpy_bp(BP_DEV_NAME, dev_name, strlen_bp(dev_name) + 1);
 		payload.u.REPORT.DevName = BP_DEV_NAME;
-		payload.u.REPORT.DevNameLen = strlen(dev_name);
+		payload.u.REPORT.DevNameLen = strlen_bp(dev_name);
 	}
 	if(BP_NULL != sys_sig_map && 0 != num) {
 		vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SYS_SIG_SET_MSK;

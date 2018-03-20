@@ -31,8 +31,8 @@
 #include <bp_vrb_flags.h>
 #include <bp_crc32.h>
 
-#include <stdio.h>
-#include <string.h>
+// #include <stdio.h>
+// #include <string.h>
 
 PackBuf * BP_PackDisconn()
 {

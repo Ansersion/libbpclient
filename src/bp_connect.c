@@ -31,8 +31,10 @@
 #include <bp_vrb_flags.h>
 #include <bp_crc32.h>
 
-#include <stdio.h>
-#include <string.h>
+// #include <stdio.h>
+// #include <string.h>
+#include <bp_strlen.h>
+#include <bp_memcpy.h>
 
 PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 {
@@ -68,11 +70,13 @@ PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 	vrb_head.u.CONNECT.Timeout = BP_Timeout;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_CONNECT);
 
-	strcpy(BP_Name, name);
-	payload.u.CONNECT.NameLen = strlen(BP_Name);
+	// strcpy(BP_Name, name);
+	memcpy_bp(BP_Name, name, strlen_bp(name) + 1);
+	payload.u.CONNECT.NameLen = strlen_bp(BP_Name);
 	payload.u.CONNECT.Name = BP_Name;
-	strcpy(BP_Password, password);
-	payload.u.CONNECT.PwdLen = strlen(BP_Password);
+	// strcpy(BP_Password, password);
+	memcpy_bp(BP_Password, password, strlen_bp(password) + 1);
+	payload.u.CONNECT.PwdLen = strlen_bp(BP_Password);
 	payload.u.CONNECT.Pwd = BP_Password;
 	payload.u.CONNECT.ClntIdLen = BP_CLIENT_ID_LEN;
 	payload.u.CONNECT.ClntId = BP_ClientId;

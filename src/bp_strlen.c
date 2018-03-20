@@ -13,8 +13,8 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-/// @file 	bp_memcpy.c
-/// @brief 	function "bp_memcpy" source file
+/// @file 	bp_strlen.c
+/// @brief 	function "bp_strlen" source file
 /// 
 /// @version 	0.1
 /// @author 	Ansersion
@@ -22,44 +22,16 @@
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <bp_memcpy.h>
+#include <bp_strlen.h>
 // #include <stdio.h>
 
-void * memcpy_bp(void * dst, const void * src, BP_WORD count)
+BP_WORD strlen_bp(const char * str)
 {
-	BP_WORD nword, npad;
-	BP_WORD *s, *d;
-	BP_UINT8 *s8, *d8;
+    BP_WORD i = 0;
+    while((*str++) != '\0')
+    {
+        i++;
+    }
 
-	if (dst == BP_NULL || src == BP_NULL)  {
-		return BP_NULL;  
-	}
-
-	if(dst == src) {
-		return dst;
-	}
-
-	nword = count/sizeof(dst);
-	npad = count%sizeof(dst);
-
-	s = (BP_WORD *)src;  
-	d = (BP_WORD *)dst;  
-
-	while(nword--)  
-	{
-		*d++ = *s++;  
-		// printf("%x ", *(d-1));
-	}
-	// printf("\n");
-
-	s8 = (BP_UINT8 *)s;
-	d8 = (BP_UINT8 *)d;
-	while(npad--)  
-	{
-		*d8++ = *s8++;  
-		// printf("%x ", *(d8-1));
-	}
-	// printf("\n");
-
-	return dst;  
+	return i;  
 }
