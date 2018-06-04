@@ -29,6 +29,11 @@
 #define BP_NULL 	0
 
 
+/** 
+  * @Brief: BPCPUXX define determine the cpu type
+  * @Note: Must define one of "BP_CPU64/BP_CPU32/BP_CPU16/BP_CPU8" to match your cpu, NO DEFAULT VALUE
+ */
+
 #ifdef BP_CPU64
 	#define BP_UINT8 	unsigned char
 	#define BP_INT8 	char
@@ -74,6 +79,19 @@
 #else
 #error Please define your cpu macro first: BP_CPU64/BP_CPU32/BP_CPU16/BP_CPU8
 
+#endif
+
+/** 
+  * @Brief: ENCRYPTION_TYPE define determine the cpu type
+  * @Note: May define one one "ENCRYPTION_NONE/ENCRYPTION_BASE64" to encrypt your message when communicating with Beecom-Server, DEFAULT ENCRYPTION_NONE
+  * 		The higher the encryption strength is, the more resources("bandwidth/CPU") consume.
+ */
+#ifdef ENCRYPTION_NONE
+	#define ENCRYPTION_TYPE 0
+#elif defined ENCRYPTION_BASE64 
+	#define ENCRYPTION_TYPE 1
+#else 
+	#define ENCRYPTION_TYPE 0
 #endif
 
 #endif
