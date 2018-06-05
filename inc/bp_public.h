@@ -45,9 +45,17 @@
 #define MAX_FIX_HEAD_SIZE 	3
 #define MIN_FIX_HEAD_SIZE 	2
 
+#define FIX_HEAD_SIZE 	3
+
+#if CHECKSUM_TYPE == 0
+	#define CHECKSUM_SIZE 4
+#elif defined CHECKSUM_TYPE == 1
+	#define CHECKSUM_SIZE 2
+#else
+	#error CHECKSUM_TYPE unconfigured(refer to bpclient_config.h)
+#endif
+
 typedef struct PackBuf {
-	// BP_UINT8 FxHdType;
-	// BP_UINT8 FxHdRmnLen[2];
 	BP_UINT8 * Buf;
 	BP_WORD RmnLen;
 	BP_UINT8 * PackStart;

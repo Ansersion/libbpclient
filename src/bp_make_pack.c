@@ -34,21 +34,17 @@ PackBuf * BP_InitPack(PackBuf * pack_buf, BP_UINT8 type_msk, BP_UINT8 * buf, BP_
 	if(BP_NULL == buf) {
 		return BP_NULL;
 	}
-	if(size < 4) {
+	if(size < FIX_HEAD_SIZE + CHECKSUM_SIZE) {
 		return BP_NULL;
 	}
-	// pack_buf->FxHdType = type_msk;
-	// pack_buf->FxHdType = type_msk;
-	// pack_buf->FxHdType = type_msk;
-	// pack_buf->FxHdRmnLen[0] = 0;
-	// pack_buf->FxHdRmnLen[1] = 0;
 	pack_buf->RmnLen = 0;
 	pack_buf->MsgSize = 0;
 	pack_buf->BufSize = size;
-	memset_bp(buf, 0, size);
+	/* Note: not initialize buffer to accelerate processing */
+	/* memset_bp(buf, 0, size); */
 	pack_buf->Buf = buf;
 	pack_buf->Buf[0] = type_msk;
-	pack_buf->PackStart = &(pack_buf->Buf[3]); // "3" is the max size of fixed header
+	pack_buf->PackStart = &(pack_buf->Buf[FIX_HEAD_SIZE]); // "3" is the max size of fixed header
 	return pack_buf;
 }
 
@@ -61,43 +57,19 @@ PackBuf * BP_InitPack2(PackBuf * pack_buf, BP_WORD size)
 
 BP_UINT8 * BP_ToPack(PackBuf * pack_buf)
 {
-#define SIZE_OF_CRC32 4
-	BP_WORD rmn_len = 0;
 	BP_WORD i = 0;
 	BP_UINT8 * pack_start = BP_NULL;
 	BP_UINT32 crc = 0;
 	if(BP_NULL == pack_buf) {
 		return BP_NULL;
 	}
-	pack_buf->RmnLen += SIZE_OF_CRC32; // "4" is the size of CRC32
-	pack_buf->MsgSize = 0;
-	rmn_len = pack_buf->RmnLen;
+	pack_buf->RmnLen += CHECKSUM_SIZE;
 
-	if(rmn_len < 128) {
-		pack_buf->Buf[1] = pack_buf->Buf[0];
-		pack_buf->Buf[2] = (BP_UINT8)(rmn_len);
-		pack_start = &(pack_buf->Buf[1]);
-		pack_buf->MsgSize = 2 + pack_buf->RmnLen;
-	} else {
-		i = 1;
-		do {
-			if(3 == i) {
-				// too big remaining length
-				return BP_NULL;
-			}
-			pack_buf->Buf[i] = rmn_len % 128;
-			rmn_len = rmn_len / 128;
-			if(rmn_len > 0) {
-				pack_buf->Buf[i] |= 128;
-			}
-			i++;
-		} while(rmn_len > 0);
-		pack_start = pack_buf->Buf;
-		pack_buf->MsgSize = 3 + pack_buf->RmnLen;
-	}
-	pack_buf->PackStart = pack_start;
-	crc = BP_calc_crc32(pack_start, pack_buf->MsgSize - SIZE_OF_CRC32);
-	BP_SetBig32(pack_start + pack_buf->MsgSize - SIZE_OF_CRC32, crc);
+	pack_buf->MsgSize = FIX_HEAD_SIZE + pack_buf->RmnLen;
+
+	pack_buf->PackStart = pack_buf->Buf;
+	crc = BP_calc_crc32(pack_start, pack_buf->MsgSize - CHECKSUM_SIZE);
+	BP_SetBig32(pack_buf->PackStart + pack_buf->MsgSize - CHECKSUM_SIZE, crc);
 
 	return pack_buf->PackStart;
 }

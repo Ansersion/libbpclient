@@ -25,11 +25,14 @@
 #ifndef __BP_VRB_FLAGS_H
 #define __BP_VRB_FLAGS_H
 
+#include <bpclient_config.h>
+
 // for CONNECT
 #define BP_VRB_FLAG_USER_NAME_MSK 	(1 << 7)
 #define BP_VRB_FLAG_PASSWORD_MSK 	(1 << 6)
 #define BP_VRB_FLAG_USER_CLNT_MSK 	(1 << 2)
 #define BP_VRB_FLAG_DEV_CLNT_MSK 	(1 << 1)
+#define BP_VRB_FLAG_CLNT_TYPE_MSK 	(1 << CLIENT_TYPE)
 
 // for CONNACK 
 #define BP_VRB_FLAG_NEW_CLNT_ID_MSK 	(1 << 7)

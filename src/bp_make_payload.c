@@ -101,8 +101,8 @@ BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 {
 	pack = BP_Set2ByteField(pack, payload->u.CONNECT.Name, payload->u.CONNECT.NameLen);
 	pack = BP_Set2ByteField(pack, payload->u.CONNECT.Pwd, payload->u.CONNECT.PwdLen);
-	*pack++ = payload->u.CONNECT.ClntIdLen;
-	pack = BP_SetNet16(pack, payload->u.CONNECT.ClntId);
+	//*pack++ = payload->u.CONNECT.ClntIdLen;
+	//pack = BP_SetNet16(pack, payload->u.CONNECT.ClntId);
 	return pack;
 }
 

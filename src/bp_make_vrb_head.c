@@ -100,7 +100,7 @@ BP_UINT8 * make_vrb_cnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 {
 	*pack++ = vrb_head->u.CONNECT.Level;
 	*pack++ = vrb_head->u.CONNECT.Flags;
-	pack = BP_SetBig16(pack, vrb_head->u.CONNECT.ClntId);
+	// pack = BP_SetBig16(pack, vrb_head->u.CONNECT.ClntId);
 	pack = BP_SetBig16(pack, vrb_head->u.CONNECT.AlvTime);
 	*pack++ = vrb_head->u.CONNECT.Timeout;
 	return pack;

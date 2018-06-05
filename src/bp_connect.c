@@ -31,8 +31,6 @@
 #include <bp_vrb_flags.h>
 #include <bp_crc32.h>
 
-// #include <stdio.h>
-// #include <string.h>
 #include <bp_strlen.h>
 #include <bp_memcpy.h>
 
@@ -59,13 +57,9 @@ PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 
 	vrb_head.u.CONNECT.Level = BP_LEVEL;
 	vrb_head.u.CONNECT.Flags = BP_VRB_FLAG_USER_NAME_MSK | BP_VRB_FLAG_PASSWORD_MSK;
-	if(0 == BP_ClientType) {
-		vrb_head.u.CONNECT.Flags |= BP_VRB_FLAG_DEV_CLNT_MSK;
-	} else if(1 == BP_ClientType) {
-		vrb_head.u.CONNECT.Flags |= BP_VRB_FLAG_USER_CLNT_MSK;
-	}
+	vrb_head.u.CONNECT.Flags |= BP_VRB_FLAG_CLNT_TYPE_MSK;
 
-	vrb_head.u.CONNECT.ClntId = BP_ClientId;
+	// vrb_head.u.CONNECT.ClntId = BP_ClientId;
 	vrb_head.u.CONNECT.AlvTime = BP_AliveTime;
 	vrb_head.u.CONNECT.Timeout = BP_Timeout;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_CONNECT);
@@ -78,8 +72,8 @@ PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 	memcpy_bp(BP_Password, password, strlen_bp(password) + 1);
 	payload.u.CONNECT.PwdLen = strlen_bp(BP_Password);
 	payload.u.CONNECT.Pwd = BP_Password;
-	payload.u.CONNECT.ClntIdLen = BP_CLIENT_ID_LEN;
-	payload.u.CONNECT.ClntId = BP_ClientId;
+	// payload.u.CONNECT.ClntIdLen = BP_CLIENT_ID_LEN;
+	// payload.u.CONNECT.ClntId = BP_ClientId;
 	pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_CONNECT, &vrb_head);
 
 	// set remaining length and pack the packet
@@ -95,19 +89,3 @@ PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 	return &BP_Pack_Buf;
 }
 
-// BP_INT8 BP_ParseConnack(BP_UINT8 * msg, BP_UINT16 len)
-// {
-// 	return 0;
-// }
-
-// BP_INT8 BP_Connect_s(BP_UINT8 * name, BP_UINT8 * password)
-// {
-// 	if(BP_NULL == name) {
-// 		return -1;
-// 	}
-// 	if(BP_NULL == password) {
-// 		return -2;
-// 	}
-// 
-// 	return 0;
-// }
