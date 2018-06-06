@@ -81,11 +81,11 @@ PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 	BP_Pack_Buf.RmnLen = rmn_len;
 	pbuf = BP_ToPack(&BP_Pack_Buf);
 
-// 	for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
-// 		printf("%02x ", pbuf[i]);
-// 	}
-// 	printf("\n");
-// 
+	for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
+		printf("%02x ", pbuf[i]);
+	}
+	printf("\n%d\n", i);
+
 	return &BP_Pack_Buf;
 }
 

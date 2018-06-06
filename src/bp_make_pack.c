@@ -44,7 +44,7 @@ PackBuf * BP_InitPack(PackBuf * pack_buf, BP_UINT8 type_msk, BP_UINT8 * buf, BP_
 	/* memset_bp(buf, 0, size); */
 	pack_buf->Buf = buf;
 	pack_buf->Buf[0] = type_msk;
-	pack_buf->PackStart = &(pack_buf->Buf[FIX_HEAD_SIZE]); // "3" is the max size of fixed header
+	pack_buf->PackStart = &(pack_buf->Buf[FIX_HEAD_SIZE]);
 	return pack_buf;
 }
 
@@ -64,11 +64,13 @@ BP_UINT8 * BP_ToPack(PackBuf * pack_buf)
 		return BP_NULL;
 	}
 	pack_buf->RmnLen += CHECKSUM_SIZE;
+	pack_buf->Buf[1] = (pack_buf->RmnLen >> 8)& 0xFF;
+	pack_buf->Buf[2] = pack_buf->RmnLen & 0xFF;
 
 	pack_buf->MsgSize = FIX_HEAD_SIZE + pack_buf->RmnLen;
 
 	pack_buf->PackStart = pack_buf->Buf;
-	crc = BP_calc_crc32(pack_start, pack_buf->MsgSize - CHECKSUM_SIZE);
+	crc = BP_calc_crc32(pack_buf->PackStart, pack_buf->MsgSize - CHECKSUM_SIZE);
 	BP_SetBig32(pack_buf->PackStart + pack_buf->MsgSize - CHECKSUM_SIZE, crc);
 
 	return pack_buf->PackStart;
