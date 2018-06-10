@@ -47,6 +47,7 @@ typedef enum BP_SigType {
 	SIG_TYPE_ENM, 
 	SIG_TYPE_FLT, 
 	SIG_TYPE_STR, 
+	SIG_TYPE_UNKNOWN = 16, 
 } BP_SigType;
 
 typedef enum BP_SigPerm {

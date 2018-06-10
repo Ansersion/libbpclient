@@ -31,6 +31,22 @@ BP_UINT16 BP_GetSigIdx(const BP_UINT16 sig_id)
 	return SIG_INDEX_INVALID;
 }
 
+BP_UINT16 BP_GetSigType(const BP_UINT16 sig_id)
+{
+	BP_SigType type = SIG_TYPE_UNKNOWN;
+	BP_WORD idx;
+	if(sig_id < 0xE000) {
+	} else {
+		idx = BP_GetSigIdx(sig_id);
+		if(idx != SIG_INDEX_INVALID) {
+			type = g_SysSigTable[idx].SigType;
+		} else {
+			type = SIG_TYPE_UNKNOWN;
+		}
+	}
+	return type;
+}
+
 BP_INT16 BP_SetSigVal(BP_UINT8 sig_num, BP_SigId2Val * sig_array)
 {
 	BP_UINT16 i, j, idx;
@@ -84,7 +100,7 @@ BP_UINT32 BP_GetSigTabChk()
 	return 0;
 }
 
-BP_UINT8 * BP_SetSysSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val)
+BP_UINT8 * BP_SetSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val)
 {
 	BP_UINT16 idx_tmp;
 	if(BP_NULL == buf) {
@@ -93,12 +109,12 @@ BP_UINT8 * BP_SetSysSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val
 	if(BP_NULL == sig_id_2_val) {
 		return buf;
 	}
-	idx_tmp = BP_GetSigIdx(sig_id_2_val->SigId); 
-	if(SIG_INDEX_INVALID == idx_tmp) {
-		return buf;
-	}
+	// idx_tmp = BP_GetSigIdx(sig_id_2_val->SigId); 
+	// if(SIG_INDEX_INVALID == idx_tmp) {
+	// 	return buf;
+	// }
 
-	switch(g_SysSigTable[idx_tmp].SigType) {
+	switch(BP_GetSigType(sig_id_2_val->SigId)) {
 		case SIG_TYPE_U32:
 			*buf++ = SIG_TYPE_U32;
 			buf = BP_SetBig32(buf, sig_id_2_val->SigVal.t_u32);
@@ -137,7 +153,10 @@ BP_UINT8 * BP_SetSysSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val
 
 			}
 			break;
+		default:
+			break;
 	}
 
 	return buf;
 }
+

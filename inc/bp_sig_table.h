@@ -36,10 +36,11 @@ extern const BP_SigTable g_SysSigTable[];
 extern const BP_UINT16 g_SysSigNum;
 
 BP_UINT16 BP_GetSigIdx(const BP_UINT16 sig_id);
+BP_UINT16 BP_GetSigType(const BP_UINT16 sig_id);
 BP_INT16 BP_SetSigVal(BP_UINT8 sig_num, BP_SigId2Val * sig_array);
 void BP_SigDump(void);
 BP_UINT32 BP_GetSigTabChk();
-BP_UINT8 * BP_SetSysSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val);
+BP_UINT8 * BP_SetSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val);
 
 #endif
 

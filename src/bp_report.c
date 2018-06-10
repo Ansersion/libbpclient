@@ -202,30 +202,19 @@ PackBuf * BP_PackReportSigVal(const BP_SigId2Val * sys_sig_array, const BP_UINT1
 	pbuf_old = pbuf;
 	vrb_head.u.REPORT.Flags = 0;
 
+	payload.u.REPORT.SysSigValEleNum = 0;
+	payload.u.REPORT.SysSigArray = BP_NULL;
 	if(BP_NULL != sys_sig_array) {
-		vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SYS_SIG_VAL_MSK;
+		vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_MSK;
 		payload.u.REPORT.SysSigValEleNum = sys_sig_num;
 		payload.u.REPORT.SysSigArray =sys_sig_array;
-		// payload.u.REPORT.SigTypeArray = g_SigTypeArray;
-
-		// for(i = 0; i < num; i++) {
-		// 	for(j = 0; j < g_SysSigNum; j++) {
-		// 		if(g_SysSigTable[j].SigId == sig_array[i].SigId) {
-		// 			g_SigTypeArray[i] = g_SysSigTable[j].SigType;
-		// 			g_SigArray[i] = g_SysSigId2Val[j];
-		// 			break;
-		// 		}
-		// 	}
-		// 	// TODO: unknown signals: get_str->SigTabArray[i]
-		// 	if(g_SysSigNum == j) {
-		// 		return BP_NULL;
-		// 	}
-		// }
 	} 
 
+	payload.u.REPORT.CusSigValEleNum = 0;
+	payload.u.REPORT.CusSigArray = BP_NULL;
 	if(BP_NULL != cus_sig_array) {
-		vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_CUS_SIG_VAL_MSK;
-		payload.u.REPORT.SysSigValEleNum = cus_sig_num;
+		vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_MSK;
+		payload.u.REPORT.CusSigValEleNum = cus_sig_num;
 		payload.u.REPORT.CusSigArray = cus_sig_array;
 	}
 
@@ -252,10 +241,13 @@ PackBuf * BP_PackReportSigVal(const BP_SigId2Val * sys_sig_array, const BP_UINT1
 	BP_Pack_Buf.RmnLen = rmn_len;
 	pbuf = BP_ToPack(&BP_Pack_Buf);
 
-	// for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
-	// 	printf("%02x ", pbuf[i]);
-	// }
-	// printf("\n");
+#ifdef DEBUG
+	printf("REPORT: ");
+	for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
+		printf("%02x ", pbuf[i]);
+	}
+	printf("\n");
+#endif
 
 	return &BP_Pack_Buf;
 }

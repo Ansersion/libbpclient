@@ -319,16 +319,20 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 		}		
 
 	}
-	if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_CUS_SIG_VAL_MSK) {
+
+	if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SIG_VAL_MSK) {
+		*pack++ = (BP_UINT8)(payload->u.REPORT.SysSigValEleNum + payload->u.REPORT.CusSigValEleNum);
+
+		// BP_SigvalSort(payload->u.REPORT.CusSigArray, payload->u.REPORT.CusSigValEleNum);
+		for(i = 0; i < payload->u.REPORT.CusSigValEleNum; i++) {
+			pack = BP_SetBig16(pack, payload->u.REPORT.CusSigArray[i].SigId);
+			pack = BP_SetSigVal2Buf(pack, &(payload->u.REPORT.CusSigArray[i]));
+		}
+
 		// BP_SigvalSort(payload->u.REPORT.SysSigArray, payload->u.REPORT.SysSigValEleNum);
-		// for(i = 0; i < payload->u.REPORT.SysSigValEleNum; i++) {
-		// 	pack = BP_SetSysSigVal2Buf(&(payload->u.REPORT.SysSigArray[i]));
-		// }
-	}
-	if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SYS_SIG_VAL_MSK) {
-		BP_SigvalSort(payload->u.REPORT.SysSigArray, payload->u.REPORT.SysSigValEleNum);
 		for(i = 0; i < payload->u.REPORT.SysSigValEleNum; i++) {
-			pack = BP_SetSysSigVal2Buf(pack, &(payload->u.REPORT.SysSigArray[i]));
+			pack = BP_SetBig16(pack, payload->u.REPORT.SysSigArray[i].SigId);
+			pack = BP_SetSigVal2Buf(pack, &(payload->u.REPORT.SysSigArray[i]));
 		}
 	}
 	// else {

@@ -157,6 +157,9 @@ BP_WORD sortSig2ValClbk(void * a, void * b)
 
 void BP_SigvalSort(const BP_SigId2Val * sig_array, BP_WORD num)
 {
+	if(BP_NULL == sig_array || 0 == num) {
+		return;
+	}
 	BubbleSortP((void *)sig_array, num, sortSig2ValClbk);
 }
 
