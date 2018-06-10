@@ -128,7 +128,7 @@ BP_UINT8 * make_vrb_getack(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 BP_UINT8 * make_vrb_rprt(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 {
 	*pack++ = vrb_head->u.REPORT.Flags;
-	pack = BP_SetBig16(pack, vrb_head->u.REPORT.ClntId);
+	// pack = BP_SetBig16(pack, vrb_head->u.REPORT.ClntId);
 	pack = BP_SetBig16(pack, vrb_head->u.REPORT.SeqId);
 	return pack;
 }
@@ -136,7 +136,7 @@ BP_UINT8 * make_vrb_rprt(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 BP_UINT8 * make_vrb_ping(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 {
 	*pack++ = vrb_head->u.PING.Flags;
-	pack = BP_SetBig16(pack, vrb_head->u.PING.ClntId);
+	// pack = BP_SetBig16(pack, vrb_head->u.PING.ClntId);
 	pack = BP_SetBig16(pack, vrb_head->u.PING.SeqId);
 	return pack;
 }

@@ -27,14 +27,15 @@
 
 #include <bpclient_config.h>
 #include <bp_sig_str.h>
+#include <bp_utils.h>
 
 #define BP_LEVEL 	0
 #define BP_CLIENT_ID_LEN 	2
 #define BP_CLIENT_ID_APPLY 	0
 
 #define BP_BUF_SIZE 	1024
-#define BP_NAME_SIZE 	64
-#define BP_PASSWORD_SIZE 	64
+#define BP_NAME_SIZE 	65
+#define BP_PASSWORD_SIZE 	65
 
 #define BP_SetBig16 	BP_SetNet16
 #define BP_SetBig32 	BP_SetNet32
@@ -54,6 +55,9 @@
 #else
 	#error CHECKSUM_TYPE unconfigured(refer to bpclient_config.h)
 #endif
+
+typedef void (*SwitchTypeDoClbk)(void * para);
+
 
 typedef struct PackBuf {
 	BP_UINT8 * Buf;
@@ -172,9 +176,11 @@ typedef struct Payload_PING {
 typedef struct Payload_REPORT {
 	BP_UINT8 * DevName;
 	BP_UINT8 DevNameLen;
-	BP_UINT16 EleNum;
-	BP_SigType 	* SigTypeArray;
-	const BP_SigId2Val * SigArray;
+	BP_UINT32 SigTabChkCrc;
+	BP_UINT16 SysSigValEleNum;
+	BP_UINT16 CusSigValEleNum;
+	const BP_SigId2Val * SysSigArray;
+	const BP_SigId2Val * CusSigArray;
 	const BP_SysSigMap * SysSigMap;
 } Payload_REPORT;
 
@@ -222,6 +228,7 @@ extern BP_UINT16 BP_SeqIdPing;
 
 BP_UINT8 * BP_SetNet16(BP_UINT8 * dst, BP_UINT16 val);
 BP_UINT8 * BP_SetNet32(BP_UINT8 * dst, BP_UINT32 val);
+BP_UINT8 * BP_SetNBytes(BP_UINT8 * dst, BP_UINT8 * src, BP_WORD num);
 
 BP_UINT8 * BP_Set2ByteField(BP_UINT8 * pack, BP_UINT8 * field, BP_UINT16 field_len);
 
@@ -229,5 +236,9 @@ BP_UINT8 * BP_GetNet16(BP_UINT8 * src, BP_UINT16 * val);
 BP_UINT8 * BP_GetNet32(BP_UINT8 * src, BP_UINT32 * val);
 
 BP_UINT8 * BP_Get2ByteField(BP_UINT8 * pack, BP_UINT8 * field_buf, BP_UINT16 * field_len);
+
+BP_WORD sortSig2ValClbk(void * a, void * b);
+void BP_SigvalSort(const BP_SigId2Val * sig_array, BP_WORD num);
+
 #endif
 

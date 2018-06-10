@@ -1,7 +1,8 @@
 INCLUDES = -I../inc
 
 CC = cc
-COMPILE_OPTS =		$(INCLUDES) -I. -O2 -c -g
+COMPILE_OPTS =		$(INCLUDES) -I. -c -g
+# COMPILE_OPTS += -O2
 
 MACRO 	=
 MACRO 	= -DBP_CPU64

@@ -24,6 +24,7 @@
 
 #include <bp_public.h>
 #include <bp_memcpy.h>
+#include <bp_utils.h>
 
 BP_UINT8 BP_Buf[BP_BUF_SIZE];
 BP_UINT8 BP_Name[BP_NAME_SIZE];
@@ -75,6 +76,13 @@ BP_UINT8 * BP_SetNet32(BP_UINT8 * dst, BP_UINT32 val)
 	*dst++ = (BP_UINT8)((val >> 8) & (0x000000FF));
 	*dst++ = (BP_UINT8)(val & 0x000000FF);
 
+	return dst;
+}
+
+BP_UINT8 * BP_SetNBytes(BP_UINT8 * dst, BP_UINT8 * src, BP_WORD num)
+{
+	memcpy_bp(dst, src, num);
+	dst += num;
 	return dst;
 }
 
@@ -140,4 +148,41 @@ BP_UINT8 * BP_Get2ByteField(BP_UINT8 * pack, BP_UINT8 * field_buf, BP_UINT16 * f
 	memcpy_bp(field_buf, p_pack, *field_len);
 
 	return p_pack+(*field_len);
+}
+
+BP_WORD sortSig2ValClbk(void * a, void * b)
+{
+	return ((BP_SigId2Val *)a)->SigId > ((BP_SigId2Val *)b)->SigId; 
+}
+
+void BP_SigvalSort(const BP_SigId2Val * sig_array, BP_WORD num)
+{
+	BubbleSortP((void *)sig_array, num, sortSig2ValClbk);
+}
+
+void SwitchTypeDo(BP_UINT8 sig_type, SwitchTypeDoClbk clbk, void * para) 
+{
+	switch(sig_type) {
+		case SIG_TYPE_U32:
+			clbk(para);
+			break;
+		case SIG_TYPE_I32:
+			clbk(para);
+			break;
+		case SIG_TYPE_U16:
+			clbk(para);
+			break;
+		case SIG_TYPE_I16:
+			clbk(para);
+			break;
+		case SIG_TYPE_ENM:
+			clbk(para);
+			break;
+		case SIG_TYPE_FLT:
+			clbk(para);
+			break;
+		case SIG_TYPE_STR:
+			clbk(para);
+			break;
+	}
 }

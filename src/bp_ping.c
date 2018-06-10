@@ -56,7 +56,7 @@ PackBuf * BP_PackPing()
 	pbuf_old = pbuf;
 
 	vrb_head.u.PING.Flags = 0;
-	vrb_head.u.PING.ClntId = BP_ClientId;
+	// vrb_head.u.PING.ClntId = BP_ClientId;
 	BP_SeqIdPing = BP_SeqIdCommon++;
 	vrb_head.u.PING.SeqId = BP_SeqIdPing;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_PING);

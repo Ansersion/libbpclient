@@ -35,6 +35,9 @@
  * 		if(null == sig_array) dev_name/sys_sig_map must not be null
  * 		else dev_name & sys_sig_map must be null
 ***************/
-PackBuf * BP_PackReport(BP_UINT8 * dev_name, const BP_SysSigMap * sys_sig_map, const BP_SigId2Val * sig_array, const BP_UINT16 num);
+// PackBuf * BP_PackReport(BP_UINT8 * dev_name, const BP_SysSigMap * sys_sig_map, const BP_SigId2Val * sig_array, const BP_UINT16 num);
+PackBuf * BP_PackReportSigTabChksum();
+PackBuf * BP_PackReportSigTable();
+PackBuf * BP_PackReportSigVal(const BP_SigId2Val * sys_sig_array, const BP_UINT16 sys_sig_num, const BP_SigId2Val * cus_sig_array, const BP_UINT16 cus_sig_num);
 #endif
 

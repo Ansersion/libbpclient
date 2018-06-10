@@ -69,6 +69,7 @@ BP_UINT8 * BP_ToPack(PackBuf * pack_buf)
 
 	pack_buf->MsgSize = FIX_HEAD_SIZE + pack_buf->RmnLen;
 
+	// printf("buf[0]=%x\n", pack_buf->Buf[0]);
 	pack_buf->PackStart = pack_buf->Buf;
 	crc = BP_calc_crc32(pack_buf->PackStart, pack_buf->MsgSize - CHECKSUM_SIZE);
 	BP_SetBig32(pack_buf->PackStart + pack_buf->MsgSize - CHECKSUM_SIZE, crc);

@@ -1,4 +1,6 @@
 #include <bp_sig_table.h>
+#include <bp_public.h>
+#include <bp_strlen.h>
 // #include <stdio.h>
 
 const BP_UINT16 SIG_SYS_COMM_STATE_MIN = 0, SIG_SYS_COMM_STATE_MAX = 2, SIG_SYS_COMM_STATE_DEF = 2;
@@ -76,3 +78,66 @@ void BP_SigDump(void)
 	}
 }
 
+BP_UINT32 BP_GetSigTabChk()
+{
+	// TODO
+	return 0;
+}
+
+BP_UINT8 * BP_SetSysSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val)
+{
+	BP_UINT16 idx_tmp;
+	if(BP_NULL == buf) {
+		return BP_NULL;
+	}
+	if(BP_NULL == sig_id_2_val) {
+		return buf;
+	}
+	idx_tmp = BP_GetSigIdx(sig_id_2_val->SigId); 
+	if(SIG_INDEX_INVALID == idx_tmp) {
+		return buf;
+	}
+
+	switch(g_SysSigTable[idx_tmp].SigType) {
+		case SIG_TYPE_U32:
+			*buf++ = SIG_TYPE_U32;
+			buf = BP_SetBig32(buf, sig_id_2_val->SigVal.t_u32);
+			break;
+		case SIG_TYPE_U16:
+			*buf++ = SIG_TYPE_U16;
+			buf = BP_SetBig16(buf, sig_id_2_val->SigVal.t_u16);
+			break;
+		case SIG_TYPE_I32:
+			*buf++ = SIG_TYPE_I32;
+			buf = BP_SetBig32(buf, sig_id_2_val->SigVal.t_i32);
+			break;
+		case SIG_TYPE_I16:
+			*buf++ = SIG_TYPE_I16;
+			buf = BP_SetBig16(buf, sig_id_2_val->SigVal.t_i16);
+			break;
+		case SIG_TYPE_ENM:
+			*buf++ = SIG_TYPE_ENM;
+			buf = BP_SetBig16(buf, sig_id_2_val->SigVal.t_enm);
+			break;
+		case SIG_TYPE_FLT:
+			*buf++ = SIG_TYPE_FLT;
+			buf = BP_SetBig32(buf, sig_id_2_val->SigVal.t_flt);
+			break;
+		case SIG_TYPE_STR: 
+			{
+				BP_WORD num;
+				if(BP_NULL == sig_id_2_val->SigVal.t_str) {
+					break;
+				}
+				num = strlen_bp(sig_id_2_val->SigVal.t_str);
+				if(num > 0) {
+					*buf++ = SIG_TYPE_STR;
+					buf = BP_SetNBytes(buf, sig_id_2_val->SigVal.t_str, num);
+				}
+
+			}
+			break;
+	}
+
+	return buf;
+}

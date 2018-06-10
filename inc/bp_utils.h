@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2018 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-/// @file 	bp_sig_table.h
-/// @brief 	struct for signal table
+/// @file 	bp_utils.h
+/// @brief 	utility functions
 /// 
 /// @version 	0.1
 /// @author 	Ansersion
@@ -22,24 +22,13 @@
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BP_SIG_TABLE_H
-#define __BP_SIG_TABLE_H
+#ifndef __BP_UTILS_H
+#define __BP_UTILS_H
 
-#include <bp_sig_str.h>
+#include <bpclient_config.h>
 
-#define SIG_SYS_COMM_STATE 			0xE000
-#define SIG_SYS_POWER 				0xE001
-
-
-extern BP_SigId2Val g_SysSigId2Val[];
-extern const BP_SigTable g_SysSigTable[];
-extern const BP_UINT16 g_SysSigNum;
-
-BP_UINT16 BP_GetSigIdx(const BP_UINT16 sig_id);
-BP_INT16 BP_SetSigVal(BP_UINT8 sig_num, BP_SigId2Val * sig_array);
-void BP_SigDump(void);
-BP_UINT32 BP_GetSigTabChk();
-BP_UINT8 * BP_SetSysSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val);
+typedef BP_WORD (*CompClbkP)(void * a,void * b); 
+void SwapP(void * A[], BP_WORD i, BP_WORD j);
+void BubbleSortP(void * A[], BP_WORD n, CompClbkP clbk);
 
 #endif
-

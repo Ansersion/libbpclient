@@ -34,6 +34,10 @@
 #include <bp_strlen.h>
 #include <bp_memcpy.h>
 
+#ifdef DEBUG
+#include <stdio.h>
+#endif
+
 PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 {
 	BP_WORD i;
@@ -52,6 +56,7 @@ PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 	}
 
 	BP_InitPack(&BP_Pack_Buf, BP_PACK_TYPE_CONNECT_MSK, BP_Buf, BP_BUF_SIZE);
+	// printf("buf[0]=%x\n", BP_Pack_Buf.Buf[0]);
 	pbuf = BP_Pack_Buf.PackStart;
 	pbuf_old = pbuf;
 
@@ -64,6 +69,7 @@ PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 	vrb_head.u.CONNECT.Timeout = BP_Timeout;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_CONNECT);
 
+	// printf("buf[0]=%x\n", BP_Pack_Buf.Buf[0]);
 	// strcpy(BP_Name, name);
 	memcpy_bp(BP_Name, name, strlen_bp(name) + 1);
 	payload.u.CONNECT.NameLen = strlen_bp(BP_Name);
@@ -75,16 +81,19 @@ PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password)
 	// payload.u.CONNECT.ClntIdLen = BP_CLIENT_ID_LEN;
 	// payload.u.CONNECT.ClntId = BP_ClientId;
 	pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_CONNECT, &vrb_head);
+	// printf("buf[0]=%x\n", BP_Pack_Buf.Buf[0]);
 
 	// set remaining length and pack the packet
 	rmn_len = (BP_WORD)(pbuf-pbuf_old);
 	BP_Pack_Buf.RmnLen = rmn_len;
 	pbuf = BP_ToPack(&BP_Pack_Buf);
 
+#ifdef DEBUG
 	for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
 		printf("%02x ", pbuf[i]);
 	}
 	printf("\n%d\n", i);
+#endif
 
 	return &BP_Pack_Buf;
 }
