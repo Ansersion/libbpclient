@@ -37,7 +37,7 @@
 // #include <string.h>
 
 // PackBuf * BP_PackGetack(BP_UINT16 seq_id, BP_UINT8 ret_code, BP_UINT16 * sig_index_array, BP_UINT16 array_num)
-PackBuf * BP_PackPostack(BP_PostStr * post_str)
+PackBuf * BP_PackPostack(const BPContext * bp_context, BP_PostStr * post_str)
 {
 	BP_WORD i, j;
 
@@ -48,16 +48,23 @@ PackBuf * BP_PackPostack(BP_PostStr * post_str)
 	BPPackVrbHead vrb_head;
 	BPPackPayload payload;
 
+    if(BP_NULL == bp_context) {
+        return BP_NULL;
+    }
+    if(BP_NULL == bp_context->packBuf) {
+        return BP_NULL;
+    }
+
 	if(BP_NULL == post_str) {
 		return BP_NULL;
 	}
 
-	BP_InitPack(&BP_Pack_Buf, BP_PACK_TYPE_POSTACK_MSK, BP_Buf, BP_BUF_SIZE);
-	pbuf = BP_Pack_Buf.PackStart;
+	BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_POSTACK_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE);
+	pbuf = bp_context->packBuf->PackStart;
 	pbuf_old = pbuf;
 
 	vrb_head.u.POSTACK.Flags = 0;
-	vrb_head.u.POSTACK.ClntId = post_str->ClientID;
+	// vrb_head.u.POSTACK.ClntId = post_str->ClientID;
 	vrb_head.u.POSTACK.SeqId = post_str->SeqId;
 	// TODO: judge the ret_code
 
@@ -101,14 +108,14 @@ PackBuf * BP_PackPostack(BP_PostStr * post_str)
 
 	// set remaining length and pack the packet
 	rmn_len = (BP_WORD)(pbuf-pbuf_old);
-	BP_Pack_Buf.RmnLen = rmn_len;
-	pbuf = BP_ToPack(&BP_Pack_Buf);
+	bp_context->packBuf->RmnLen = rmn_len;
+	pbuf = BP_ToPack(bp_context->packBuf);
 
 	// for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
 	// 	printf("%02x ", pbuf[i]);
 	// }
 	// printf("\n");
 
-	return &BP_Pack_Buf;
+	return bp_context->packBuf;
 }
 

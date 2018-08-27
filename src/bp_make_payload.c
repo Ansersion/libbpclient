@@ -36,6 +36,11 @@
 // #include <string.h>
 #include <bp_strlen.h>
 
+#define MAX_GET_ACK_SIG_NUM 	64
+BP_SigType g_SigTypeArray[MAX_GET_ACK_SIG_NUM];
+BP_SigId2Val g_SigArray[MAX_GET_ACK_SIG_NUM];
+
+
 BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_pld_postack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_pld_getack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);

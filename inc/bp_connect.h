@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2018 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -27,6 +27,6 @@
 
 #include <bp_public.h>
 
-PackBuf * BP_PackConnect(BP_UINT8 * name, BP_UINT8 * password);
+PackBuf * BP_PackConnect(const BPContext * bp_context, BP_UINT8 * name, BP_UINT8 * password);
 #endif
 

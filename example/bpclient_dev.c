@@ -32,9 +32,9 @@
 
 
 #define PORT 8025
-#define SERVER_IP "192.168.2.196"
+#define SERVER_IP "127.0.0.1"
 
-BP_UINT8 DEV_NAME[] = "AnsersionDev";
+// BP_UINT8 DEV_NAME[] = "AnsersionDev";
 
 int main()
 {
@@ -53,13 +53,14 @@ int main()
 	// BP_UINT8 * user_name = "2";
 	// BP_UINT8 * password = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456";
 	BP_UINT8 * TEST = "TST";
-	BP_UINT8 * user_name = "3";
-	BP_UINT8 * password = "3333333333333333333333333333333333333333333333333333333333333333";
+	BP_UINT8 * user_name = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1";
+	BP_UINT8 * password = "1111111111111111111111111111111111111111111111111111111111111111";
 
 	BP_UINT8 buf[2048+1];
 	BP_UINT16 left_len;
 	BP_UINT32 crc = 0;
 	BP_UINT8 type_and_flags;
+    const BPContext * bpContextTmp = BP_NULL;
 
 	PackBuf pack_buf;
 	PackBuf * p_pack_buf;
@@ -86,7 +87,8 @@ int main()
 		exit(0);
 	}
 
-	BP_Init2Default();
+	// BP_Init2Default(&BPContextEmbeded);
+    BP_InitEmbededContext();
 
 	loop = 1;
 
@@ -131,7 +133,7 @@ int main()
 					// }
 					// printf("report\n");
 				} else if(strncmp(input, "rsv", 3) == 0){
-					p_pack_buf = BP_PackReportSigVal(&sig_id_2_val_array_test, sizeof(sig_id_2_val_array_test) / sizeof(BP_SigId2Val), BP_NULL, 0);
+					// p_pack_buf = BP_PackReportSigVal(&sig_id_2_val_array_test, sizeof(sig_id_2_val_array_test) / sizeof(BP_SigId2Val), BP_NULL, 0);
 					if(BP_NULL == p_pack_buf) {
 						printf("p_pack_buf == NULL\n");
 					} else if(BP_NULL == p_pack_buf->PackStart) {
@@ -149,7 +151,9 @@ int main()
 				} else if(strncmp(input, "i", 1) == 0) {
 					printf("cmd: i\n");
 				} else if(strncmp(input, "c", 1) == 0) {
-					p_pack_buf = BP_PackConnect(user_name, password);
+                    printf("start pack connect\n");
+					p_pack_buf = BP_PackConnect(&BPContextEmbeded, user_name, password);
+                    printf("start send:%p\n", p_pack_buf);
 					n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
 					if(n != p_pack_buf->MsgSize) {
 						close(conndfd);
@@ -158,7 +162,7 @@ int main()
 					}
 					printf("connect\n");
 				} else if(strncmp(input, "d", 1) == 0) {
-					p_pack_buf = BP_PackDisconn();
+					p_pack_buf = BP_PackDisconn(&BPContextEmbeded);
 					n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
 					if(n != p_pack_buf->MsgSize) {
 						close(conndfd);
@@ -168,7 +172,7 @@ int main()
 					printf("disconn\n");
 					loop = 0;
 				} else if(strncmp(input, "p", 1) == 0) {
-					p_pack_buf = BP_PackPing();
+					p_pack_buf = BP_PackPing(&BPContextEmbeded);
 					n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
 					if(n != p_pack_buf->MsgSize) {
 						close(conndfd);
@@ -184,12 +188,12 @@ int main()
 				}
 			}
 			if(FD_ISSET(conndfd, &rfds)) {
-				n=recv(conndfd,buf,MAX_FIX_HEAD_SIZE, MSG_WAITALL);
+				n=recv(conndfd,buf,FIX_HEAD_SIZE, MSG_WAITALL);
 				if(strncmp(buf, TEST, 3) == 0) {
 					printf("recv %s\n", TEST);
 					continue;
 				}
-				if(MAX_FIX_HEAD_SIZE != n) {
+				if(FIX_HEAD_SIZE != n) {
 					close(conndfd);
 					perror("Recv error 1");
 					return -2;
@@ -197,15 +201,21 @@ int main()
 				BP_ParseFixHead(buf, &type_and_flags, &left_len);
 
 				len = left_len;
+                printf("len=%d\n", len);
 
-				n += recv(conndfd,buf+MAX_FIX_HEAD_SIZE,len, MSG_WAITALL);
-				len += MAX_FIX_HEAD_SIZE;
+				n += recv(conndfd,buf+FIX_HEAD_SIZE,len, MSG_WAITALL);
+				len += FIX_HEAD_SIZE;
 
 				if(n != len) {
 					close(conndfd);
 					printf("Recv error 2");
 					return -2;
 				}
+                printf("recv: \n");
+                for(i = 0; i < len; i++) {
+                    printf("%02x ", buf[i]);
+                }
+                printf("\n");
 
 				if(0 != BP_CheckCRC(type_and_flags, buf, len)) {
 					printf("CRC Check error\n");
@@ -260,7 +270,7 @@ int main()
 						printf("start dump...\n");
 						BP_SigDump();
 
-						p_pack_buf = BP_PackPostack(&str_post);
+						// p_pack_buf = BP_PackPostack(&str_post);
 						printf("MsgSize: %d\n", p_pack_buf->MsgSize);
 						for(i = 0; i < p_pack_buf->MsgSize; i++) {
 							printf("%02x ", p_pack_buf->PackStart[i]);
@@ -290,7 +300,7 @@ int main()
 						}
 						printf("\n");
 
-						p_pack_buf = BP_PackGetack(&str_get);
+						// p_pack_buf = BP_PackGetack(&str_get);
 						printf("MsgSize: %d\n", p_pack_buf->MsgSize);
 						for(i = 0; i < p_pack_buf->MsgSize; i++) {
 							printf("%02x ", p_pack_buf->PackStart[i]);

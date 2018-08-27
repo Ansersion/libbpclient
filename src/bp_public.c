@@ -26,11 +26,14 @@
 #include <bp_memcpy.h>
 #include <bp_utils.h>
 
-BP_UINT8 BP_Buf[BP_BUF_SIZE];
-BP_UINT8 BP_Name[BP_NAME_SIZE];
-BP_UINT8 BP_Password[BP_PASSWORD_SIZE];
-PackBuf BP_Pack_Buf;
-BP_UINT8 BP_DEV_NAME[BP_NAME_SIZE];
+BPContext BPContextEmbeded;
+// BP_UINT8 BP_Buf[BP_BUF_SIZE];
+BP_UINT8 BPBufEmbeded[BP_BUF_SIZE_EMBEDED];
+BP_UINT8 BPNameEmbeded[BP_NAME_SIZE];
+BP_UINT8 BPPasswordEmbeded[BP_PASSWORD_SIZE];
+// PackBuf BP_Pack_Buf;
+PackBuf PackBufEmbeded;
+// BP_UINT8 BP_DEV_NAME[BP_NAME_SIZE];
 
 // 0-CRC32, 1-CRC16; default 0
 BP_UINT8 BP_CrcType = 0;
@@ -43,7 +46,7 @@ BP_UINT16 BP_AliveTime = 60;
 // ; default 5
 BP_UINT8 BP_Timeout = 5;
 // ; default 0
-BP_UINT16 BP_ClientId = BP_CLIENT_ID_APPLY;
+// BP_UINT16 BP_ClientId = BP_CLIENT_ID_APPLY;
 // ; default 0
 BP_UINT16 BP_SysSigSetVersion = 0;
 // ; default 0

@@ -34,7 +34,7 @@
 // #include <stdio.h>
 // #include <string.h>
 
-PackBuf * BP_PackPing()
+PackBuf * BP_PackPing(const BPContext * bp_context)
 {
 	BP_WORD i;
 
@@ -44,6 +44,13 @@ PackBuf * BP_PackPing()
 	BPPackVrbHead vrb_head;
 	BPPackPayload payload;
 
+    if(BP_NULL == bp_context) {
+        return BP_NULL;
+    }
+    if(BP_NULL == bp_context->packBuf) {
+        return BP_NULL;
+    }
+
 	// if(BP_NULL == name) {
 	// 	return BP_NULL;
 	// }
@@ -51,8 +58,8 @@ PackBuf * BP_PackPing()
 	// 	return BP_NULL;
 	// }
 
-	BP_InitPack(&BP_Pack_Buf, BP_PACK_TYPE_PING_MSK, BP_Buf, BP_BUF_SIZE);
-	pbuf = BP_Pack_Buf.PackStart;
+	BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_PING_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE);
+	pbuf = bp_context->packBuf->PackStart;
 	pbuf_old = pbuf;
 
 	vrb_head.u.PING.Flags = 0;
@@ -66,13 +73,13 @@ PackBuf * BP_PackPing()
 
 	// set remaining length and pack the packet
 	rmn_len = (BP_WORD)(pbuf-pbuf_old);
-	BP_Pack_Buf.RmnLen = rmn_len;
-	pbuf = BP_ToPack(&BP_Pack_Buf);
+	bp_context->packBuf->RmnLen = rmn_len;
+	pbuf = BP_ToPack(bp_context->packBuf);
 
 // 	for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
 // 		printf("%02x ", pbuf[i]);
 // 	}
 // 	printf("\n");
 // 
-	return &BP_Pack_Buf;
+	return bp_context->packBuf;
 }

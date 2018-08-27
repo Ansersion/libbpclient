@@ -24,13 +24,40 @@
 
 #include <bp_init.h>
 
-void BP_Init2Default()
+void BP_InitPackBuf(PackBuf * pack_buf, BP_UINT8 * buf, BP_WORD buf_size)
 {
-	BP_ClientType = 0;
-	BP_CipherType = 0;
-	BP_AliveTime = 60;
-	BP_Timeout = 5;
-	BP_ClientId = BP_CLIENT_ID_APPLY;
+    if(BP_NULL == pack_buf) {
+        return;
+    }
+    pack_buf->Buf = buf;
+    pack_buf->RmnLen = 0;
+    pack_buf->PackStart = pack_buf->Buf;
+    pack_buf->MsgSize = 0;
+    pack_buf->BufSize = buf_size;
+}
+
+void BP_InitEmbededContext()
+{
+    BP_Init2Default(&BPContextEmbeded);
+    BP_InitPackBuf(&PackBufEmbeded, BPBufEmbeded, BP_BUF_SIZE_EMBEDED);
+    BPContextEmbeded.packBuf = &PackBufEmbeded;
+    BPContextEmbeded.name = BPNameEmbeded;
+    BPContextEmbeded.password = BPPasswordEmbeded;
+}
+
+void BP_Init2Default(BPContext * bp_context)
+{
+    if(BP_NULL == bp_context) {
+        return;
+    }
+    bp_context->Encryption = ENCRYPTION_TYPE;;
+    bp_context->CrcType = CHECKSUM_TYPE;
+    bp_context->BPLevel = BP_LEVEL;
+    bp_context->PerformanceLimit = PERFORMANCE_LIMIT;
+    bp_context->IsDeviceClient = CLIENT_TYPE;
+    bp_context->BPAlivePeroid = 60;
+    bp_context->BPTimeout = 5;
+    bp_context->packBuf = BP_NULL;
 }
 
 void BP_Init(BP_UINT8 clnt_type, BP_UINT8 cipher_type, BP_UINT16 alive_time, BP_UINT8 timeout, BP_UINT16 clnt_id)
@@ -39,5 +66,5 @@ void BP_Init(BP_UINT8 clnt_type, BP_UINT8 cipher_type, BP_UINT16 alive_time, BP_
 	BP_CipherType = cipher_type;
 	BP_AliveTime = alive_time;
 	BP_Timeout = timeout;
-	BP_ClientId = clnt_id;
+	// BP_ClientId = clnt_id;
 }

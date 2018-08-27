@@ -124,7 +124,7 @@ PackBuf * BP_PackReport(const BP_SigId2Val * sig_array, const BP_UINT16 num)
 	return BP_NULL;
 }
 
-PackBuf * BP_PackReportSigTabChksum()
+PackBuf * BP_PackReportSigTabChksum(const BPContext * bp_context)
 {
 	BP_WORD i, j;
 
@@ -134,8 +134,15 @@ PackBuf * BP_PackReportSigTabChksum()
 	BPPackVrbHead vrb_head;
 	BPPackPayload payload;
 
-	BP_InitPack(&BP_Pack_Buf, BP_PACK_TYPE_REPORT_MSK, BP_Buf, BP_BUF_SIZE);
-	pbuf = BP_Pack_Buf.PackStart;
+    if(BP_NULL == bp_context) {
+        return BP_NULL;
+    }
+    if(BP_NULL == bp_context->packBuf) {
+        return BP_NULL;
+    }
+
+	BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE);
+	pbuf = bp_context->packBuf->PackStart;
 	pbuf_old = pbuf;
 
 	vrb_head.u.REPORT.Flags = 0;
@@ -162,22 +169,22 @@ PackBuf * BP_PackReportSigTabChksum()
 
 	// set remaining length and pack the packet
 	rmn_len = (BP_WORD)(pbuf-pbuf_old);
-	BP_Pack_Buf.RmnLen = rmn_len;
-	pbuf = BP_ToPack(&BP_Pack_Buf);
+	bp_context->packBuf->RmnLen = rmn_len;
+	pbuf = BP_ToPack(bp_context->packBuf);
 
 	// for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
 	// 	printf("%02x ", pbuf[i]);
 	// }
 	// printf("\n");
 
-	return &BP_Pack_Buf;
+	return bp_context->packBuf;
 }
 
 PackBuf * BP_PackReportSigTable()
 {
 }
 
-PackBuf * BP_PackReportSigVal(const BP_SigId2Val * sys_sig_array, const BP_UINT16 sys_sig_num, const BP_SigId2Val * cus_sig_array, const BP_UINT16 cus_sig_num)
+PackBuf * BP_PackReportSigVal(const BPContext *bp_context, const BP_SigId2Val * sys_sig_array, const BP_UINT16 sys_sig_num, const BP_SigId2Val * cus_sig_array, const BP_UINT16 cus_sig_num)
 {
 	BP_WORD i, j;
 
@@ -186,6 +193,13 @@ PackBuf * BP_PackReportSigVal(const BP_SigId2Val * sys_sig_array, const BP_UINT1
 
 	BPPackVrbHead vrb_head;
 	BPPackPayload payload;
+
+    if(BP_NULL == bp_context) {
+        return BP_NULL;
+    }
+    if(BP_NULL == bp_context->packBuf) {
+        return BP_NULL;
+    }
 
 	if(BP_NULL == sys_sig_array && BP_NULL == cus_sig_array) {
 		return BP_NULL;
@@ -197,8 +211,8 @@ PackBuf * BP_PackReportSigVal(const BP_SigId2Val * sys_sig_array, const BP_UINT1
 		return BP_NULL;
 	}
 
-	BP_InitPack(&BP_Pack_Buf, BP_PACK_TYPE_REPORT_MSK, BP_Buf, BP_BUF_SIZE);
-	pbuf = BP_Pack_Buf.PackStart;
+	BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE);
+	pbuf = bp_context->packBuf->PackStart;
 	pbuf_old = pbuf;
 	vrb_head.u.REPORT.Flags = 0;
 
@@ -238,16 +252,16 @@ PackBuf * BP_PackReportSigVal(const BP_SigId2Val * sys_sig_array, const BP_UINT1
 	// set remaining length and pack the packet
 	rmn_len = (BP_WORD)(pbuf-pbuf_old);
 
-	BP_Pack_Buf.RmnLen = rmn_len;
-	pbuf = BP_ToPack(&BP_Pack_Buf);
+	bp_context->packBuf->RmnLen = rmn_len;
+	pbuf = BP_ToPack(bp_context->packBuf);
 
 #ifdef DEBUG
 	printf("REPORT: ");
-	for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
+	for(i = 0; i < bp_context->packBuf->MsgSize; i++) {
 		printf("%02x ", pbuf[i]);
 	}
 	printf("\n");
 #endif
 
-	return &BP_Pack_Buf;
+	return bp_context->packBuf;
 }

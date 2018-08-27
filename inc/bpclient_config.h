@@ -156,3 +156,9 @@
 
 #endif
 
+/** 
+  * @Brief: BP_LEVEL determines the version number of BP
+  * @Note: DEFAULT 0
+ */
+#define BP_LEVEL 	0
+

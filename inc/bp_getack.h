@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2018 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -28,11 +28,12 @@
 #include <bp_public.h>
 #include <bp_parse.h>
 
-#define MAX_GET_ACK_SIG_NUM 	64
+// #define MAX_GET_ACK_SIG_NUM 	64
 
-extern BP_SigType g_SigTypeArray[MAX_GET_ACK_SIG_NUM];
-extern BP_SigId2Val g_SigArray[MAX_GET_ACK_SIG_NUM];
+// extern BP_SigType g_SigTypeArray[MAX_GET_ACK_SIG_NUM];
+// extern BP_SigId2Val g_SigArray[MAX_GET_ACK_SIG_NUM];
 
-PackBuf * BP_PackGetack(BP_GetStr * get_str);
+PackBuf * BP_PackGetack(const BPContext * bp_context, BP_GetStr * get_str);
+
 #endif
 

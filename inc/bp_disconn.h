@@ -27,6 +27,6 @@
 
 #include <bp_public.h>
 
-PackBuf * BP_PackDisconn();
+PackBuf * BP_PackDisconn(const BPContext * bp_context);
 #endif
 

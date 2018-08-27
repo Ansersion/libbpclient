@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2018 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -29,11 +29,23 @@
 #include <bp_sig_str.h>
 #include <bp_utils.h>
 
-#define BP_LEVEL 	0
-#define BP_CLIENT_ID_LEN 	2
-#define BP_CLIENT_ID_APPLY 	0
+// #define BP_CLIENT_ID_LEN 	2
+// #define BP_CLIENT_ID_APPLY 	0
+// 
+// #define BP_ENCRYPTION_PLAINTEXT     0x00
+// #define BP_ENCRYPTION_BASE64      0x01
+// 
+// #define BP_CRC_TYPE_32      0x00
+// #define BP_CRC_TYPE_16      0x01
+// 
+// #define BP_PERF_LIMIT_UNLIMIT   0x00
+// #define BP_PERF_LIMIT_WEAK      0x01
+// #define BP_PERF_LIMIT_STRONG    0x02
+// #define BP_PERF_LIMIT_INVALID   0x03
+// #define BP_PERF_LIMIT_HARD 	2
 
 #define BP_BUF_SIZE 	1024
+#define BP_BUF_SIZE_EMBEDED 	1024
 #define BP_NAME_SIZE 	65
 #define BP_PASSWORD_SIZE 	65
 
@@ -43,8 +55,8 @@
 #define BP_GetBig16 	BP_GetNet16
 #define BP_GetBig32 	BP_GetNet32
 
-#define MAX_FIX_HEAD_SIZE 	3
-#define MIN_FIX_HEAD_SIZE 	2
+// #define MAX_FIX_HEAD_SIZE 	3
+// #define MIN_FIX_HEAD_SIZE 	2
 
 #define FIX_HEAD_SIZE 	3
 
@@ -58,7 +70,6 @@
 
 typedef void (*SwitchTypeDoClbk)(void * para);
 
-
 typedef struct PackBuf {
 	BP_UINT8 * Buf;
 	BP_WORD RmnLen;
@@ -67,55 +78,74 @@ typedef struct PackBuf {
 	BP_WORD BufSize;
 } PackBuf;
 
+typedef struct BPContext {
+    /* suggest: not change these variables durring time */
+    BP_UINT8 Encryption;
+    BP_UINT8 CrcType;;
+    BP_UINT8 BPLevel;
+    BP_UINT8 PerformanceLimit;
+    BP_UINT8 IsDeviceClient;
+    /* suggest end */
+
+    /* note: changed and token into effect only after a new CONNECTION */
+    BP_UINT16 BPAlivePeroid;
+    BP_UINT16 BPTimeout;
+    /* note end */
+
+    PackBuf * packBuf;
+    BP_UINT8 * name;
+    BP_UINT8 * password;
+} BPContext;
+
 // variable struct
 typedef struct VrbHead_CONNECT {
 	BP_UINT16 	Level;
 	BP_UINT8 	Flags;
-	BP_UINT16 	ClntId;
+	// BP_UINT16 	ClntId;
 	BP_UINT16 	AlvTime;
 	BP_UINT8 	Timeout;
 } VrbHead_CONNECT;
 
 typedef struct VrbHead_GETACK {
 	BP_UINT8 	Flags;
-	BP_UINT16 	ClntId;
+	// BP_UINT16 	ClntId;
 	BP_UINT16 	SeqId;
 	BP_UINT8 	RetCode;
 } VrbHead_GETACK;
 
 typedef struct VrbHead_POST {
 	BP_UINT8 	Flags;
-	BP_UINT16 	ClntId;
+	// BP_UINT16 	ClntId;
 	BP_UINT16 	SeqId;
 } VrbHead_POST;
 
 typedef struct VrbHead_POSTACK {
 	BP_UINT8 	Flags;
-	BP_UINT16 	ClntId;
+	// BP_UINT16 	ClntId;
 	BP_UINT16 	SeqId;
 	BP_UINT8 	RetCode;
 } VrbHead_POSTACK;
 
 typedef struct VrbHead_REPORT {
 	BP_UINT8 	Flags;
-	BP_UINT16 	ClntId;
+	// BP_UINT16 	ClntId;
 	BP_UINT16 	SeqId;
 } VrbHead_REPORT;
 
 typedef struct VrbHead_PING {
 	BP_UINT8 	Flags;
-	BP_UINT16 	ClntId;
+	// BP_UINT16 	ClntId;
 	BP_UINT16 	SeqId;
 } VrbHead_PING;
 
 typedef struct VrbHead_PINGACK {
 	BP_UINT8 	Flags;
-	BP_UINT16 	ClntId;
+	// BP_UINT16 	ClntId;
 	BP_UINT16 	SeqId;
 } VrbHead_PINGACK;
 
 typedef struct VrbHead_DISCONN {
-	BP_UINT16 	ClntId;
+	// BP_UINT16 	ClntId;
 } VrbHead_DISCONN;
 
 typedef union vrbU {
@@ -140,7 +170,7 @@ typedef struct Payload_CONNECT {
 	BP_UINT8  	PwdLen;
 	BP_UINT8 * 	Pwd;
 	BP_UINT8  	ClntIdLen;
-	BP_UINT16 	ClntId;
+	// BP_UINT16 	ClntId;
 } Payload_CONNECT;
 
 typedef struct Payload_GETACK {
@@ -199,12 +229,15 @@ typedef struct BPPackPayload {
 } BPPackPayload;
 
 
-extern BP_UINT8 BP_Buf[];
-extern BP_UINT8 BP_Name[BP_NAME_SIZE];
-extern BP_UINT8 BP_Password[BP_PASSWORD_SIZE];
-extern BP_UINT8 BP_DEV_NAME[];
-extern PackBuf BP_Pack_Buf;
-extern BP_UINT16 BP_ClientId;
+extern BPContext BPContextEmbeded;
+// extern BP_UINT8 BP_Buf[];
+extern BP_UINT8 BPBufEmbeded[BP_BUF_SIZE_EMBEDED];
+extern BP_UINT8 BPNameEmbeded[BP_NAME_SIZE];
+extern BP_UINT8 BPPasswordEmbeded[BP_PASSWORD_SIZE];
+// extern BP_UINT8 BP_DEV_NAME[];
+// extern PackBuf BP_Pack_Buf;
+extern PackBuf PackBufEmbeded;
+// extern BP_UINT16 BP_ClientId;
 
 // typedef struct BP_Param {
 // 	BP_UINT8 ClientType;

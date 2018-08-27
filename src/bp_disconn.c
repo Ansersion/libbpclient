@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2018 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@
 // #include <stdio.h>
 // #include <string.h>
 
-PackBuf * BP_PackDisconn()
+PackBuf * BP_PackDisconn(const BPContext * bp_context)
 {
 	BP_WORD i;
 
@@ -43,13 +43,19 @@ PackBuf * BP_PackDisconn()
 
 	BPPackVrbHead vrb_head;
 	BPPackPayload payload;
+    if(BP_NULL == bp_context) {
+        return BP_NULL;
+    }
+    if(BP_NULL == bp_context->packBuf) {
+        return BP_NULL;
+    }
 
-	BP_InitPack(&BP_Pack_Buf, BP_PACK_TYPE_DISCONN_MSK, BP_Buf, BP_BUF_SIZE);
-	pbuf = BP_Pack_Buf.PackStart;
+	BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_DISCONN_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE);
+	pbuf = bp_context->packBuf->PackStart;
 	pbuf_old = pbuf;
 
 	// variable header
-	vrb_head.u.DISCONN.ClntId = BP_ClientId;
+	// vrb_head.u.DISCONN.ClntId = BP_ClientId;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_DISCONN);
 
 	// payload
@@ -57,13 +63,13 @@ PackBuf * BP_PackDisconn()
 
 	// set remaining length and pack the packet
 	rmn_len = (BP_WORD)(pbuf-pbuf_old);
-	BP_Pack_Buf.RmnLen = rmn_len;
-	pbuf = BP_ToPack(&BP_Pack_Buf);
+	bp_context->packBuf->RmnLen = rmn_len;
+	pbuf = BP_ToPack(bp_context->packBuf);
 
 	// for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
 	// 	printf("%02x ", pbuf[i]);
 	// }
 	// printf("\n");
 
-	return &BP_Pack_Buf;
+	return bp_context->packBuf;
 }

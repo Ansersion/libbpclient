@@ -28,6 +28,6 @@
 #include <bp_public.h>
 #include <bp_parse.h>
 
-PackBuf * BP_PackPostack(BP_PostStr * post_str);
+PackBuf * BP_PackPostack(const BPContext * bp_context, BP_PostStr * post_str);
 #endif
 

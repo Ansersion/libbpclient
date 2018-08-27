@@ -143,7 +143,7 @@ TEST(REPORT_ERR, REPORT_CLNT_ID_ERR)
 
 	ASSERT_EQ(RET_CODE_CONNACK_OK, str_connack.RetCode);
 
-	BP_ClientId = unknown_clnt_id;
+	// BP_ClientId = unknown_clnt_id;
 	p_pack_buf = BP_PackReport(DEV_NAME, g_SysSigMap, BP_NULL, g_SysSigMapSize);
 	n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
 

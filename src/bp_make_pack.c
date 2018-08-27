@@ -37,6 +37,9 @@ PackBuf * BP_InitPack(PackBuf * pack_buf, BP_UINT8 type_msk, BP_UINT8 * buf, BP_
 	if(size < FIX_HEAD_SIZE + CHECKSUM_SIZE) {
 		return BP_NULL;
 	}
+#ifdef DEBUG
+        printf("start BP_InitPack\n");
+#endif
 	pack_buf->RmnLen = 0;
 	pack_buf->MsgSize = 0;
 	pack_buf->BufSize = size;

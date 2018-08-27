@@ -27,8 +27,7 @@
 #include <bp_crc16.h>
 #include <bp_fix_flags.h>
 #include <bp_sig_table.h>
-
-#include <bp_getack.h>
+#include <bp_make_payload.h>
 
 BP_INT8 BP_ParseRprtack(BP_RprtackStr * str_rprtack, BP_UINT8 * msg, BP_UINT16 len)
 {
@@ -39,12 +38,7 @@ BP_INT8 BP_ParseRprtack(BP_RprtackStr * str_rprtack, BP_UINT8 * msg, BP_UINT16 l
 	if(BP_NULL == msg) {
 		return -0x02;
 	}
-	if(len < 127 + MIN_FIX_HEAD_SIZE) {
-		p_msg = msg + MIN_FIX_HEAD_SIZE;
-	} else {
-		p_msg = msg + MAX_FIX_HEAD_SIZE;
-
-	}
+    p_msg = msg + FIX_HEAD_SIZE;
 	p_msg = BP_GetBig16(p_msg, &(str_rprtack->SeqId));
 	str_rprtack->RetCode = *p_msg++;
 	return 0;
@@ -59,12 +53,12 @@ BP_INT8 BP_ParsePingack(BP_PingackStr * str_pingack, BP_UINT8 * msg, BP_UINT16 l
 	if(BP_NULL == msg) {
 		return -0x02;
 	}
-	if(len < 127 + MIN_FIX_HEAD_SIZE) {
-		p_msg = msg + MIN_FIX_HEAD_SIZE;
-	} else {
-		p_msg = msg + MAX_FIX_HEAD_SIZE;
-
-	}
+	// if(len < 127 + MIN_FIX_HEAD_SIZE) {
+	// 	p_msg = msg + MIN_FIX_HEAD_SIZE;
+	// } else {
+	// 	p_msg = msg + MAX_FIX_HEAD_SIZE;
+	// }
+    p_msg = msg + FIX_HEAD_SIZE;
 	str_pingack->Flags = *p_msg++;
 	// p_msg = BP_GetBig16(p_msg, &(str_pingack->ClientID));
 	p_msg = BP_GetBig16(p_msg, &(str_pingack->SeqId));
@@ -85,12 +79,13 @@ BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len)
 	if(BP_NULL == msg) {
 		return -0x02;
 	}
-	if(len < 127 + MIN_FIX_HEAD_SIZE) {
-		p_msg = msg + MIN_FIX_HEAD_SIZE;
-	} else {
-		p_msg = msg + MAX_FIX_HEAD_SIZE;
+	// if(len < 127 + MIN_FIX_HEAD_SIZE) {
+	// 	p_msg = msg + MIN_FIX_HEAD_SIZE;
+	// } else {
+	// 	p_msg = msg + MAX_FIX_HEAD_SIZE;
 
-	}
+	// }
+    p_msg = msg + FIX_HEAD_SIZE;
 	str_post->Flags = *p_msg++;
 	p_msg = BP_GetBig16(p_msg, &(str_post->ClientID));
 	p_msg = BP_GetBig16(p_msg, &(str_post->SeqId));
@@ -154,12 +149,13 @@ BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len)
 	if(BP_NULL == msg) {
 		return -0x02;
 	}
-	if(len < 127 + MIN_FIX_HEAD_SIZE) {
-		p_msg = msg + MIN_FIX_HEAD_SIZE;
-	} else {
-		p_msg = msg + MAX_FIX_HEAD_SIZE;
+	//if(len < 127 + MIN_FIX_HEAD_SIZE) {
+	//	p_msg = msg + MIN_FIX_HEAD_SIZE;
+	//} else {
+	//	p_msg = msg + MAX_FIX_HEAD_SIZE;
 
-	}
+	//}
+    p_msg = msg + FIX_HEAD_SIZE;
 	str_get->Flags = *p_msg++;
 	p_msg = BP_GetBig16(p_msg, &(str_get->ClientID));
 	p_msg = BP_GetBig16(p_msg, &(str_get->SeqId));
@@ -181,23 +177,13 @@ BP_INT8 BP_ParseConnack(BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 l
 	if(BP_NULL == msg) {
 		return -0x02;
 	}
-	if(len < 127 + MIN_FIX_HEAD_SIZE) {
-		str_connack->RetCode = msg[MIN_FIX_HEAD_SIZE+2];
-		if(msg[MIN_FIX_HEAD_SIZE + 2] != 0) {
-			return -0x11;
-		}
-		BP_GetBig16(msg + MIN_FIX_HEAD_SIZE + 3 + 1, &(str_connack->ClientID));
-		BP_GetBig16(msg + MIN_FIX_HEAD_SIZE + 3 + 1 + 2, &(str_connack->SysSigSetVersion));
-		BP_ClientId = str_connack->ClientID;
-	} else {
-		str_connack->RetCode = msg[MAX_FIX_HEAD_SIZE+2];
-		if(msg[3 + 2] != 0) {
-			return -0x11;
-		}
-		BP_GetBig16(msg + MAX_FIX_HEAD_SIZE + 3 + 1, &(str_connack->ClientID));
-		BP_GetBig16(msg + MAX_FIX_HEAD_SIZE + 3 + 1 + 2, &(str_connack->SysSigSetVersion));
-		BP_ClientId = str_connack->ClientID;
+	str_connack->RetCode = msg[FIX_HEAD_SIZE+2];
+	if(msg[FIX_HEAD_SIZE + 2] != 0) {
+		return -0x11;
 	}
+	BP_GetBig16(msg + FIX_HEAD_SIZE + 3 + 1, &(str_connack->ClientID));
+	BP_GetBig16(msg + FIX_HEAD_SIZE + 3 + 1 + 2, &(str_connack->SysSigSetVersion));
+	// BP_ClientId = str_connack->ClientID;
 	return 0;
 }
 
@@ -206,31 +192,29 @@ BP_INT16 BP_ParseFixHead(BP_UINT8 * msg, BP_UINT8 * type_and_flags, BP_UINT16 * 
 	BP_UINT8 i;
 	BP_WORD multiplier;
 	if(BP_NULL == msg) {
+#ifdef DEBUG
+        printf("BP_NULL == msg\n");
+#endif
 		return -0x1;
 	}
 	if(BP_NULL == type_and_flags) {
+#ifdef DEBUG
+        printf("type_and_flags == msg\n");
+#endif
 		return -0x2;
 	}
 	if(BP_NULL == rmn_len) {
+#ifdef DEBUG
+        printf("rmn_len == msg\n");
+#endif
 		return -0x3;
 	}
 	i = 0;
-	*type_and_flags = msg[i];
+	*type_and_flags = msg[i++];
 
-	multiplier = 1;
 	*rmn_len = 0;
-	do {
-		i++;
-		*rmn_len += (msg[i] & 0x7F) * multiplier;
-		multiplier *= 128;
-		if(multiplier > 128) {
-			return -0x11;
-		}
-	} while((msg[i] & 0x80) != 0);
-
-	if(*rmn_len < 128 && *rmn_len != 0) {
-		*rmn_len -= 1;
-	}
+    *rmn_len = *rmn_len + msg[i++];
+    *rmn_len = (*rmn_len << 8) + msg[i++];
 
 	return 0;
 }
