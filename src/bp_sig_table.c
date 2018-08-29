@@ -3,7 +3,7 @@
 #include <bp_strlen.h>
 
 /* system default value */
-const BP_UINT8 * const STRING_NONE = "";
+const BP_UINT8 STRING_NONE[] = "";
 const SigTypeU SYS_STRING_DEFAULT_VALUE = {.t_str = STRING_NONE};
 
 /* system signal min, max, default value */
@@ -32,7 +32,7 @@ const BP_SigTable g_SysSigTable[] =
 const BP_UINT16 g_SysSigNum = sizeof(g_SysSigId2Val) / sizeof(BP_SigId2Val);
 
 /* system signal custom value */
-const BP_UINT8 * const SIG_SYS_SERIAL_NUMBER_CUSTOM_DEF_VALUE = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1";
+const BP_UINT8 SIG_SYS_SERIAL_NUMBER_CUSTOM_DEF_VALUE[] = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1";
 
 /* system signal custom value unit array */
 const BP_SysCustomUnit g_SysCustomUnitTable[] = {

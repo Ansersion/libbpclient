@@ -62,7 +62,11 @@ BP_UINT8 * BP_ToPack(PackBuf * pack_buf)
 {
 	BP_WORD i = 0;
 	BP_UINT8 * pack_start = BP_NULL;
+#if CHECKSUM_TYPE == 0
 	BP_UINT32 crc = 0;
+#else
+	BP_UINT16 crc = 0;
+#endif
 	if(BP_NULL == pack_buf) {
 		return BP_NULL;
 	}
@@ -74,8 +78,13 @@ BP_UINT8 * BP_ToPack(PackBuf * pack_buf)
 
 	// printf("buf[0]=%x\n", pack_buf->Buf[0]);
 	pack_buf->PackStart = pack_buf->Buf;
+#if CHECKSUM_TYPE == 0
 	crc = BP_calc_crc32(pack_buf->PackStart, pack_buf->MsgSize - CHECKSUM_SIZE);
 	BP_SetBig32(pack_buf->PackStart + pack_buf->MsgSize - CHECKSUM_SIZE, crc);
+#else 
+	crc = BP_calc_crc16(pack_buf->PackStart, pack_buf->MsgSize - CHECKSUM_SIZE);
+	BP_SetBig16(pack_buf->PackStart + pack_buf->MsgSize - CHECKSUM_SIZE, crc);
+#endif
 
 	return pack_buf->PackStart;
 }

@@ -239,10 +239,16 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 	BP_UINT16 i, j;
 	BP_UINT16 t4n = 0, t2n = 0, txn = 0;
 	BP_UINT16 idx_tmp;
+#if CHECKSUM_TYPE == 0
+	BP_UINT32 sig_map_crc;
+#else
+	BP_UINT16 sig_map_crc;
+#endif
 	const BP_UINT8 * sig_map;
 	BP_UINT8 * pack_4 = BP_NULL;
 	BP_UINT8 * pack_2 = BP_NULL;
 	BP_UINT8 * pack_x = BP_NULL;
+	BP_UINT8 * pack_old = pack;
 	// if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SIG_VAL_SET_MSK) {
 	// 	for(i = 0; i < payload->u.REPORT.EleNum; i++) {
 	// 		switch(payload->u.REPORT.SigTypeArray[i]) {
@@ -323,19 +329,25 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 	// 	(pack = pack_x) || (pack = pack_2) || (pack = pack_4);
 	// } 
 	if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SIG_TAB_CHK_MSK) {
-		for(i = 0; i < (sizeof(BP_UINT32) >> CHECKSUM_TYPE); i++) {
-			*pack++ = (payload->u.REPORT.SigTabChkCrc >> (8 * i)) & 0xFF;
+		for(i = 0; i < CHECKSUM_SIZE; i++) {
+			*pack++ = 0;
 		}		
-	}
-	if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SYS_SIG_SET_MSK) {
+	} else if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SYS_SIG_SET_MSK) {
         for(i = 0; i < payload->u.REPORT.SysSigMapEleNum; i++) {
 			*pack++ = payload->u.REPORT.SysSigMap[i].Dist;
             memcpy_bp(pack, payload->u.REPORT.SysSigMap[i].SigMap, payload->u.REPORT.SysSigMap[i].SigMapSize);
             pack += payload->u.REPORT.SysSigMap[i].SigMapSize;
         }
-	}
-
-	if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SIG_VAL_MSK) {
+		/* TODO: pack custom signal map*/
+		/* TODO: pack custom system signal attribute map*/
+#if CHECKSUM_TYPE == 0
+		sig_map_crc = BP_calc_crc32(pack_old, (BP_WORD)(pack - pack_old));
+		pack = BP_SetBig32(pack, sig_map_crc);
+#else
+		sig_map_crc = BP_calc_crc16(pack_old, (BP_WORD)(pack - pack_old));
+		pack = BP_SetBig16(pack, sig_map_crc);
+#endif
+	} else {
 		*pack++ = (BP_UINT8)(payload->u.REPORT.SysSigValEleNum + payload->u.REPORT.CusSigValEleNum);
 
 		// BP_SigvalSort(payload->u.REPORT.CusSigArray, payload->u.REPORT.CusSigValEleNum);
