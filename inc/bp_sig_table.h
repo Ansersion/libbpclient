@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2018 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -28,19 +28,10 @@
 #include <bp_sig_str.h>
 
 #define SIG_SYS_COMM_STATE 			0xE000
-#define SIG_SYS_POWER 				0xE001
+#define SIG_SYS_SERIAL_NUMBER 		0xE001
+#define SIG_SYS_POWER 				0xE002
 
 
-extern BP_SigId2Val g_SysSigId2Val[];
-extern const BP_SigTable g_SysSigTable[];
-extern const BP_UINT16 g_SysSigNum;
-
-BP_UINT16 BP_GetSigIdx(const BP_UINT16 sig_id);
-BP_UINT16 BP_GetSigType(const BP_UINT16 sig_id);
-BP_INT16 BP_SetSigVal(BP_UINT8 sig_num, BP_SigId2Val * sig_array);
-void BP_SigDump(void);
-BP_UINT32 BP_GetSigTabChk();
-BP_UINT8 * BP_SetSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val);
 
 #endif
 

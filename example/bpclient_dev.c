@@ -23,12 +23,12 @@
 #include <bp_connect.h>
 #include <bp_disconn.h>
 #include <bp_parse.h>
-#include <bp_sys_sig.h>
 #include <bp_report.h>
 #include <bp_getack.h>
 #include <bp_postack.h>
 #include <bp_ping.h>
 #include <bp_sig_table.h>
+#include <bp_sig_table_tools.h>
 
 
 #define PORT 8025
@@ -124,14 +124,14 @@ int main()
 					// printf("report\n");
 				} else if(strncmp(input, "rsm", 3) == 0){
 					// p_pack_buf = BP_PackReport(BP_NULL, g_SysSigMap);
-					// p_pack_buf = BP_PackReport(DEV_NAME, g_SysSigMap, BP_NULL, g_SysSigMapSize);
+					p_pack_buf = BP_PackReportSigTable(&BPContextEmbeded, g_SysSigMap, g_SysSigMapSize);
 					// n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
 					// if(n != p_pack_buf->MsgSize) {
 					// 	close(conndfd);
 					// 	perror("Send error");
 					// 	return -1;
 					// }
-					// printf("report\n");
+					printf("report\n");
 				} else if(strncmp(input, "rsv", 3) == 0){
 					// p_pack_buf = BP_PackReportSigVal(&sig_id_2_val_array_test, sizeof(sig_id_2_val_array_test) / sizeof(BP_SigId2Val), BP_NULL, 0);
 					if(BP_NULL == p_pack_buf) {

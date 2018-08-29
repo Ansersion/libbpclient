@@ -29,7 +29,7 @@
 #include <bp_pack_type.h>
 #include <bp_vrb_flags.h>
 #include <bp_crc32.h>
-#include <bp_sys_sig.h>
+#include <bp_sig_table_tools.h>
 #include <bp_postack.h>
 #include <bp_sig_table.h>
 

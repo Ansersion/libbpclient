@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2018 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-/// @file 	bp_connect.c
-/// @brief 	for BP CONNECT functions source file
+/// @file 	bp_report.c
+/// @brief 	for BP REPORT functions source file
 /// 
 /// @version 	0.1
 /// @author 	Ansersion
@@ -29,7 +29,7 @@
 #include <bp_pack_type.h>
 #include <bp_vrb_flags.h>
 #include <bp_crc32.h>
-#include <bp_sys_sig.h>
+#include <bp_sig_table_tools.h>
 #include <bp_report.h>
 #include <bp_sig_table.h>
 
@@ -180,8 +180,84 @@ PackBuf * BP_PackReportSigTabChksum(const BPContext * bp_context)
 	return bp_context->packBuf;
 }
 
-PackBuf * BP_PackReportSigTable()
+PackBuf * BP_PackReportSigTable(const BPContext * bp_context, const BP_SigTable * sys_sig_tab, const BP_UINT16 sys_sig_tab_ele_num)
 {
+    BP_WORD i, j;
+
+    BP_UINT8 * pbuf, * pbuf_old;
+    BP_WORD rmn_len = 0;
+
+    BPPackVrbHead vrb_head;
+    BPPackPayload payload;
+
+    if(BP_NULL == bp_context) {
+        return BP_NULL;
+    }
+    if(BP_NULL == bp_context->packBuf) {
+        return BP_NULL;
+    }
+
+    if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, bp_context->packBuf->BufSize)) {
+        return BP_NULL;
+    }
+#ifdef DEBUG
+	printf("buf[0]=%x\n", bp_context->packBuf->Buf[0]);
+#endif
+    pbuf = bp_context->packBuf->PackStart;
+    pbuf_old = pbuf;
+
+    BP_SeqIdReport = BP_SeqIdCommon++;
+    vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
+    vrb_head.u.REPORT.Flags = 0;
+
+    if(BP_NULL != sys_sig_tab && 0 != sys_sig_tab_ele_num) {
+    	vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SYS_SIG_SET_MSK;
+    	payload.u.REPORT.SysSigMapEleNum = sys_sig_tab_ele_num;
+    	payload.u.REPORT.SysSigMap = sys_sig_tab;
+    }
+    // if(BP_NULL != sig_array) {
+    // 	vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_SET_MSK;
+    // 	payload.u.REPORT.EleNum = num;
+    // 	payload.u.REPORT.SigArray = sig_array;
+    // 	payload.u.REPORT.SigTypeArray = g_SigTypeArray;
+
+    // 	for(i = 0; i < num; i++) {
+    // 		for(j = 0; j < g_SysSigNum; j++) {
+    // 			if(g_SysSigTable[j].SigId == sig_array[i].SigId) {
+    // 				g_SigTypeArray[i] = g_SysSigTable[j].SigType;
+    // 				g_SigArray[i] = g_SysSigId2Val[j];
+    // 				break;
+    // 			}
+    // 		}
+    // 		// TODO: unknown signals: get_str->SigTabArray[i]
+    // 		if(g_SysSigNum == j) {
+    // 			return BP_NULL;
+    // 		}
+    // 	}
+    // }
+#ifdef DEBUG
+	printf("start BP_make_vrb_head\n");
+#endif
+    pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_REPORT);
+
+#ifdef DEBUG
+	printf("start BP_make_payload\n");
+#endif
+    pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_REPORT, &vrb_head);
+
+    // set remaining length and pack the packet
+    rmn_len = (BP_WORD)(pbuf-pbuf_old);
+    bp_context->packBuf->RmnLen = rmn_len;
+    pbuf = BP_ToPack(bp_context->packBuf);
+
+#ifdef DEBUG
+	for(i = 0; i < bp_context->packBuf->MsgSize; i++) {
+		printf("%02x ", pbuf[i]);
+	}
+	printf("\n%d\n", i);
+#endif
+
+    return bp_context->packBuf;
 }
 
 PackBuf * BP_PackReportSigVal(const BPContext *bp_context, const BP_SigId2Val * sys_sig_array, const BP_UINT16 sys_sig_num, const BP_SigId2Val * cus_sig_array, const BP_UINT16 cus_sig_num)

@@ -46,7 +46,7 @@ PackBuf * BP_InitPack(PackBuf * pack_buf, BP_UINT8 type_msk, BP_UINT8 * buf, BP_
 	/* Note: not initialize buffer to accelerate processing */
 	/* memset_bp(buf, 0, size); */
 	pack_buf->Buf = buf;
-	pack_buf->Buf[0] = type_msk;
+	pack_buf->Buf[0] = type_msk | ((ENCRYPTION_TYPE << 1) & 0x06) | (CHECKSUM_TYPE & 0x01);
 	pack_buf->PackStart = &(pack_buf->Buf[FIX_HEAD_SIZE]);
 	return pack_buf;
 }

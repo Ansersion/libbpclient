@@ -27,6 +27,35 @@
 
 #include <bpclient_config.h>
 
+#define ENABLE_ALARM            1
+#define DISABLE_ALARM           0
+#define ENABLE_STATISTICS       1
+#define DISABLE_STATISTICS      0
+#define ENABLE_DISPLAY          1
+#define DISABLE_DISPLAY         0
+#define HAS_CUSTOM_INFO         1
+#define NO_CUSTOM_INFO          0
+#define RESERVED_FIELD          0
+
+#define ALARM_CLASS_NONE            5
+#define ALARM_CLASS_INFO            4    
+#define ALARM_CLASS_ATTENTION       3
+#define ALARM_CLASS_WARNING         2
+#define ALARM_CLASS_SERIOUS         1
+#define ALARM_CLASS_EMERGENCY       0
+
+#define SYS_SIG_CUSTOM_TYPE_ALM_CLASS           10
+#define SYS_SIG_CUSTOM_TYPE_ALM_DLY_AFTER       9
+#define SYS_SIG_CUSTOM_TYPE_ALM_DLY_BEFORE      8
+#define SYS_SIG_CUSTOM_TYPE_IS_ALARM            7
+#define SYS_SIG_CUSTOM_TYPE_DEF_VAL             6
+#define SYS_SIG_CUSTOM_TYPE_MIN_VAL             5
+#define SYS_SIG_CUSTOM_TYPE_MAX_VAL             4
+#define SYS_SIG_CUSTOM_TYPE_ACCURACY            3
+#define SYS_SIG_CUSTOM_TYPE_GROUP_LANG          2
+#define SYS_SIG_CUSTOM_TYPE_ENUM_LANG           1
+#define SYS_SIG_CUSTOM_TYPE_EN_STATISTICS       0
+
 #define SIG_INDEX_INVALID 			0xFFFF
 
 #define DIST_END_FLAG_MSK 	0x01
@@ -39,6 +68,7 @@
 #define DIST_CLASS_5_MSK 	0x0A	
 #define DIST_CLASS_6_MSK 	0x0C	
 
+
 typedef enum BP_SigType {
 	SIG_TYPE_U32 = 0, 
 	SIG_TYPE_U16,
@@ -47,7 +77,8 @@ typedef enum BP_SigType {
 	SIG_TYPE_ENM, 
 	SIG_TYPE_FLT, 
 	SIG_TYPE_STR, 
-	SIG_TYPE_UNKNOWN = 16, 
+	SIG_TYPE_BOOLEAN, 
+	SIG_TYPE_UNKNOWN = 15,
 } BP_SigType;
 
 typedef enum BP_SigPerm {
@@ -63,6 +94,7 @@ typedef union SigTypeU {
 	BP_UINT16 	t_enm;
 	BP_FLOAT 	t_flt;
 	BP_UINT8* 	t_str;
+	BP_UINT8 	t_bool;
 } SigTypeU;
 
 typedef struct BP_SigId2Val {
@@ -80,17 +112,35 @@ typedef struct BP_SigTable {
 	/* SIG_TYPE_FLT, */
 	/* SIG_TYPE_STR, */
 	BP_UINT16 SigType:4;
+	/* DISABLE_STATISTICS = 0, */
+	/* ENABLE_STATISTICS, */
 	BP_UINT16 EnStatics:1;
+	/* DISABLE_DISPLAY = 0, */
+	/* ENABLE_DISPLAY, */
+	BP_UINT16 IsDisplay:1;
 	BP_UINT16 Accuracy:3;
-	// BP_UINT32 EnAlarm:1;
-	// BP_UINT32 AlmClass:3;
+	/* DISABLE_ALARM = 0, */
+	/* ENABLE_ALARM, */
+	BP_UINT16 EnAlarm:1;
 	/* SIG_PERM_RO = 0, */
 	/* SIG_PERM_RW, */
 	BP_UINT16 Perm:1;
-	BP_UINT16 Reserved:4;
+    /* ALARM_CLASS_NONE = 5 */
+    /* ALARM_CLASS_INFO = 4 */    
+    /* ALARM_CLASS_ATTENTION = 3 */
+    /* ALARM_CLASS_WARNING = 2 */
+    /* ALARM_CLASS_SERIOUS = 1 */
+    /* ALARM_CLASS_EMERGENCY = 0 */
+	BP_UINT16 AlmClass:3;
+	/* NO_CUSTOM_INFO = 0, */
+	/* HAS_CUSTOM_INFO, */
+    BP_UINT16 HasCustomInfo:1;
+	BP_UINT16 Reserved:1;
 	SigTypeU * MinVal;
 	SigTypeU * MaxVal;
 	SigTypeU * DefVal;
+    BP_UINT8 DelayBeforeAlm;
+    BP_UINT8 DelayAfterAlm;
 
 	// /* Other info*/
 	// BP_UINT16 SigSize:3;
@@ -106,6 +156,12 @@ typedef struct BP_SysSigMap {
 	BP_UINT8 SigMapSize;
 	const BP_UINT8 * SigMap;
 } BP_SysSigMap;
+
+typedef struct BP_SysCustomUnit {
+    BP_UINT16 SigId;
+    BP_UINT8 CustomType;
+    void * CustomValue;
+} BP_SysCustomUnit;
 
 #endif
 

@@ -28,6 +28,7 @@
 #include <bp_fix_flags.h>
 #include <bp_sig_table.h>
 #include <bp_make_payload.h>
+#include <bp_sig_table_tools.h>
 
 BP_INT8 BP_ParseRprtack(BP_RprtackStr * str_rprtack, BP_UINT8 * msg, BP_UINT16 len)
 {

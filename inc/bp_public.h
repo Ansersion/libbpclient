@@ -211,6 +211,7 @@ typedef struct Payload_REPORT {
 	BP_UINT16 CusSigValEleNum;
 	const BP_SigId2Val * SysSigArray;
 	const BP_SigId2Val * CusSigArray;
+	BP_UINT16 SysSigMapEleNum;
 	const BP_SysSigMap * SysSigMap;
 } Payload_REPORT;
 

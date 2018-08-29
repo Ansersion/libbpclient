@@ -219,6 +219,10 @@ BP_UINT8 * make_pld_getack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHe
 					}
 				}
 				break;
+			case SIG_TYPE_BOOLEAN:
+				pack_2 = BP_SetBig16(pack_2, payload->u.GETACK.SigArray[i].SigId);
+				pack_2 = BP_SetBig16(pack_2, payload->u.GETACK.SigArray[i].SigVal.t_bool);
+				break;
 		}
 	}
 	(pack = pack_x) || (pack = pack_2) || (pack = pack_4);
@@ -322,7 +326,13 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 		for(i = 0; i < (sizeof(BP_UINT32) >> CHECKSUM_TYPE); i++) {
 			*pack++ = (payload->u.REPORT.SigTabChkCrc >> (8 * i)) & 0xFF;
 		}		
-
+	}
+	if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SYS_SIG_SET_MSK) {
+        for(i = 0; i < payload->u.REPORT.SysSigMapEleNum; i++) {
+			*pack++ = payload->u.REPORT.SysSigMap[i].Dist;
+            memcpy_bp(pack, payload->u.REPORT.SysSigMap[i].SigMap, payload->u.REPORT.SysSigMap[i].SigMapSize);
+            pack += payload->u.REPORT.SysSigMap[i].SigMapSize;
+        }
 	}
 
 	if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SIG_VAL_MSK) {
