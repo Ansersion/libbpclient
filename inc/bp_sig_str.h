@@ -44,13 +44,13 @@
 #define ALARM_CLASS_SERIOUS         1
 #define ALARM_CLASS_EMERGENCY       0
 
-#define SYS_SIG_CUSTOM_TYPE_ALM_CLASS           10
-#define SYS_SIG_CUSTOM_TYPE_ALM_DLY_AFTER       9
-#define SYS_SIG_CUSTOM_TYPE_ALM_DLY_BEFORE      8
+#define SYS_SIG_CUSTOM_TYPE_ALM_DLY_AFTER       10
+#define SYS_SIG_CUSTOM_TYPE_ALM_DLY_BEFORE      9
+#define SYS_SIG_CUSTOM_TYPE_ALM_CLASS           8
 #define SYS_SIG_CUSTOM_TYPE_IS_ALARM            7
 #define SYS_SIG_CUSTOM_TYPE_DEF_VAL             6
-#define SYS_SIG_CUSTOM_TYPE_MIN_VAL             5
-#define SYS_SIG_CUSTOM_TYPE_MAX_VAL             4
+#define SYS_SIG_CUSTOM_TYPE_MAX_VAL             5
+#define SYS_SIG_CUSTOM_TYPE_MIN_VAL             4
 #define SYS_SIG_CUSTOM_TYPE_ACCURACY            3
 #define SYS_SIG_CUSTOM_TYPE_GROUP_LANG          2
 #define SYS_SIG_CUSTOM_TYPE_ENUM_LANG           1

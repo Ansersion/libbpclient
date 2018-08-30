@@ -217,7 +217,7 @@ PackBuf * BP_PackReportSigTable(const BPContext * bp_context)
     //payload.u.REPORT.SysSigMap = g_SysSigNum;
     // }
     // if(BP_NULL != g_CusSigTable && 0 != g_CusSigNum) {
-    // vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_CUS_SIG_SET_MSK;
+    vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_CUS_SIG_SET_MSK;
     // }
     // if(BP_NULL != sig_array) {
     // 	vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_SET_MSK;

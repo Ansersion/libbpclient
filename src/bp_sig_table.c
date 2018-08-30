@@ -33,6 +33,7 @@ const BP_UINT8 SIG_SYS_SERIAL_NUMBER_CUSTOM_DEF_VALUE[] = "XXXXXXXXXXXXXXXXXXXXX
 
 /* system signal custom value unit array */
 const BP_SysCustomUnit g_SysCustomUnitTable[] = {
+    /* must be sorted which same signal id get togather */
     {SIG_SYS_SERIAL_NUMBER, SYS_SIG_CUSTOM_TYPE_DEF_VAL, (void *)SIG_SYS_SERIAL_NUMBER_CUSTOM_DEF_VALUE}
 };
 
@@ -40,6 +41,7 @@ const BP_SysCustomUnit g_SysCustomUnitTable[] = {
 const BP_WORD g_SysCustomUnitNum = sizeof(g_SysCustomUnitTable) / sizeof(BP_SysCustomUnit);
 
 
+/* system signal enable map */
 const BP_UINT8 g_SysMapDis_0[1] = {0x04 | 0x02 | 0x01};
 
 const BP_SysSigMap g_SysSigMap[] = 

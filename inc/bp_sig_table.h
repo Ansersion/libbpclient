@@ -37,6 +37,9 @@ extern const BP_WORD g_SysSigNum;
 extern const BP_SysCustomUnit g_SysCustomUnit[];
 extern const BP_WORD g_SysCustomUnitNum;
 
+extern const BP_SysCustomUnit g_SysCustomUnitTable[];
+extern const BP_WORD g_SysCustomUnitNum;
+
 extern const BP_UINT8 g_SysMapDis_0[];
 extern const BP_SysSigMap g_SysSigMap[];
 extern const BP_WORD g_SysSigMapSize;

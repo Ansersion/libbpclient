@@ -13,11 +13,10 @@ const BP_SigTable g_CusSigTable[] =
 	{SIG_CUS_DEVICE_NAME, SIG_TYPE_STR, DISABLE_STATISTICS, DISABLE_DISPLAY, 0, DISABLE_ALARM, SIG_PERM_RO, ALARM_CLASS_NONE, NO_CUSTOM_INFO, RESERVED_FIELD, (SigTypeU *)&STRING_DEFAULT_VALUE, (SigTypeU *)&STRING_DEFAULT_VALUE, (SigTypeU *)&STRING_DEFAULT_VALUE, 5, 5},
 };
 
-const BP_WORD g_CusSigNum = sizeof(g_CusSigTable) / sizeof(BP_SigId2Val);
+const BP_WORD g_CusSigNum = sizeof(g_CusSigId2Val) / sizeof(BP_SigId2Val);
 
 const BP_UINT8 * g_CusSigNameLang[] = 
 {
-    "",
     "",
     "",
     "",
