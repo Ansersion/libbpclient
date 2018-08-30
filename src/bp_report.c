@@ -37,6 +37,10 @@
 #include <bp_strlen.h>
 #include <bp_memcpy.h>
 
+#ifdef DEBUG
+#include <stdio.h>
+#endif
+
 PackBuf * BP_PackReport(const BP_SigId2Val * sig_array, const BP_UINT16 num)
 {
 	// BP_WORD i, j;
@@ -142,17 +146,18 @@ PackBuf * BP_PackReportSigTabChksum(const BPContext * bp_context)
         return BP_NULL;
     }
 
-	BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE);
+	if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE)) {
+		return BP_NULL;
+	}
+		
 	pbuf = bp_context->packBuf->PackStart;
 	pbuf_old = pbuf;
 
+    BP_SeqIdReport = BP_SeqIdCommon++;
+    vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
+
 	vrb_head.u.REPORT.Flags = 0;
 	vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_TAB_CHK_MSK;
-
-	payload.u.REPORT.SigTabChkCrc = BP_GetSigTabChk();
-
-	BP_SeqIdReport = BP_SeqIdCommon++;
-	vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
 
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_REPORT);
 	// printf("debug:\n");
@@ -173,10 +178,12 @@ PackBuf * BP_PackReportSigTabChksum(const BPContext * bp_context)
 	bp_context->packBuf->RmnLen = rmn_len;
 	pbuf = BP_ToPack(bp_context->packBuf);
 
-	// for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
-	// 	printf("%02x ", pbuf[i]);
-	// }
-	// printf("\n");
+#ifdef DEBUG
+	for(i = 0; i < bp_context->packBuf->MsgSize; i++) {
+		printf("%02x ", pbuf[i]);
+	}
+	printf("\n%d\n", i);
+#endif
 
 	return bp_context->packBuf;
 }
@@ -211,34 +218,9 @@ PackBuf * BP_PackReportSigTable(const BPContext * bp_context)
     vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
     vrb_head.u.REPORT.Flags = 0;
 
-    // if(BP_NULL != g_SysSigTable && 0 != g_SysSigNum) {
     vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SYS_SIG_SET_MSK;
-    //payload.u.REPORT.SysSigMapEleNum = g_SysSigTable;
-    //payload.u.REPORT.SysSigMap = g_SysSigNum;
-    // }
-    // if(BP_NULL != g_CusSigTable && 0 != g_CusSigNum) {
     vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_CUS_SIG_SET_MSK;
-    // }
-    // if(BP_NULL != sig_array) {
-    // 	vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_SET_MSK;
-    // 	payload.u.REPORT.EleNum = num;
-    // 	payload.u.REPORT.SigArray = sig_array;
-    // 	payload.u.REPORT.SigTypeArray = g_SigTypeArray;
-
-    // 	for(i = 0; i < num; i++) {
-    // 		for(j = 0; j < g_SysSigNum; j++) {
-    // 			if(g_SysSigTable[j].SigId == sig_array[i].SigId) {
-    // 				g_SigTypeArray[i] = g_SysSigTable[j].SigType;
-    // 				g_SigArray[i] = g_SysSigId2Val[j];
-    // 				break;
-    // 			}
-    // 		}
-    // 		// TODO: unknown signals: get_str->SigTabArray[i]
-    // 		if(g_SysSigNum == j) {
-    // 			return BP_NULL;
-    // 		}
-    // 	}
-    // }
+    vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SYS_SIG_ATTR_CUSTOM_MSK;
 #ifdef DEBUG
 	printf("start BP_make_vrb_head\n");
 #endif

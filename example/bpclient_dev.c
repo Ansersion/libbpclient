@@ -32,7 +32,7 @@
 
 
 #define PORT 8025
-#define SERVER_IP "127.0.0.1"
+#define SERVER_IP "192.168.2.196"
 
 // BP_UINT8 DEV_NAME[] = "AnsersionDev";
 
@@ -115,13 +115,14 @@ int main()
 				} else if(strncmp(input, "rsc", 3) == 0){
 					// p_pack_buf = BP_PackReport(BP_NULL, g_SysSigMap);
 					// p_pack_buf = BP_PackReport(DEV_NAME, g_SysSigMap, BP_NULL, g_SysSigMapSize);
+					p_pack_buf = BP_PackReportSigTabChksum(&BPContextEmbeded);
 					// n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
 					// if(n != p_pack_buf->MsgSize) {
 					// 	close(conndfd);
 					// 	perror("Send error");
 					// 	return -1;
 					// }
-					// printf("report\n");
+					printf("report\n");
 				} else if(strncmp(input, "rsm", 3) == 0){
 					// p_pack_buf = BP_PackReport(BP_NULL, g_SysSigMap);
 					p_pack_buf = BP_PackReportSigTable(&BPContextEmbeded);
