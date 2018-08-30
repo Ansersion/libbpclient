@@ -111,6 +111,7 @@ typedef struct BP_SigTable {
 	/* SIG_TYPE_ENM, */
 	/* SIG_TYPE_FLT, */
 	/* SIG_TYPE_STR, */
+	/* SIG_TYPE_BOOLEAN, */
 	BP_UINT16 SigType:4;
 	/* DISABLE_STATISTICS = 0, */
 	/* ENABLE_STATISTICS, */
@@ -162,6 +163,17 @@ typedef struct BP_SysCustomUnit {
     BP_UINT8 CustomType;
     void * CustomValue;
 } BP_SysCustomUnit;
+
+typedef struct BP_CusLangMap {
+    BP_UINT16 SigId;
+    BP_UINT16 LangId;
+} BP_CusLangMap;
+
+typedef struct BP_CusEnumLangMap {
+    BP_UINT16 SigId;
+    BP_UINT16 EnumVal;
+    BP_UINT16 LangId;
+} BP_CusEnumLangMap;
 
 #endif
 

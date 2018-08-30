@@ -27,6 +27,7 @@
 #include <bp_pack_type.h>
 #include <bp_vrb_flags.h>
 #include <bp_sig_table.h>
+#include <bp_custom_sig_table.h>
 
 
 // std
@@ -236,110 +237,151 @@ BP_UINT8 * make_pld_postack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbH
 
 BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head)
 {
-	BP_UINT16 i, j;
+	BP_UINT16 i, j, k;
 	BP_UINT16 t4n = 0, t2n = 0, txn = 0;
 	BP_UINT16 idx_tmp;
+    BP_UINT8 byte_tmp = 0;
 #if CHECKSUM_TYPE == 0
 	BP_UINT32 sig_map_crc;
 #else
 	BP_UINT16 sig_map_crc;
 #endif
 	const BP_UINT8 * sig_map;
+	const BP_UINT8 * lang;
 	BP_UINT8 * pack_4 = BP_NULL;
 	BP_UINT8 * pack_2 = BP_NULL;
 	BP_UINT8 * pack_x = BP_NULL;
 	BP_UINT8 * pack_old = pack;
-	// if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SIG_VAL_SET_MSK) {
-	// 	for(i = 0; i < payload->u.REPORT.EleNum; i++) {
-	// 		switch(payload->u.REPORT.SigTypeArray[i]) {
-	// 			case SIG_TYPE_U32:
-	// 			case SIG_TYPE_I32:
-	// 			case SIG_TYPE_FLT:
-	// 				t4n++;
-	// 				break;
-	// 			case SIG_TYPE_U16:
-	// 			case SIG_TYPE_I16:
-	// 			case SIG_TYPE_ENM:
-	// 				t2n++;
-	// 				break;
-	// 			case SIG_TYPE_STR:
-	// 				txn++;
-	// 				break;
-	// 			default:
-	// 				return BP_NULL;
-	// 		}
-	// 	}
-	// 	if(t4n > 0x3F || t2n > 0x3F || txn > 0x3F) {
-	// 		return BP_NULL;
-	// 	}
-	// 	*pack = 0;
-	// 	if(t4n != 0) {
-	// 		pack_4 = (pack+1);
-	// 		*pack += 1;
-	// 		*pack_4++ = 0x80 | t4n;
-	// 	}
-	// 	if(t2n != 0) {
-	// 		pack_2 = (pack+1) + ((BP_NULL==pack_4)?0:(1+t4n*(4+2)));
-	// 		*pack += 1;
-	// 		*pack_2++ = 0x40 | t2n;
-	// 	}
-	// 	if(txn != 0) {
-	// 		pack_x = (pack+1) + ((BP_NULL==pack_4)?0:(1+t4n*(4+2))) + ((BP_NULL==pack_2)?0:(1+t2n*(2+2)));
-	// 		*pack += 1;
-	// 		*pack_x++ = 0xC0 | txn;
-	// 	}
-	// 	for(i = 0; i < payload->u.REPORT.EleNum; i++) {
-	// 		switch(payload->u.REPORT.SigTypeArray[i]) {
-	// 			case SIG_TYPE_U32:
-	// 				pack_4 = BP_SetBig16(pack_4, payload->u.REPORT.SigArray[i].SigId);
-	// 				pack_4 = BP_SetBig32(pack_4, payload->u.REPORT.SigArray[i].SigVal.t_u32);
-	// 				break;
-	// 			case SIG_TYPE_I32:
-	// 				pack_4 = BP_SetBig16(pack_4, payload->u.REPORT.SigArray[i].SigId);
-	// 				pack_4 = BP_SetBig32(pack_4, payload->u.REPORT.SigArray[i].SigVal.t_i32);
-	// 				break;
-	// 			case SIG_TYPE_FLT:
-	// 				pack_4 = BP_SetBig16(pack_4, payload->u.REPORT.SigArray[i].SigId);
-	// 				pack_4 = BP_SetBig32(pack_4, payload->u.REPORT.SigArray[i].SigVal.t_flt);
-	// 				break;
-	// 			case SIG_TYPE_U16:
-	// 				pack_2 = BP_SetBig16(pack_2, payload->u.REPORT.SigArray[i].SigId);
-	// 				pack_2 = BP_SetBig16(pack_2, payload->u.REPORT.SigArray[i].SigVal.t_u16);
-	// 				break;
-	// 			case SIG_TYPE_I16:
-	// 				pack_2 = BP_SetBig16(pack_2, payload->u.REPORT.SigArray[i].SigId);
-	// 				pack_2 = BP_SetBig16(pack_2, payload->u.REPORT.SigArray[i].SigVal.t_i16);
-	// 				break;
-	// 			case SIG_TYPE_ENM:
-	// 				pack_2 = BP_SetBig16(pack_2, payload->u.REPORT.SigArray[i].SigId);
-	// 				pack_2 = BP_SetBig16(pack_2, payload->u.REPORT.SigArray[i].SigVal.t_enm);
-	// 				break;
-	// 			case SIG_TYPE_STR:
-	// 				{
-	// 					BP_UINT8 n = strlen_bp(payload->u.REPORT.SigArray[i].SigVal.t_str);
-	// 					BP_UINT8 j;
-	// 					pack_x = BP_SetBig16(pack_x, payload->u.REPORT.SigArray[i].SigId);
-	// 					for(j = 0; j < n; j++) {
-	// 						*pack_x++ = payload->u.REPORT.SigArray[i].SigVal.t_str[i];
-	// 					}
-	// 				}
-	// 				break;
-	// 		}
-	// 	}
-	// 	(pack = pack_x) || (pack = pack_2) || (pack = pack_4);
-	// } 
-	if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SIG_TAB_CHK_MSK) {
-		for(i = 0; i < CHECKSUM_SIZE; i++) {
-			*pack++ = 0;
-		}		
-	} else if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SYS_SIG_SET_MSK) {
-        for(i = 0; i < payload->u.REPORT.SysSigMapEleNum; i++) {
-			*pack++ = payload->u.REPORT.SysSigMap[i].Dist;
-            memcpy_bp(pack, payload->u.REPORT.SysSigMap[i].SigMap, payload->u.REPORT.SysSigMap[i].SigMapSize);
-            pack += payload->u.REPORT.SysSigMap[i].SigMapSize;
+    BP_UINT8 * pack_enum_lang_num;
+    BP_SigTable * sig_table_tmp;
+
+    if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SYS_SIG_SET_MSK) {
+        /* pack system signal map */
+        for(i = 0; i < g_SysSigMapSize; i++) {
+			*pack++ = g_SysSigMap[i].Dist;
+            memcpy_bp(pack, g_SysSigMap[i].SigMap, g_SysSigMap[i].SigMapSize);
         }
-		/* TODO: pack custom signal map*/
 		/* TODO: pack custom system signal attribute map*/
+        /* pack custom signal map */
+        pack = BP_SetBig16(pack, (BP_UINT16)g_CusSigNum);
+        for(i = 0; i < g_CusSigNum; i++) {
+            sig_table_tmp = &sig_table_tmp;
+            pack = BP_SetBig16(pack, sig_table_tmp->SigId);
+            *pack++ = (sig_table_tmp->SigType << 4) | (sig_table_tmp->Perm << 3) | (sig_table_tmp->EnStatics << 2) | (sig_table_tmp->EnAlarm << 1) | (sig_table_tmp->IsDisplay);
+            for(j = 7; j > 0; j--) {
+                byte_tmp = STD_LANGUAGE_SUPPORTED_MASK & (0x01 << j);
+                if(0 == byte_tmp) {
+                    continue;
+                }
+                if(0 == STD_LANGUAGE_SUPPORTED_MASK & ((0x01 << (j+1)) - 1)) {
+                    byte_tmp |= 0x01; // end flag
+                }
+                *pack++ = byte_tmp;
+                /* construct signal name language */
+                for(k = 0; k < g_CusSigNameLangMapNum; k++) {
+                    if(g_CusSigNameLangMap[k].SigId == sig_table_tmp->SigId) {
+                        if(g_CusSigNameLangMap[k].LangId == 0) {
+                            continue;
+                        }
+                        lang = g_CusSigNameLang[((g_CusSigNameLangMap[k].LangId - 1) * STD_LANGUAGE_SUPPORTED_NUM) + j];
+                        byte_tmp = (BP_UINT8)strlen_bp(lang);
+                        pack = BP_Set1ByteField(pack, lang, byte_tmp);
+                        break;
+                    }
+                }
+
+                /* construct signal unit language */
+                for(k = 0; k < g_CusSigUnitLangMapNum; k++) {
+                    if(g_CusSigUnitLangMap[k].SigId == sig_table_tmp->SigId) {
+                        if(g_CusSigUnitLangMap[k].LangId == 0) {
+                            continue;
+                        }
+                        lang = g_CusSigUnitLang[((g_CusSigUnitLangMap[k].LangId - 1) * STD_LANGUAGE_SUPPORTED_NUM) + j];
+                        byte_tmp = (BP_UINT8)strlen_bp(lang);
+                        pack = BP_Set1ByteField(pack, lang, byte_tmp);
+                        break;
+                    }
+                }
+
+                /* construct signal group language */
+                for(k = 0; k < g_CusSigGroupLangMapNum; k++) {
+                    if(g_CusSigGroupLangMap[k].SigId == sig_table_tmp->SigId) {
+                        if(g_CusSigGroupLangMap[k].LangId == 0) {
+                            continue;
+                        }
+                        lang = g_CusSigGroupLang[((g_CusSigGroupLangMap[k].LangId - 1) * STD_LANGUAGE_SUPPORTED_NUM) + j];
+                        byte_tmp = (BP_UINT8)strlen_bp(lang);
+                        pack = BP_Set1ByteField(pack, lang, byte_tmp);
+                        break;
+                    }
+                }
+
+
+                /* construct enum signal language if any*/
+                if(SIG_TYPE_ENM == sig_table_tmp->SigType) {
+                    pack_enum_lang_num = pack;
+                    *pack_enum_lang_num = 0;
+
+                    for(k = 0; k < g_CusSigEnumLangMapNum; k++) {
+                        if(g_CusSigEnumLangMap[k].SigId == sig_table_tmp->SigId) {
+                            if(g_CusSigEnumLangMap[k].LangId == 0) {
+                                continue;
+                            }
+                            lang = g_CusSigEnumLang[((g_CusSigEnumLangMap[k].LangId - 1) * STD_LANGUAGE_SUPPORTED_NUM) + j];
+                            byte_tmp = (BP_UINT8)strlen_bp(lang);
+                            pack = BP_Set1ByteField(pack, lang, byte_tmp);
+                            *pack_enum_lang_num += 1;
+                        }
+                    }
+                }
+
+            }
+
+            switch(sig_table_tmp->SigType) {
+                case SIG_TYPE_U32:
+                    pack = BP_SetBig32(pack, sig_table_tmp->MinVal->t_u32);
+                    pack = BP_SetBig32(pack, sig_table_tmp->MaxVal->t_u32);
+                    pack = BP_SetBig32(pack, sig_table_tmp->DefVal->t_u32);
+                    break;
+                case SIG_TYPE_U16:
+                    pack = BP_SetBig16(pack, sig_table_tmp->MinVal->t_u16);
+                    pack = BP_SetBig16(pack, sig_table_tmp->MaxVal->t_u16);
+                    pack = BP_SetBig16(pack, sig_table_tmp->DefVal->t_u16);
+                    break;
+                case SIG_TYPE_I32:
+                    pack = BP_SetBig32(pack, sig_table_tmp->MinVal->t_i32);
+                    pack = BP_SetBig32(pack, sig_table_tmp->MaxVal->t_i32);
+                    pack = BP_SetBig32(pack, sig_table_tmp->DefVal->t_i32);
+                    break;
+                case SIG_TYPE_I16:
+                    pack = BP_SetBig16(pack, sig_table_tmp->MinVal->t_i16);
+                    pack = BP_SetBig16(pack, sig_table_tmp->MaxVal->t_i16);
+                    pack = BP_SetBig16(pack, sig_table_tmp->DefVal->t_i16);
+                    break;
+                case SIG_TYPE_ENM:
+                    break;
+                case SIG_TYPE_FLT:
+                    *pack++ = sig_table_tmp->Accuracy;
+                    pack = BP_SetBig32(pack, sig_table_tmp->MinVal->t_flt);
+                    pack = BP_SetBig32(pack, sig_table_tmp->MaxVal->t_flt);
+                    pack = BP_SetBig32(pack, sig_table_tmp->DefVal->t_flt);
+                    break;
+                case SIG_TYPE_STR:
+                    byte_tmp = strlen_bp(sig_table_tmp->DefVal->t_str);
+                    pack = BP_Set1ByteField(pack, sig_table_tmp->DefVal->t_str, byte_tmp);
+                    break;
+                case SIG_TYPE_BOOLEAN:
+                    *pack++ = sig_table_tmp->DefVal->t_bool;
+                    break;
+            }
+
+            if(sig_table_tmp->EnAlarm) {
+                *pack++ = sig_table_tmp->AlmClass;
+                *pack++ = sig_table_tmp->DelayBeforeAlm;
+                *pack++ = sig_table_tmp->DelayAfterAlm;
+            }
+
+        }
 #if CHECKSUM_TYPE == 0
 		sig_map_crc = BP_calc_crc32(pack_old, (BP_WORD)(pack - pack_old));
 		pack = BP_SetBig32(pack, sig_map_crc);

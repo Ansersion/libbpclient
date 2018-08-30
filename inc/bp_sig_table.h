@@ -31,6 +31,16 @@
 #define SIG_SYS_SERIAL_NUMBER 		0xE001
 #define SIG_SYS_POWER 				0xE002
 
+extern BP_SigId2Val g_SysSigId2Val[];
+extern const BP_SigTable g_SysSigTable[];
+extern const BP_WORD g_SysSigNum;
+extern const BP_SysCustomUnit g_SysCustomUnit[];
+extern const BP_WORD g_SysCustomUnitNum;
+
+extern const BP_UINT8 g_SysMapDis_0[];
+extern const BP_SysSigMap g_SysSigMap[];
+extern const BP_WORD g_SysSigMapSize;
+
 
 
 #endif

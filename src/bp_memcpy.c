@@ -38,6 +38,9 @@ void * memcpy_bp(void * dst, const void * src, BP_WORD count)
 	if(dst == src) {
 		return dst;
 	}
+    if(0 == count) {
+        return dst;
+    }
 
 	nword = count/sizeof(dst);
 	npad = count%sizeof(dst);

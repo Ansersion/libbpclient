@@ -104,6 +104,18 @@ BP_UINT8 * BP_Set2ByteField(BP_UINT8 * pack, BP_UINT8 * field, BP_UINT16 field_l
 	return p_pack+field_len;
 }
 
+BP_UINT8 * BP_Set1ByteField(BP_UINT8 * pack, const BP_UINT8 * field, BP_UINT8 field_len)
+{
+	BP_UINT8 * p_pack = pack;
+	if(BP_NULL == pack) {
+		return BP_NULL;
+	}
+	*p_pack++ = field_len;
+	memcpy_bp(p_pack, field, field_len);
+
+	return p_pack+field_len;
+}
+
 BP_UINT8 * BP_GetNet16(BP_UINT8 * src, BP_UINT16 * val)
 {
 	if(BP_NULL == src) {

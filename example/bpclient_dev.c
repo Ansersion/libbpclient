@@ -124,7 +124,7 @@ int main()
 					// printf("report\n");
 				} else if(strncmp(input, "rsm", 3) == 0){
 					// p_pack_buf = BP_PackReport(BP_NULL, g_SysSigMap);
-					p_pack_buf = BP_PackReportSigTable(&BPContextEmbeded, g_SysSigMap, g_SysSigMapSize);
+					p_pack_buf = BP_PackReportSigTable(&BPContextEmbeded);
 					// n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
 					// if(n != p_pack_buf->MsgSize) {
 					// 	close(conndfd);

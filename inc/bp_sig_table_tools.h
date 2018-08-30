@@ -30,15 +30,8 @@
 #define SYSTEM_SIGNAL_ID_DIST_NUM   0x200
 #define MAX_SYS_SIG_DIST_NUM 	16
 
-extern BP_SigId2Val g_SysSigId2Val[];
-extern const BP_SigTable g_SysSigTable[];
-extern const BP_UINT16 g_SysSigNum;
-extern const BP_SysCustomUnit g_SysCustomUnit[];
-extern const BP_UINT16 g_SysCustomUnitNum;
-
-extern const BP_UINT8 g_SysMapDis_0[];
-extern const BP_SysSigMap g_SysSigMap[];
-extern const BP_UINT16 g_SysSigMapSize;
+extern const BP_UINT8 STRING_NONE[];
+extern const SigTypeU STRING_DEFAULT_VALUE;
 
 BP_UINT16 BP_GetSigIdx(const BP_UINT16 sig_id);
 BP_UINT16 BP_GetSigType(const BP_UINT16 sig_id);
@@ -48,6 +41,7 @@ BP_UINT32 BP_GetSigTabChk();
 BP_UINT8 * BP_SetSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val);
 
 BP_UINT8 whichDist(BP_UINT16 sys_sig_id);
+BP_UINT8 hasMinMax(BP_UINT16 sig_type);
 
 #endif
 

@@ -265,6 +265,7 @@ BP_UINT8 * BP_SetNet32(BP_UINT8 * dst, BP_UINT32 val);
 BP_UINT8 * BP_SetNBytes(BP_UINT8 * dst, BP_UINT8 * src, BP_WORD num);
 
 BP_UINT8 * BP_Set2ByteField(BP_UINT8 * pack, BP_UINT8 * field, BP_UINT16 field_len);
+BP_UINT8 * BP_Set1ByteField(BP_UINT8 * pack, const BP_UINT8 * field, BP_UINT8 field_len);
 
 BP_UINT8 * BP_GetNet16(BP_UINT8 * src, BP_UINT16 * val);
 BP_UINT8 * BP_GetNet32(BP_UINT8 * src, BP_UINT32 * val);

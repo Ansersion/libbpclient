@@ -2,6 +2,10 @@
 #include <bp_sig_table_tools.h>
 #include <bp_public.h>
 
+const BP_UINT8 STRING_NONE[] = "";
+const SigTypeU STRING_DEFAULT_VALUE = {.t_str = STRING_NONE};
+
+
 BP_UINT16 BP_GetSigIdx(const BP_UINT16 sig_id)
 {
 	BP_UINT16 i;
