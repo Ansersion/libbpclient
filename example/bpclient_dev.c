@@ -32,7 +32,7 @@
 
 
 #define PORT 8025
-#define SERVER_IP "192.168.2.196"
+#define SERVER_IP "127.0.0.1"
 
 // BP_UINT8 DEV_NAME[] = "AnsersionDev";
 
@@ -53,8 +53,8 @@ int main()
 	// BP_UINT8 * user_name = "2";
 	// BP_UINT8 * password = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456";
 	BP_UINT8 * TEST = "TST";
-	BP_UINT8 * user_name = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1";
-	BP_UINT8 * password = "1111111111111111111111111111111111111111111111111111111111111111";
+	BP_UINT8 * user_name = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX3";
+	BP_UINT8 * password = "3333333333333333333333333333333333333333333333333333333333333333";
 
 	BP_UINT8 buf[2048+1];
 	BP_UINT16 left_len;
@@ -116,22 +116,22 @@ int main()
 					// p_pack_buf = BP_PackReport(BP_NULL, g_SysSigMap);
 					// p_pack_buf = BP_PackReport(DEV_NAME, g_SysSigMap, BP_NULL, g_SysSigMapSize);
 					p_pack_buf = BP_PackReportSigTabChksum(&BPContextEmbeded);
-					// n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
-					// if(n != p_pack_buf->MsgSize) {
-					// 	close(conndfd);
-					// 	perror("Send error");
-					// 	return -1;
-					// }
+					n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+					if(n != p_pack_buf->MsgSize) {
+						close(conndfd);
+						perror("Send error");
+						return -1;
+					}
 					printf("report\n");
 				} else if(strncmp(input, "rsm", 3) == 0){
 					// p_pack_buf = BP_PackReport(BP_NULL, g_SysSigMap);
 					p_pack_buf = BP_PackReportSigTable(&BPContextEmbeded);
-					// n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
-					// if(n != p_pack_buf->MsgSize) {
-					// 	close(conndfd);
-					// 	perror("Send error");
-					// 	return -1;
-					// }
+					n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+					if(n != p_pack_buf->MsgSize) {
+						close(conndfd);
+						perror("Send error");
+						return -1;
+					}
 					printf("report\n");
 				} else if(strncmp(input, "rsv", 3) == 0){
 					// p_pack_buf = BP_PackReportSigVal(&sig_id_2_val_array_test, sizeof(sig_id_2_val_array_test) / sizeof(BP_SigId2Val), BP_NULL, 0);

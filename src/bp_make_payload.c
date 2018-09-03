@@ -436,6 +436,7 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 #ifdef DEBUG
 				printf("start pack custom signal name language\n");
 #endif
+                
 				for(k = 0; k < g_CusSigNameLangMapNum; k++) {
 					if(g_CusSigNameLangMap[k].SigId == sig_table_tmp->SigId) {
 						if(g_CusSigNameLangMap[k].LangId == 0) {
@@ -455,6 +456,9 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 				printf("start pack custom signal unit language\n");
 #endif
 				/* construct signal unit language */
+                if(0 == g_CusSigUnitLangMapNum) {
+                    *pack++ = 0;
+                }
 				for(k = 0; k < g_CusSigUnitLangMapNum; k++) {
 					if(g_CusSigUnitLangMap[k].SigId == sig_table_tmp->SigId) {
 						if(g_CusSigUnitLangMap[k].LangId == 0) {
@@ -471,6 +475,9 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 				printf("start pack custom signal group language\n");
 #endif
 				/* construct signal group language */
+                if(0 == g_CusSigGroupLangMapNum) {
+                    *pack++ = 0;
+                }
 				for(k = 0; k < g_CusSigGroupLangMapNum; k++) {
 					if(g_CusSigGroupLangMap[k].SigId == sig_table_tmp->SigId) {
 						if(g_CusSigGroupLangMap[k].LangId == 0) {
@@ -558,13 +565,6 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 			}
 
 		}
-#if CHECKSUM_TYPE == 0
-		sig_map_crc = BP_calc_crc32(pack_old, (BP_WORD)(pack - pack_old));
-		pack = BP_SetBig32(pack, sig_map_crc);
-#else
-		sig_map_crc = BP_calc_crc16(pack_old, (BP_WORD)(pack - pack_old));
-		pack = BP_SetBig16(pack, sig_map_crc);
-#endif
 		if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SIG_TAB_CHK_MSK) {
 			pack = pack_old;
 #if CHECKSUM_TYPE == 0
@@ -572,7 +572,15 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 #else
 			pack = BP_SetBig16(pack, sig_map_crc);
 #endif
-		}
+		} else {
+#if CHECKSUM_TYPE == 0
+		sig_map_crc = BP_calc_crc32(pack_old, (BP_WORD)(pack - pack_old));
+		pack = BP_SetBig32(pack, sig_map_crc);
+#else
+		sig_map_crc = BP_calc_crc16(pack_old, (BP_WORD)(pack - pack_old));
+		pack = BP_SetBig16(pack, sig_map_crc);
+#endif
+        }
 	} else {
 		*pack++ = (BP_UINT8)(payload->u.REPORT.SysSigValEleNum + payload->u.REPORT.CusSigValEleNum);
 
