@@ -76,10 +76,12 @@ PackBuf * BP_PackPing(const BPContext * bp_context)
 	bp_context->packBuf->RmnLen = rmn_len;
 	pbuf = BP_ToPack(bp_context->packBuf);
 
-// 	for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
-// 		printf("%02x ", pbuf[i]);
-// 	}
-// 	printf("\n");
-// 
+#ifdef DEBUG
+ 	for(i = 0; i < bp_context->packBuf->MsgSize; i++) {
+ 		printf("%02x ", pbuf[i]);
+ 	}
+ 	printf("\n");
+ 
+#endif
 	return bp_context->packBuf;
 }

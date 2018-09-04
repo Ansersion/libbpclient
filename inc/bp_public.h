@@ -145,7 +145,7 @@ typedef struct VrbHead_PINGACK {
 } VrbHead_PINGACK;
 
 typedef struct VrbHead_DISCONN {
-	// BP_UINT16 	ClntId;
+	BP_UINT8 	Flags;
 } VrbHead_DISCONN;
 
 typedef union vrbU {

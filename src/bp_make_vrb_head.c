@@ -150,6 +150,7 @@ BP_UINT8 * make_vrb_pingack(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 
 BP_UINT8 * make_vrb_discnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 {
+	*pack++ = vrb_head->u.DISCONN.Flags;
 	// pack = BP_SetBig16(pack, vrb_head->u.DISCONN.ClntId);
 	// printf("make_vrb_discnct: %p\n", pack);
 	return pack;

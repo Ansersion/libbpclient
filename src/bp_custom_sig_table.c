@@ -17,10 +17,10 @@ const BP_WORD g_CusSigNum = sizeof(g_CusSigId2Val) / sizeof(BP_SigId2Val);
 
 const BP_UINT8 * g_CusSigNameLang[] = 
 {
-    "",
-    "",
-    "",
-    "",
+    STRING_NONE,
+    STRING_NONE,
+    STRING_NONE,
+    STRING_NONE,
     "BC Light",
     "BC灯",
 };

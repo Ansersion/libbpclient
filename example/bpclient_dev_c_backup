@@ -245,7 +245,6 @@ int main()
 						printf("\n");
 						BP_ParsePingack(&str_pingack, buf, len);
 						printf("flags = %d\n", str_pingack.Flags);
-						// printf("client id = %d\n", str_pingack.ClientID);
 						printf("seq id = %d\n", str_pingack.SeqId);
 						printf("ret code = %d\n", str_pingack.RetCode);
 						break;

@@ -1,6 +1,7 @@
 #include <bp_sig_table.h>
 #include <bp_sig_table_tools.h>
 #include <bp_public.h>
+#include <bp_strlen.h>
 
 const BP_UINT8 STRING_NONE[] = "";
 const SigTypeU STRING_DEFAULT_VALUE = {.t_str = STRING_NONE};
