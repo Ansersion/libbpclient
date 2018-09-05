@@ -29,15 +29,20 @@
 
 #define VERSION "v0.1"
 #define PORT 8025
-#define SERVER_IP "192.168.2.196"
 
 void printNote();
 int handleUserInput();
 int handleNetMsgReceived();
 int bpDo();
 
+int conndfd;
+BP_UINT8 recvBuf[2048+1];
+
 int SetFlag = 0;
 int ConnectFlag = 0;
+int ReportFlag = 0;
+const int REPORT_FLAG_SIG_MAP = 1;
+const int REPORT_FLAG_SIG_MAP_CHECKSUM = 2;
 int SignalType = 0xFF;
 BP_UINT16 SetSignalId;
 void * SetSignalValue;
@@ -51,7 +56,6 @@ int main()
     const int stdinfd = 0;
     const int timeout = 30;
     int loop;
-	int conndfd;
 	struct sockaddr_in serverAddr;
     int err = 0;
     int retval;
@@ -140,6 +144,7 @@ int handleUserInput()
 	/* last one is '\r\n' which is not a parameter */
     const int MAX_PARA_NUM = 5 + 1;
     char * tmp;
+    char * tmp2;
     char * cmd;
     char * paras[MAX_PARA_NUM];
     char input[256];
@@ -156,11 +161,34 @@ int handleUserInput()
         tmp = strtok(NULL, " ");
         paras[paraNum++] = tmp;
     }
+    if(NULL == cmd) {
+        return 0;
+    }
+    if(paraNum >= 2) {
+        tmp2 = strstr(paras[paraNum - 2], "\r");
+        if(tmp2) {
+            *tmp2 = '\0';
+        }
+        tmp2 = strstr(paras[paraNum - 2], "\n");
+        if(tmp2) {
+            *tmp2 = '\0';
+        }
+    } else {
+        tmp2 = strstr(cmd, "\r");
+        if(tmp2) {
+            *tmp2 = '\0';
+        }
+        tmp2 = strstr(cmd, "\n");
+        if(tmp2) {
+            *tmp2 = '\0';
+        }
+    }
     if(strncmp(cmd, "help", strlen("help")) == 0) {
 		printf("* help --- print this message\r\n");
 		printf("* connect <SN> <Password> --- connect to the BcServer with device SN and password, such as 'connect abc abc_password'\r\n");
-		printf("* set <SignalId> <SignalType> <SignalValue> --- set the signal value, such as 'set 4 E002 0'\r\n");
 		printf("* get <SignalId> <SignalType> --- get the signal value, such as 'get 4 E002'\r\n");
+		printf("* set <SignalId> <SignalType> <SignalValue> --- set the signal value, such as 'set 4 E002 0'\r\n");
+		printf("* report map/checksum --- report signal map or signal map checksum, such as 'report map'\r\n");
 		printf("* bye --- quit\r\n");
 		printf("Note: <SignalType>: 0-u32, 1-u16, 2-i32, 3-i16, 4-enum, 5-float, 6-string, 7-boolean\r\n");
     } else if(strncmp(cmd, "connect", strlen("connect")) == 0) {
@@ -204,6 +232,17 @@ int handleUserInput()
 			return 0;
 		}
 		/* TODO: */
+    } else if(strncmp(cmd, "report", strlen("report")) == 0) {
+		if(paraNum < 2) {
+			printf("too few parameter\r\n");
+			return 0;
+		} 
+		if(0 == strncmp(paras[0], "map", strlen("map"))) {
+            ReportFlag = REPORT_FLAG_SIG_MAP;
+		}
+		if(0 == strncmp(paras[0], "checksum", strlen("checksum"))) {
+            ReportFlag = REPORT_FLAG_SIG_MAP_CHECKSUM;
+		}
     } else if(strncmp(cmd, "bye", strlen("bye")) == 0) {
 		ByeFlag = 1;
     } else {
@@ -214,12 +253,83 @@ int handleUserInput()
 
 int handleNetMsgReceived()
 {
+    int n;
+	BP_UINT16 left_len;
+	BP_UINT32 crc = 0;
+	BP_UINT8 type_and_flags;
+    int i;
+    int len;
+
+    n=recv(conndfd,recvBuf,FIX_HEAD_SIZE, MSG_WAITALL);
+    if(FIX_HEAD_SIZE != n) {
+        perror("Recv error 1");
+        return -2;
+    }
+    BP_ParseFixHead(recvBuf, &type_and_flags, &left_len);
+
+    len = left_len;
+    printf("len=%d\n", len);
+
+    n += recv(conndfd,recvBuf+FIX_HEAD_SIZE,len, MSG_WAITALL);
+    len += FIX_HEAD_SIZE;
+
+    if(n != len) {
+        printf("Recv error 2");
+        return -2;
+    }
+    printf("recv: \n");
+    for(i = 0; i < len; i++) {
+        printf("%02x ", recvBuf[i]);
+    }
+    printf("\n");
+
+    if(0 != BP_CheckCRC(type_and_flags, recvBuf, len)) {
+        printf("CRC Check error\n");
+        return -3;
+    }
+    switch((type_and_flags >> 4) & 0x0F) {
+        case BP_PACK_TYPE_CONNACK:
+            {
+                BP_ConnackStr str_connack;
+                BP_ParseConnack(&str_connack, recvBuf, len);
+                printf("CONNACK:\n");
+                printf("RetCode = %d\n", str_connack.RetCode);
+                printf("client id = %d\n", str_connack.ClientID);
+                printf("system signal set version = %d\n", str_connack.SysSigSetVersion);
+                break;
+            }
+        case BP_PACK_TYPE_RPRTACK:
+            {
+                printf("RPRTACK:\n");
+                for(i = 0; i < len; i++) {
+                    printf("%02x ", recvBuf[i]);
+                }
+                printf("\n");
+                break;
+            }
+        default:
+            printf("recv pack unknown\n");
+            for(i = 0; i < len; i++) {
+                printf("%02x ", recvBuf[i]);
+            }
+            printf("\n");
+    }
     return 0;
 }
 
 int bpDo() {
     int err = 0;
+    int n;
+	PackBuf * p_pack_buf;
     if(ConnectFlag) {
+        printf("start connect\n");
+        p_pack_buf = BP_PackConnect(&BPContextEmbeded, Sn, Password);
+        printf("start send:%p\n", p_pack_buf);
+        n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+        if(n != p_pack_buf->MsgSize) {
+            perror("Send error");
+            err = -1;
+        }
         ConnectFlag = 0;
     }
     if(SetFlag) {
@@ -228,11 +338,40 @@ int bpDo() {
         SetFlag = 0;
     }
     if(ByeFlag) {
+        p_pack_buf = BP_PackDisconn(&BPContextEmbeded);
+        n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+        if(n != p_pack_buf->MsgSize) {
+            perror("Send error");
+        }
+        printf("disconn\n");
         err = 0xFF;
         ByeFlag = 0;
     }
     if(PostFlag) {
         PostFlag = 0;
+    }
+    if(ReportFlag) {
+        switch(ReportFlag) {
+            case REPORT_FLAG_SIG_MAP:
+					printf("report signal map\n");
+					p_pack_buf = BP_PackReportSigTable(&BPContextEmbeded);
+					n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+					if(n != p_pack_buf->MsgSize) {
+                        perror("Send error");
+                        err = -1;
+					}
+                break;
+            case REPORT_FLAG_SIG_MAP_CHECKSUM:
+                printf("report checksum\n");
+                p_pack_buf = BP_PackReportSigTabChksum(&BPContextEmbeded);
+                n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+                if(n != p_pack_buf->MsgSize) {
+                    perror("Send error");
+                    err = -1;
+                }
+                break;
+        }
+        ReportFlag = 0;
     }
     return err;
 }
