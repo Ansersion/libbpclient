@@ -128,9 +128,14 @@ typedef struct VrbHead_POSTACK {
 
 typedef struct VrbHead_REPORT {
 	BP_UINT8 	Flags;
-	// BP_UINT16 	ClntId;
 	BP_UINT16 	SeqId;
 } VrbHead_REPORT;
+
+typedef struct VrbHead_RPRTACK {
+	BP_UINT8 	Flags;
+	BP_UINT16 	SeqId;
+	BP_UINT8 	RetCode;
+} VrbHead_RPRTACK;
 
 typedef struct VrbHead_PING {
 	BP_UINT8 	Flags;
@@ -154,6 +159,7 @@ typedef union vrbU {
 	VrbHead_PING 		PING;
 	VrbHead_PINGACK 	PINGACK;
 	VrbHead_REPORT 		REPORT;
+	VrbHead_RPRTACK 	RPRTACK;
 	VrbHead_DISCONN 	DISCONN;
 	VrbHead_POST 		POST;
 	VrbHead_POSTACK 	POSTACK;
@@ -207,10 +213,8 @@ typedef struct Payload_REPORT {
 	BP_UINT8 * DevName;
 	BP_UINT8 DevNameLen;
 	BP_UINT32 SigTabChkCrc;
-	BP_UINT16 SysSigValEleNum;
-	BP_UINT16 CusSigValEleNum;
-	const BP_SigId2Val * SysSigArray;
-	const BP_SigId2Val * CusSigArray;
+	BP_UINT16 SigValEleNum;
+	const BP_SigId2Val * SigArray;
 	BP_UINT16 SysSigMapEleNum;
 	const BP_SysSigMap * SysSigMap;
 } Payload_REPORT;
@@ -228,6 +232,11 @@ typedef union pldU {
 typedef struct BPPackPayload {
 	pldU u;
 } BPPackPayload;
+
+typedef struct BPPacket {
+	vrbU vrb;
+	pldU pld;
+} BPPacket;
 
 
 extern BPContext BPContextEmbeded;

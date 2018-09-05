@@ -28,6 +28,14 @@
 #include <bp_vrb_flags.h>
 #include <bp_sig_table.h>
 #include <bp_custom_sig_table.h>
+#include <bp_memcpy.h>
+#include <bp_sig_table_tools.h>
+
+#if CHECKSUM_TYPE == 0
+	#include <bp_crc32.h>
+#else
+	#include <bp_crc16.h>
+#endif
 
 
 // std
@@ -579,31 +587,18 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 		sig_map_crc = BP_calc_crc16(pack_old, len);
 		pack = BP_SetBig16(pack, sig_map_crc);
 #endif
-	} else {
-		*pack++ = (BP_UINT8)(payload->u.REPORT.SysSigValEleNum + payload->u.REPORT.CusSigValEleNum);
+	}
+	if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SIG_VAL_MSK)
+	{
+		*pack++ = (BP_UINT8)(payload->u.REPORT.SigValEleNum);
 
 		// BP_SigvalSort(payload->u.REPORT.CusSigArray, payload->u.REPORT.CusSigValEleNum);
-		for(i = 0; i < payload->u.REPORT.CusSigValEleNum; i++) {
-			pack = BP_SetBig16(pack, payload->u.REPORT.CusSigArray[i].SigId);
-			pack = BP_SetSigVal2Buf(pack, &(payload->u.REPORT.CusSigArray[i]));
+		for(i = 0; i < payload->u.REPORT.SigValEleNum; i++) {
+			pack = BP_SetBig16(pack, payload->u.REPORT.SigArray[i].SigId);
+			pack = BP_SetSigVal2Buf(pack, &(payload->u.REPORT.SigArray[i]));
 		}
 
-		// BP_SigvalSort(payload->u.REPORT.SysSigArray, payload->u.REPORT.SysSigValEleNum);
-		for(i = 0; i < payload->u.REPORT.SysSigValEleNum; i++) {
-			pack = BP_SetBig16(pack, payload->u.REPORT.SysSigArray[i].SigId);
-			pack = BP_SetSigVal2Buf(pack, &(payload->u.REPORT.SysSigArray[i]));
-		}
 	}
-	// else {
-	// 	for(i = 0; i < payload->u.REPORT.EleNum; i++) {
-	// 		*pack++ = payload->u.REPORT.SysSigMap->Dist;
-	// 		sig_map = payload->u.REPORT.SysSigMap->SigMap;
-
-	// 		for(j = 0; j < payload->u.REPORT.SysSigMap->SigMapSize; j++) {
-	// 			*pack++ = *sig_map++;
-	// 		}
-	// 	}
-	// }
 	return pack;
 }
 

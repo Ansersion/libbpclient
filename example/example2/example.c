@@ -29,6 +29,8 @@
 
 #define VERSION "v0.1"
 #define PORT 8025
+#define REPORT_FLAG_SIG_MAP 1
+#define REPORT_FLAG_SIG_MAP_CHECKSUM 2
 
 void printNote();
 int handleUserInput();
@@ -37,12 +39,11 @@ int bpDo();
 
 int conndfd;
 BP_UINT8 recvBuf[2048+1];
+char input[256];
 
 int SetFlag = 0;
 int ConnectFlag = 0;
 int ReportFlag = 0;
-const int REPORT_FLAG_SIG_MAP = 1;
-const int REPORT_FLAG_SIG_MAP_CHECKSUM = 2;
 int SignalType = 0xFF;
 BP_UINT16 SetSignalId;
 void * SetSignalValue;
@@ -50,6 +51,7 @@ void * Sn;
 void * Password;
 int PostFlag = 0;
 int ByeFlag = 0;
+int PingFlag = 0;
 
 int main()
 {
@@ -69,21 +71,22 @@ int main()
 	Password = malloc(256);
 
     printNote();
-	printf("Please Input BcServer Ip: ");
+	printf("* Please Input BcServer Ip: ");
 	scanf("%s", serverIp);
 
-    printf("Input \"help\" for help\r\n");
+    printf("* Input \"help\" for help\r\n");
+    fgets(input, sizeof(input), stdin);
 
     /* connect to BcServer */
 	if(-1==(conndfd=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP))) {
-		printf("Create Socket Error\n");
+		printf("* Create Socket Error\n");
 	}
 	memset(&serverAddr,0,sizeof(serverAddr));
 	serverAddr.sin_family=AF_INET;
 	serverAddr.sin_addr.s_addr=inet_addr(serverIp);
 	serverAddr.sin_port=htons(PORT);
 	if(connect(conndfd,(struct sockaddr*)&serverAddr,sizeof(serverAddr)) < 0) {
-		printf("Connect Error\n");
+		printf("* Connect Error\n");
 		return -1;
 	}
 
@@ -103,7 +106,7 @@ int main()
         retval = select(conndfd+1, &rfds, NULL, NULL, &tv);
         if(-1 == retval) {
             /* error occurred, terminate the program */
-            perror("select() error");
+            perror("* select() error");
             err = -1;
             loop = 0;
         } else if(0 == retval) {
@@ -135,8 +138,8 @@ int main()
 void printNote()
 {
     printf("***********Virtual BcClient(%s)***********\r\n", VERSION);
-    printf("It's a example of libbpclient\r\n");
-    printf("More Info: https://github.com/Ansersion/libbpclient \r\n");
+    printf("* It's a example of libbpclient\r\n");
+    printf("* More Info: https://github.com/Ansersion/libbpclient \r\n");
 }
 
 int handleUserInput()
@@ -147,7 +150,6 @@ int handleUserInput()
     char * tmp2;
     char * cmd;
     char * paras[MAX_PARA_NUM];
-    char input[256];
     int paraNum = 0;
     int i;
         
@@ -189,15 +191,16 @@ int handleUserInput()
 		printf("* get <SignalId> <SignalType> --- get the signal value, such as 'get 4 E002'\r\n");
 		printf("* set <SignalId> <SignalType> <SignalValue> --- set the signal value, such as 'set 4 E002 0'\r\n");
 		printf("* report map/checksum --- report signal map or signal map checksum, such as 'report map'\r\n");
+		printf("* ping --- tell the server I'm still alive\r\n");
 		printf("* bye --- quit\r\n");
-		printf("Note: <SignalType>: 0-u32, 1-u16, 2-i32, 3-i16, 4-enum, 5-float, 6-string, 7-boolean\r\n");
+		printf("* Note: <SignalType>: 0-u32, 1-u16, 2-i32, 3-i16, 4-enum, 5-float, 6-string, 7-boolean\r\n");
     } else if(strncmp(cmd, "connect", strlen("connect")) == 0) {
 		if(paraNum < 3) {
-			printf("too few parameter\r\n");
+			printf("* too few parameter\r\n");
 			return 0;
 		} 
 		if(sscanf(paras[0], "%x", &SetSignalId) < 0) {
-			printf("invalid signal id[%s]\r\n", paras[0]);
+			printf("* invalid signal id[%s]\r\n", paras[0]);
 			return 0;
 		}
 		memcpy(Sn, paras[0], strlen(paras[0]) + 1);
@@ -205,36 +208,36 @@ int handleUserInput()
 		ConnectFlag = 1;
     } else if(strncmp(cmd, "set", strlen("set")) == 0) {
 		if(paraNum < 4) {
-			printf("too few parameter\r\n");
+			printf("* too few parameter\r\n");
 			return 0;
 		} 
 		if(sscanf(paras[0], "%x", &SetSignalId) < 0) {
-			printf("invalid signal id[%s]\r\n", paras[0]);
+			printf("* invalid signal id[%s]\r\n", paras[0]);
 			return 0;
 		}
 		if(sscanf(paras[1], "%d", &SignalType) < 0) {
-			printf("invalid signal id[%s]\r\n", paras[1]);
+			printf("* invalid signal id[%s]\r\n", paras[1]);
 			return 0;
 		}
 		memcpy(SetSignalValue, paras[2], strlen(paras[2]));
 		SetFlag = 1;
     } else if(strncmp(cmd, "get", strlen("get")) == 0) {
 		if(paraNum < 3) {
-			printf("too few parameter\r\n");
+			printf("* too few parameter\r\n");
 			return 0;
 		} 
 		if(sscanf(paras[0], "%x", &SetSignalId) < 0) {
-			printf("invalid signal id[%s]\r\n", paras[0]);
+			printf("* invalid signal id[%s]\r\n", paras[0]);
 			return 0;
 		}
 		if(sscanf(paras[1], "%d", &SignalType) < 0) {
-			printf("invalid signal id[%s]\r\n", paras[1]);
+			printf("* invalid signal id[%s]\r\n", paras[1]);
 			return 0;
 		}
 		/* TODO: */
     } else if(strncmp(cmd, "report", strlen("report")) == 0) {
 		if(paraNum < 2) {
-			printf("too few parameter\r\n");
+			printf("* too few parameter\r\n");
 			return 0;
 		} 
 		if(0 == strncmp(paras[0], "map", strlen("map"))) {
@@ -243,10 +246,12 @@ int handleUserInput()
 		if(0 == strncmp(paras[0], "checksum", strlen("checksum"))) {
             ReportFlag = REPORT_FLAG_SIG_MAP_CHECKSUM;
 		}
+    } else if(strncmp(cmd, "ping", strlen("ping")) == 0) {
+		PingFlag = 1;
     } else if(strncmp(cmd, "bye", strlen("bye")) == 0) {
 		ByeFlag = 1;
     } else {
-        printf("Unknown command: [%s]\r\n", cmd);
+        printf("* Unknown command: [%s]\r\n", cmd);
     }
     return 0;
 }
@@ -259,60 +264,69 @@ int handleNetMsgReceived()
 	BP_UINT8 type_and_flags;
     int i;
     int len;
+	BPPacket bp_packet;
 
     n=recv(conndfd,recvBuf,FIX_HEAD_SIZE, MSG_WAITALL);
     if(FIX_HEAD_SIZE != n) {
-        perror("Recv error 1");
+        perror("Recv error 1\r\n");
         return -2;
     }
     BP_ParseFixHead(recvBuf, &type_and_flags, &left_len);
 
     len = left_len;
-    printf("len=%d\n", len);
+    printf("* len=%d\r\n", len);
 
     n += recv(conndfd,recvBuf+FIX_HEAD_SIZE,len, MSG_WAITALL);
     len += FIX_HEAD_SIZE;
 
     if(n != len) {
-        printf("Recv error 2");
+        printf("* Recv error 2\r\n");
         return -2;
     }
-    printf("recv: \n");
+    printf("* recv: ");
     for(i = 0; i < len; i++) {
         printf("%02x ", recvBuf[i]);
     }
     printf("\n");
 
     if(0 != BP_CheckCRC(type_and_flags, recvBuf, len)) {
-        printf("CRC Check error\n");
+        printf("* CRC Check error\n");
         return -3;
     }
     switch((type_and_flags >> 4) & 0x0F) {
-        case BP_PACK_TYPE_CONNACK:
-            {
+        case BP_PACK_TYPE_CONNACK: {
                 BP_ConnackStr str_connack;
                 BP_ParseConnack(&str_connack, recvBuf, len);
-                printf("CONNACK:\n");
-                printf("RetCode = %d\n", str_connack.RetCode);
-                printf("client id = %d\n", str_connack.ClientID);
-                printf("system signal set version = %d\n", str_connack.SysSigSetVersion);
+                printf("* CONNACK:\n");
+                printf("* RetCode = %d\n", str_connack.RetCode);
+                printf("* system signal set version = %d\n", str_connack.SysSigSetVersion);
                 break;
             }
-        case BP_PACK_TYPE_RPRTACK:
-            {
-                printf("RPRTACK:\n");
-                for(i = 0; i < len; i++) {
-                    printf("%02x ", recvBuf[i]);
-                }
-                printf("\n");
+        case BP_PACK_TYPE_RPRTACK: {
+                BP_RprtackStr str_rprtack;
+                BP_ParseRprtack(&bp_packet, recvBuf, len);
+                printf("* RPRTACK:\n");
+                printf("* RetCode = %d\n", bp_packet.vrb.RPRTACK.RetCode);
+                printf("* SeqId = %d\n", bp_packet.vrb.RPRTACK.SeqId);
                 break;
             }
-        default:
-            printf("recv pack unknown\n");
-            for(i = 0; i < len; i++) {
-                printf("%02x ", recvBuf[i]);
-            }
-            printf("\n");
+		case BP_PACK_TYPE_PINGACK: {
+				BP_PingackStr str_pingack;
+				BP_ParsePingack(&str_pingack, recvBuf, len);
+				printf("* PINGACK:\n");
+				printf("* flags = %d\n", str_pingack.Flags);
+				printf("* seq id = %d\n", str_pingack.SeqId);
+				printf("* ret code = %d\n", str_pingack.RetCode);
+				break;
+			}
+		case BP_PACK_TYPE_POST: {
+				printf("* POST:%d\n", len);
+				break;
+			}
+        default: {
+				printf("* recv pack unknown\n");
+				break;
+			}
     }
     return 0;
 }
@@ -322,51 +336,62 @@ int bpDo() {
     int n;
 	PackBuf * p_pack_buf;
     if(ConnectFlag) {
-        printf("start connect\n");
+        printf("* start connect\n");
         p_pack_buf = BP_PackConnect(&BPContextEmbeded, Sn, Password);
-        printf("start send:%p\n", p_pack_buf);
+        printf("* start send:%p\n", p_pack_buf);
         n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
         if(n != p_pack_buf->MsgSize) {
-            perror("Send error");
+            perror("* Send error");
             err = -1;
         }
         ConnectFlag = 0;
     }
     if(SetFlag) {
-		printf("%x->%s\r\n", SetSignalId, (char *)SetSignalValue);
+		printf("* %x->%s\r\n", SetSignalId, (char *)SetSignalValue);
 
         SetFlag = 0;
     }
+	if(PingFlag) {
+		p_pack_buf = BP_PackPing(&BPContextEmbeded);
+		n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+		if(n != p_pack_buf->MsgSize) {
+			perror("Send error");
+			err = -1;
+		}
+		printf("* ping\n");
+		PingFlag = 0;
+	}
     if(ByeFlag) {
         p_pack_buf = BP_PackDisconn(&BPContextEmbeded);
         n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
         if(n != p_pack_buf->MsgSize) {
-            perror("Send error");
+            perror("* Send error");
         }
-        printf("disconn\n");
+        printf("* disconn\n");
         err = 0xFF;
         ByeFlag = 0;
     }
     if(PostFlag) {
+		/* TODO: */
         PostFlag = 0;
     }
     if(ReportFlag) {
         switch(ReportFlag) {
             case REPORT_FLAG_SIG_MAP:
-					printf("report signal map\n");
+					printf("* report signal map\n");
 					p_pack_buf = BP_PackReportSigTable(&BPContextEmbeded);
 					n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
 					if(n != p_pack_buf->MsgSize) {
-                        perror("Send error");
+                        perror("* Send error");
                         err = -1;
 					}
                 break;
             case REPORT_FLAG_SIG_MAP_CHECKSUM:
-                printf("report checksum\n");
+                printf("* report checksum\n");
                 p_pack_buf = BP_PackReportSigTabChksum(&BPContextEmbeded);
                 n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
                 if(n != p_pack_buf->MsgSize) {
-                    perror("Send error");
+                    perror("* Send error");
                     err = -1;
                 }
                 break;

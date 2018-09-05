@@ -246,7 +246,7 @@ PackBuf * BP_PackReportSigTable(const BPContext * bp_context)
     return bp_context->packBuf;
 }
 
-PackBuf * BP_PackReportSigVal(const BPContext *bp_context, const BP_SigId2Val * sys_sig_array, const BP_UINT16 sys_sig_num, const BP_SigId2Val * cus_sig_array, const BP_UINT16 cus_sig_num)
+PackBuf * BP_PackReportSigVal(const BPContext *bp_context, const BP_SigId2Val * sig_array, const BP_UINT16 sig_num)
 {
 	BP_WORD i, j;
 
@@ -263,14 +263,8 @@ PackBuf * BP_PackReportSigVal(const BPContext *bp_context, const BP_SigId2Val * 
         return BP_NULL;
     }
 
-	if(BP_NULL == sys_sig_array && BP_NULL == cus_sig_array) {
-		return BP_NULL;
-	} 
-	if(BP_NULL != sys_sig_array && 0 == sys_sig_num) {
-		return BP_NULL;
-	}
-	if(BP_NULL != cus_sig_array && 0 == cus_sig_num) {
-		return BP_NULL;
+	if(BP_NULL == sig_array || 0 == sig_num) {
+		return bp_context->packBuf;
 	}
 
 	BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE);
@@ -278,21 +272,10 @@ PackBuf * BP_PackReportSigVal(const BPContext *bp_context, const BP_SigId2Val * 
 	pbuf_old = pbuf;
 	vrb_head.u.REPORT.Flags = 0;
 
-	payload.u.REPORT.SysSigValEleNum = 0;
-	payload.u.REPORT.SysSigArray = BP_NULL;
-	if(BP_NULL != sys_sig_array) {
-		vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_MSK;
-		payload.u.REPORT.SysSigValEleNum = sys_sig_num;
-		payload.u.REPORT.SysSigArray =sys_sig_array;
-	} 
+	vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_MSK;
+	payload.u.REPORT.SigValEleNum = sig_num;
+	payload.u.REPORT.SigArray =sig_array;
 
-	payload.u.REPORT.CusSigValEleNum = 0;
-	payload.u.REPORT.CusSigArray = BP_NULL;
-	if(BP_NULL != cus_sig_array) {
-		vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_MSK;
-		payload.u.REPORT.CusSigValEleNum = cus_sig_num;
-		payload.u.REPORT.CusSigArray = cus_sig_array;
-	}
 
 	BP_SeqIdReport = BP_SeqIdCommon++;
 	vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
