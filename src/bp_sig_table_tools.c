@@ -147,6 +147,66 @@ BP_UINT8 * BP_SetSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val)
 	return buf;
 }
 
+BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, SigTypeU sig_val)
+{
+	if(BP_NULL == buf) {
+		return BP_NULL;
+	}
+
+	switch(sig_type) {
+		case SIG_TYPE_U32:
+			*buf++ = SIG_TYPE_U32;
+			buf = BP_SetBig32(buf, sig_val.t_u32);
+			break;
+		case SIG_TYPE_U16:
+			*buf++ = SIG_TYPE_U16;
+			buf = BP_SetBig16(buf, sig_val.t_u16);
+			break;
+		case SIG_TYPE_I32:
+			*buf++ = SIG_TYPE_I32;
+			buf = BP_SetBig32(buf, sig_val.t_i32);
+			break;
+		case SIG_TYPE_I16:
+			*buf++ = SIG_TYPE_I16;
+			buf = BP_SetBig16(buf, sig_val.t_i16);
+			break;
+		case SIG_TYPE_ENM:
+			*buf++ = SIG_TYPE_ENM;
+			buf = BP_SetBig16(buf, sig_val.t_enm);
+			break;
+		case SIG_TYPE_FLT:
+			*buf++ = SIG_TYPE_FLT;
+			buf = BP_SetBig32(buf, sig_val.t_flt);
+			break;
+		case SIG_TYPE_STR: 
+			{
+				BP_WORD num;
+				if(BP_NULL == sig_val.t_str) {
+					break;
+				}
+                *buf++ = SIG_TYPE_FLT;
+				num = strlen_bp(sig_val.t_str);
+                if(num > MAX_STRING_SIG_VAL_LEN) {
+                    num = MAX_STRING_SIG_VAL_LEN;
+                }
+				if(num > 0) {
+					*buf++ = (BP_UINT8)num;
+					buf = BP_SetNBytes(buf, sig_val.t_str, num);
+				}
+
+			}
+			break;
+		case SIG_TYPE_BOOLEAN:
+			*buf++ = SIG_TYPE_BOOLEAN;
+			*buf++ = sig_val.t_bool;
+			break;
+		default:
+			break;
+	}
+
+	return buf;
+}
+
 BP_UINT8 whichDist(BP_UINT16 sys_sig_id)
 {
     return (sys_sig_id - SYSTEM_SIGNAL_ID_START) / SYSTEM_SIGNAL_ID_DIST_NUM;

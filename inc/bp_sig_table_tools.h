@@ -29,6 +29,7 @@
 #define SYSTEM_SIGNAL_ID_START      0xE000
 #define SYSTEM_SIGNAL_ID_DIST_NUM   0x200
 #define MAX_SYS_SIG_DIST_NUM 	16
+#define MAX_STRING_SIG_VAL_LEN 	255
 
 extern const BP_UINT8 STRING_NONE[];
 extern const SigTypeU STRING_DEFAULT_VALUE;
@@ -39,6 +40,7 @@ BP_INT16 BP_SetSigVal(BP_UINT8 sig_num, BP_SigId2Val * sig_array);
 void BP_SigDump(void);
 BP_UINT32 BP_GetSigTabChk();
 BP_UINT8 * BP_SetSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val);
+BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, SigTypeU sig_val);
 
 BP_UINT8 whichDist(BP_UINT16 sys_sig_id);
 BP_UINT8 hasMinMax(BP_UINT16 sig_type);

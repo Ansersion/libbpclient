@@ -268,7 +268,7 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
     BP_SigTable * sig_table_tmp;
     BP_SigType sig_type_tmp;
 
-	if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SYS_SIG_SET_MSK|BP_VRB_FLAG_SYS_SIG_ATTR_CUSTOM_MSK|BP_VRB_FLAG_CUS_SIG_SET_MSK|BP_VRB_FLAG_SIG_TAB_CHK_MSK) {
+	if(vrb_head->u.REPORT.Flags & (BP_VRB_FLAG_SYS_SIG_SET_MSK|BP_VRB_FLAG_SYS_SIG_ATTR_CUSTOM_MSK|BP_VRB_FLAG_CUS_SIG_SET_MSK|BP_VRB_FLAG_SIG_TAB_CHK_MSK)) {
 		/* pack system signal map */
 		for(i = 0; i < g_SysSigMapSize; i++) {
 			*pack++ = g_SysSigMap[i].Dist;
@@ -591,11 +591,45 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 	if(vrb_head->u.REPORT.Flags & BP_VRB_FLAG_SIG_VAL_MSK)
 	{
 		*pack++ = (BP_UINT8)(payload->u.REPORT.SigValEleNum);
+#ifdef DEBUG
+        printf("report: signal value num=%d\n", payload->u.REPORT.SigValEleNum);
+#endif
 
-		// BP_SigvalSort(payload->u.REPORT.CusSigArray, payload->u.REPORT.CusSigValEleNum);
 		for(i = 0; i < payload->u.REPORT.SigValEleNum; i++) {
+#ifdef DEBUG
+            printf("report: signal id=%x\n", payload->u.REPORT.SigArray[i].SigId);
+#endif
+            sig_type_tmp = SIG_TYPE_UNKNOWN;
+            if(payload->u.REPORT.SigArray[i].SigId < SYSTEM_SIGNAL_ID_START) {
+                for(j = 0; j < g_CusSigNum; j++) {
+#ifdef DEBUG
+                    printf("report: custom signal id:%x->%x\n", payload->u.REPORT.SigArray[i].SigId, g_CusSigTable[j].SigId);
+#endif
+                    if(payload->u.REPORT.SigArray[i].SigId == g_CusSigTable[j].SigId) {
+                        sig_type_tmp = g_CusSigTable[j].SigType;
+#ifdef DEBUG
+                        printf("report: custom signal type=%d\n", sig_type_tmp);
+#endif
+                        break;
+                    }
+                }
+            } else {
+                for(j = 0; j < g_SysSigNum; j++) {
+#ifdef DEBUG
+                    printf("report: system signal id:%x->%x\n", payload->u.REPORT.SigArray[i].SigId, g_SysSigTable[j].SigId);
+#endif
+                    if(payload->u.REPORT.SigArray[i].SigId == g_SysSigTable[j].SigId) {
+                        sig_type_tmp = g_SysSigTable[j].SigType;
+                        break;
+                    }
+                }
+            }
+            if(SIG_TYPE_UNKNOWN == sig_type_tmp) {
+                continue;
+            }
+            printf("report: signal type=%d\n", sig_type_tmp);
 			pack = BP_SetBig16(pack, payload->u.REPORT.SigArray[i].SigId);
-			pack = BP_SetSigVal2Buf(pack, &(payload->u.REPORT.SigArray[i]));
+            pack = BP_SetSigVal2Buf2(pack, sig_type_tmp, payload->u.REPORT.SigArray[i].SigVal);
 		}
 
 	}

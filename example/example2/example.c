@@ -216,7 +216,7 @@ int handleUserInput()
 			return 0;
 		}
 		if(sscanf(paras[1], "%d", &SignalType) < 0) {
-			printf("* invalid signal id[%s]\r\n", paras[1]);
+			printf("* invalid signal type[%s]\r\n", paras[1]);
 			return 0;
 		}
 		memcpy(SetSignalValue, paras[2], strlen(paras[2]));
@@ -347,7 +347,48 @@ int bpDo() {
         ConnectFlag = 0;
     }
     if(SetFlag) {
-		printf("* %x->%s\r\n", SetSignalId, (char *)SetSignalValue);
+        BP_SigId2Val sig_id_2_val_tmp;
+        sig_id_2_val_tmp.SigId = SetSignalId;
+        switch(SignalType) {
+            case SIG_TYPE_U32:
+                sscanf(SetSignalValue, "%u", &(sig_id_2_val_tmp.SigVal.t_u32));
+                break;
+            case SIG_TYPE_U16:
+                sscanf(SetSignalValue, "%u", &(sig_id_2_val_tmp.SigVal.t_u16));
+                break;
+            case SIG_TYPE_I32:
+                sscanf(SetSignalValue, "%d", &(sig_id_2_val_tmp.SigVal.t_i32));
+                break;
+            case SIG_TYPE_I16:
+                sscanf(SetSignalValue, "%d", &(sig_id_2_val_tmp.SigVal.t_i16));
+                break;
+            case SIG_TYPE_ENM:
+                sscanf(SetSignalValue, "%u", &(sig_id_2_val_tmp.SigVal.t_enm));
+                break;
+            case SIG_TYPE_FLT:
+                sscanf(SetSignalValue, "%f", &(sig_id_2_val_tmp.SigVal.t_flt));
+                break;
+            case SIG_TYPE_STR:
+                sig_id_2_val_tmp.SigVal.t_str = SetSignalValue;
+                break;
+            case SIG_TYPE_BOOLEAN:
+                sscanf(SetSignalValue, "%d", &(sig_id_2_val_tmp.SigVal.t_bool));
+                break;
+            default:
+                err = -1;
+                printf("* Unknown signal type: %d\n", SignalType);
+                break;
+        }
+        if(0 == err) {
+            p_pack_buf = BP_PackReportSigVal(&BPContextEmbeded, &(sig_id_2_val_tmp), 1);
+            printf("* report signal value\n");
+            n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+            if(n != p_pack_buf->MsgSize) {
+                perror("* Send error");
+                err = -1;
+            }
+        }
+
 
         SetFlag = 0;
     }
