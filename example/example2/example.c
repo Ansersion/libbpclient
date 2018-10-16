@@ -52,11 +52,12 @@ void * Password;
 int PostFlag = 0;
 int ByeFlag = 0;
 int PingFlag = 0;
+int PingAutoTime = 0;
 
 int main()
 {
     const int stdinfd = 0;
-    const int timeout = 30;
+    const int timeout = 1;
     int loop;
 	struct sockaddr_in serverAddr;
     int err = 0;
@@ -65,6 +66,7 @@ int main()
 	fd_set efds;
 	struct timeval tv;
 	char serverIp[64];
+    int timeoutCount = 0;
 
 	SetSignalValue = malloc(256);
 	Sn = malloc(256);
@@ -110,16 +112,25 @@ int main()
             err = -1;
             loop = 0;
         } else if(0 == retval) {
-            // printf("timeout %d seconds", timeout);
+            // printf("* timeout");
+            timeoutCount++;
         } else if(FD_ISSET(stdinfd, &rfds)) {
 			FD_CLR(stdinfd, &rfds);
             if(0 != (err = handleUserInput())) {
                 loop = 0;
             }
+            timeoutCount = 0;
         } else if(FD_ISSET(conndfd, &rfds)) {
 			FD_CLR(conndfd, &rfds);
             if(0 != (err = handleNetMsgReceived())) {
                 loop = 0;
+            }
+            timeoutCount = 0;
+        }
+        if(PingAutoTime > 0) {
+            if(timeoutCount > PingAutoTime) {
+                timeoutCount = 0;
+                PingFlag = 1;
             }
         }
         if(0 != (err = bpDo())) {
@@ -152,6 +163,7 @@ int handleUserInput()
     char * paras[MAX_PARA_NUM];
     int paraNum = 0;
     int i;
+    int tmpInt;
         
     if(NULL == fgets(input, sizeof(input), stdin)) {
         perror("fgets() error");
@@ -189,9 +201,9 @@ int handleUserInput()
 		printf("* help --- print this message\r\n");
 		printf("* connect <SN> <Password> --- connect to the BcServer with device SN and password, such as 'connect abc abc_password'\r\n");
 		printf("* get <SignalId> <SignalType> --- get the signal value, such as 'get 4 E002'\r\n");
-		printf("* set <SignalId> <SignalType> <SignalValue> --- set the signal value, such as 'set 4 E002 0'\r\n");
+		printf("* set <SignalId> <SignalType> <SignalValue> --- set the signal value, such as 'set E002 4 0'\r\n");
 		printf("* report map/checksum --- report signal map or signal map checksum, such as 'report map'\r\n");
-		printf("* ping --- tell the server I'm still alive\r\n");
+		printf("* ping <option> <para> --- tell the server I'm still alive,(<option>:'auto',<para> int(in unit of second)), such as 'ping', 'ping auto 10'\r\n");
 		printf("* bye --- quit\r\n");
 		printf("* Note: <SignalType>: 0-u32, 1-u16, 2-i32, 3-i16, 4-enum, 5-float, 6-string, 7-boolean\r\n");
     } else if(strncmp(cmd, "connect", strlen("connect")) == 0) {
@@ -247,7 +259,14 @@ int handleUserInput()
             ReportFlag = REPORT_FLAG_SIG_MAP_CHECKSUM;
 		}
     } else if(strncmp(cmd, "ping", strlen("ping")) == 0) {
-		PingFlag = 1;
+        if(paraNum >= 2) {
+            tmpInt = atoi(paras[1]);
+            if(0 == strncmp(paras[0], "auto", strlen("auto"))) {
+                PingAutoTime = tmpInt;
+            }
+        } else {
+            PingFlag = 1;
+        }
     } else if(strncmp(cmd, "bye", strlen("bye")) == 0) {
 		ByeFlag = 1;
     } else {

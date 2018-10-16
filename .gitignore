@@ -59,3 +59,4 @@ myTest
 gtest/backup
 gtest/backup/*
 example/example1/example1
+example/example2/example
