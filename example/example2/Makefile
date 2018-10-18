@@ -1,4 +1,6 @@
-INCLUDES = -I../../inc
+INCLUDES =
+INCLUDES += -I../../inc
+INCLUDES += -I../../sig_table
 
 CC = cc
 COMPILE_OPTS =		$(INCLUDES) -I. -O2 -c -g
