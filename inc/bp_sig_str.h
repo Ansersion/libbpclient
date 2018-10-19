@@ -37,12 +37,14 @@
 #define NO_CUSTOM_INFO          0
 #define RESERVED_FIELD          0
 
-#define ALARM_CLASS_NONE            5
+#define ALARM_CLASS_NONE            0x7F
 #define ALARM_CLASS_INFO            4    
 #define ALARM_CLASS_ATTENTION       3
 #define ALARM_CLASS_WARNING         2
 #define ALARM_CLASS_SERIOUS         1
 #define ALARM_CLASS_EMERGENCY       0
+
+#define ALARM_DELAY_DEFAULT            5
 
 #define SYS_SIG_CUSTOM_TYPE_ALM_DLY_AFTER       10
 #define SYS_SIG_CUSTOM_TYPE_ALM_DLY_BEFORE      9
@@ -59,6 +61,9 @@
 #define SIG_INDEX_INVALID 			0xFFFF
 
 #define DIST_END_FLAG_MSK 	0x01
+
+#define DIST_BASIC_MSK 	        0x00
+#define DIST_TEMP_HUMIDITY_MSK 	0x10
 
 #define DIST_CLASS_MSK 		0x0E	
 #define DIST_CLASS_1_MSK 	0x02	

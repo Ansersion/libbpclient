@@ -30,10 +30,6 @@
 #define SIG_SYS_SERIAL_NUMBER 		0xE000
 #define SIG_SYS_COMM_STATE 			0xE001
 #define SIG_SYS_POWER 				0xE002
-#define SIG_SYS_ENV_TEMP 		    0xE200
-#define SIG_SYS_ENV_HUMIDITY 		0xE201
-#define SIG_SYS_SETTING_TEMP 		0xE202
-#define SIG_SYS_SETTING_HUMIDITY 	0xE203
 
 extern BP_SigId2Val g_SysSigId2Val[];
 extern const BP_SigTable g_SysSigTable[];
