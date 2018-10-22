@@ -1,3 +1,4 @@
+#include <bp_custom_sig_table.h>
 #include <bp_sig_table.h>
 #include <bp_sig_table_tools.h>
 #include <bp_public.h>
@@ -10,19 +11,42 @@ const SigTypeU STRING_DEFAULT_VALUE = {.t_str = STRING_NONE};
 BP_UINT16 BP_GetSigIdx(const BP_UINT16 sig_id)
 {
 	BP_UINT16 i;
-	for(i = 0; i < g_SysSigNum; i++) {
-		if(sig_id == g_SysSigId2Val[i].SigId) {
-			return i;
+	if(sig_id < SYSTEM_SIGNAL_ID_START) {
+		for(i = 0; i < g_CusSigNum; i++) {
+			if(sig_id == g_CusSigId2Val[i].SigId) {
+				return i;
+			}
+		}
+	} else {
+		for(i = 0; i < g_SysSigNum; i++) {
+			if(sig_id == g_SysSigId2Val[i].SigId) {
+				return i;
+			}
 		}
 	}
 	return SIG_INDEX_INVALID;
+}
+
+BP_SigId2Val * BP_GetSigId2Val(const BP_UINT16 sig_idx, const BP_UINT16 sig_id)
+{
+	if(sig_id < SYSTEM_SIGNAL_ID_START) {
+		if(sig_idx >= g_CusSigNum) {
+			return BP_NULL;
+		}
+		return &(g_CusSigId2Val[sig_idx]);
+	} else {
+		if(sig_idx >= g_SysSigNum) {
+			return BP_NULL;
+		}
+		return &(g_SysSigId2Val[sig_idx]);
+	}
 }
 
 BP_UINT16 BP_GetSigType(const BP_UINT16 sig_id)
 {
 	BP_SigType type = SIG_TYPE_UNKNOWN;
 	BP_WORD idx;
-	if(sig_id < 0xE000) {
+	if(sig_id < SYSTEM_SIGNAL_ID_START) {
 	} else {
 		idx = BP_GetSigIdx(sig_id);
 		if(idx != SIG_INDEX_INVALID) {

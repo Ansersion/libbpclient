@@ -30,6 +30,7 @@
 
 extern BP_SigType g_SigTypeArray[];
 extern BP_SigId2Val g_SigArray[];
+extern BP_SigValArrayEntry g_SigValArray[];
 
 BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp_type, BPPackVrbHead * vrb_head);
 

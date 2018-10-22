@@ -48,7 +48,8 @@ typedef struct BP_PostStr {
 	BP_UINT16 SeqId;
 	// BP_UINT8 SigTabNum;
 	BP_UINT8 SigNum;
-	BP_SigId2Val * SigArray;
+	// BP_SigId2Val * SigArray;
+	BP_SigValArrayEntry * SigValArray;
 } BP_PostStr;
 
 typedef struct BP_RprtackStr {

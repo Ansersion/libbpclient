@@ -107,6 +107,11 @@ typedef struct BP_SigId2Val {
 	SigTypeU SigVal;
 }BP_SigId2Val;
 
+typedef struct BP_SigValArrayEntry {
+	BP_UINT16 SigIdx;
+	BP_UINT16 SigId;
+}BP_SigValArrayEntry;
+
 typedef struct BP_SigTable {
 	BP_UINT16 SigId;
 	/* SIG_TYPE_U32 = 0, */

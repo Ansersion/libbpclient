@@ -82,9 +82,11 @@ BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len)
 {
 	BP_UINT8 * p_msg = BP_NULL;
 	BP_UINT8 i = 0, j = 0, k = 0;
-	BP_UINT8 sig_tab_num = 0, sig_num = 0, sig_type = 0;
+	BP_UINT8 sig_num = 0, sig_type = 0;
 	BP_UINT8 sig_str_size = 0;
 	BP_UINT8 sig_idx_tmp = 0;
+	BP_UINT16 sig_id_tmp = 0;
+	BP_SigId2Val * bpSigId2ValTmp = BP_NULL;
 	if(BP_NULL == str_post) {
 		return -0x01;
 	}
@@ -96,50 +98,56 @@ BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len)
 	p_msg = BP_GetBig16(p_msg, &(str_post->SeqId));
 	str_post->SigNum = 0;
     p_msg+=4; // skip the device id
-    if(str_post->Flags & BP_VRB_FLAG_SIG_VAL_MSK) {
-        sig_tab_num = *p_msg++;
-        for(i = 0; i < sig_tab_num; i++) {
-            p_msg = BP_GetBig16(p_msg, &(g_SigArray[i].SigId));
-            sig_type = *p_msg++ & 0x0F;
-			sig_idx_tmp = BP_GetSigIdx(g_SigArray[i].SigId);
-            if(SIG_INDEX_INVALID == sig_idx_tmp) {
-                return -0x11;
-            }
-            if(g_SysSigTable[sig_idx_tmp].SigType != sig_type) {
-                return -0x13;
-            }
+	if(str_post->Flags & BP_VRB_FLAG_SIG_VAL_MSK) {
+		sig_num = *p_msg++;
+		for(i = 0; i < sig_num; i++) {
+			p_msg = BP_GetBig16(p_msg, &sig_id_tmp);
+			sig_type = *p_msg++ & 0x0F;
+			sig_idx_tmp = BP_GetSigIdx(sig_id_tmp);
+			if(SIG_INDEX_INVALID == sig_idx_tmp) {
+				return -0x11;
+			}
+			if(g_SysSigTable[sig_idx_tmp].SigType != sig_type) {
+				return -0x13;
+			}
+			g_SigValArray[i].SigId = sig_id_tmp;
+			g_SigValArray[i].SigIdx = sig_idx_tmp;
+			bpSigId2ValTmp = BP_GetSigId2Val(sig_idx_tmp, sig_id_tmp);
+			if(BP_NULL == bpSigId2ValTmp) {
+				return -0x14;
+			}
 			switch(g_SysSigTable[sig_idx_tmp].SigType) {
 				case SIG_TYPE_U32:
-					p_msg = BP_GetBig32(p_msg, &(g_SysSigId2Val[sig_idx_tmp].SigVal.t_u32));
+					p_msg = BP_GetBig32(p_msg, (BP_UINT32 *)&(bpSigId2ValTmp->SigVal.t_u32));
 					break;
 				case SIG_TYPE_U16:
-					p_msg = BP_GetBig16(p_msg, &(g_SysSigId2Val[sig_idx_tmp].SigVal.t_u16));
+					p_msg = BP_GetBig16(p_msg, (BP_UINT16 *)&(bpSigId2ValTmp->SigVal.t_u16));
 					break;
 				case SIG_TYPE_I32:
-					p_msg = BP_GetBig32(p_msg, &(g_SysSigId2Val[sig_idx_tmp].SigVal.t_i32));
+					p_msg = BP_GetBig32(p_msg, (BP_UINT32 *)&(bpSigId2ValTmp->SigVal.t_i32));
 					break;
 				case SIG_TYPE_I16:
-					p_msg = BP_GetBig16(p_msg, &(g_SysSigId2Val[sig_idx_tmp].SigVal.t_i16));
+					p_msg = BP_GetBig16(p_msg, (BP_UINT16 *)&(bpSigId2ValTmp->SigVal.t_i16));
 					break;
 				case SIG_TYPE_ENM:
-					p_msg = BP_GetBig16(p_msg, &(g_SysSigId2Val[sig_idx_tmp].SigVal.t_enm));
+					p_msg = BP_GetBig16(p_msg, (BP_UINT16 *)&(bpSigId2ValTmp->SigVal.t_enm));
 					break;
 				case SIG_TYPE_FLT:
-					p_msg = BP_GetBig32(p_msg, (BP_UINT32 *)&(g_SysSigId2Val[sig_idx_tmp].SigVal.t_flt));
+					p_msg = BP_GetBig32(p_msg, (BP_UINT32 *)&(bpSigId2ValTmp->SigVal.t_flt));
 					break;
 				case SIG_TYPE_STR:
 					sig_str_size = *p_msg++;
 					for(k = 0; k < sig_str_size; k++) {
-						g_SysSigId2Val[sig_idx_tmp].SigVal.t_str[k] = *p_msg++;
+						bpSigId2ValTmp->SigVal.t_str[k] = *p_msg++;
 					}
 					break;
 				default:
 					return -0x12;
 			}
-        }
-    }
-    str_post->SigNum += sig_num;
-	str_post->SigArray = g_SigArray;
+		}
+		str_post->SigNum += sig_num;
+		str_post->SigValArray = g_SigValArray;
+	}
 	return 0;
 }
 

@@ -35,6 +35,7 @@ extern const BP_UINT8 STRING_NONE[];
 extern const SigTypeU STRING_DEFAULT_VALUE;
 
 BP_UINT16 BP_GetSigIdx(const BP_UINT16 sig_id);
+BP_SigId2Val * BP_GetSigId2Val(const BP_UINT16 sig_idx, const BP_UINT16 sig_id);
 BP_UINT16 BP_GetSigType(const BP_UINT16 sig_id);
 BP_INT16 BP_SetSigVal(BP_UINT8 sig_num, BP_SigId2Val * sig_array);
 void BP_SigDump(void);

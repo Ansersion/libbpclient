@@ -112,7 +112,9 @@ int main()
             err = -1;
             loop = 0;
         } else if(0 == retval) {
-            // printf("* timeout");
+            // printf("* timeout\n");
+			tv.tv_sec = timeout;
+			tv.tv_usec = 0;
             timeoutCount++;
         } else if(FD_ISSET(stdinfd, &rfds)) {
 			FD_CLR(stdinfd, &rfds);
