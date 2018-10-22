@@ -22,8 +22,8 @@
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BP_VRB_FLAGS_H
-#define __BP_VRB_FLAGS_H
+#ifndef __BP_FIX_FLAGS_H
+#define __BP_FIX_FLAGS_H
 
 #define BP_FIX_FLAG_CRC16_MSK 		(1 << 0)
 #define BP_FIX_FLAG_CIPHER_LSB_MSK 	(1 << 1)

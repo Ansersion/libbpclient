@@ -234,6 +234,7 @@ int handleUserInput()
 		memcpy(SetSignalValue, paras[2], strlen(paras[2]));
 		SetFlag = 1;
     } else if(strncmp(cmd, "get", strlen("get")) == 0) {
+        BP_SigId2Val * sig_id_2_val_tmp = BP_NULL;
 		if(paraNum < 3) {
 			printf("* too few parameter\r\n");
 			return 0;
@@ -246,7 +247,46 @@ int handleUserInput()
 			printf("* invalid signal id[%s]\r\n", paras[1]);
 			return 0;
 		}
-		/* TODO: */
+        if(0 <= SetSignalId && SetSignalId < SYSTEM_SIGNAL_ID_START) {
+            // TODO
+        } else if(SetSignalId >= SYSTEM_SIGNAL_ID_START) {
+            for(i = 0; i < g_SysSigNum; i++) {
+                if(g_SysSigId2Val[i].SigId == SetSignalId) {
+                    sig_id_2_val_tmp = &g_SysSigId2Val[i];
+                    break;
+                }
+            }
+        }
+        if(BP_NULL == sig_id_2_val_tmp) {
+            printf("* Not find the signal\r\n");
+        } else {
+            switch(SignalType) {
+                case SIG_TYPE_U32:
+                    printf("* %x->%d\r\n", SetSignalId, sig_id_2_val_tmp->SigVal.t_u32);
+                    break;
+                case SIG_TYPE_U16:
+                    printf("* %x->%d\r\n", SetSignalId, sig_id_2_val_tmp->SigVal.t_u16);
+                    break;
+                case SIG_TYPE_I32:
+                    printf("* %x->%d\r\n", SetSignalId, sig_id_2_val_tmp->SigVal.t_i32);
+                    break;
+                case SIG_TYPE_I16:
+                    printf("* %x->%d\r\n", SetSignalId, sig_id_2_val_tmp->SigVal.t_i16);
+                    break;
+                case SIG_TYPE_ENM:
+                    printf("* %x->%d\r\n", SetSignalId, sig_id_2_val_tmp->SigVal.t_enm);
+                    break;
+                case SIG_TYPE_FLT:
+                    printf("* %x->%f\r\n", SetSignalId, sig_id_2_val_tmp->SigVal.t_flt);
+                    break;
+                case SIG_TYPE_STR:
+                    printf("* %x->%s\r\n", SetSignalId, sig_id_2_val_tmp->SigVal.t_str);
+                    break;
+                case SIG_TYPE_BOOLEAN:
+                    printf("* %x->%d\r\n", SetSignalId, sig_id_2_val_tmp->SigVal.t_bool);
+                    break;
+            }
+        }
     } else if(strncmp(cmd, "report", strlen("report")) == 0) {
 		if(paraNum < 2) {
 			printf("* too few parameter\r\n");
@@ -339,7 +379,13 @@ int handleNetMsgReceived()
 				break;
 			}
 		case BP_PACK_TYPE_POST: {
+                BP_PostStr str_post;
+                int x;
 				printf("* POST:%d\n", len);
+                x = BP_ParsePost(&str_post, recvBuf, len);
+				if(0 != x) {
+                    printf("* ParsePost err: %x\n", x);
+                }
 				break;
 			}
         default: {
@@ -353,6 +399,7 @@ int handleNetMsgReceived()
 int bpDo() {
     int err = 0;
     int n;
+    int i;
 	PackBuf * p_pack_buf;
     if(ConnectFlag) {
         printf("* start connect\n");
@@ -366,45 +413,59 @@ int bpDo() {
         ConnectFlag = 0;
     }
     if(SetFlag) {
-        BP_SigId2Val sig_id_2_val_tmp;
-        sig_id_2_val_tmp.SigId = SetSignalId;
-        switch(SignalType) {
-            case SIG_TYPE_U32:
-                sscanf(SetSignalValue, "%u", &(sig_id_2_val_tmp.SigVal.t_u32));
-                break;
-            case SIG_TYPE_U16:
-                sscanf(SetSignalValue, "%u", &(sig_id_2_val_tmp.SigVal.t_u16));
-                break;
-            case SIG_TYPE_I32:
-                sscanf(SetSignalValue, "%d", &(sig_id_2_val_tmp.SigVal.t_i32));
-                break;
-            case SIG_TYPE_I16:
-                sscanf(SetSignalValue, "%d", &(sig_id_2_val_tmp.SigVal.t_i16));
-                break;
-            case SIG_TYPE_ENM:
-                sscanf(SetSignalValue, "%u", &(sig_id_2_val_tmp.SigVal.t_enm));
-                break;
-            case SIG_TYPE_FLT:
-                sscanf(SetSignalValue, "%f", &(sig_id_2_val_tmp.SigVal.t_flt));
-                break;
-            case SIG_TYPE_STR:
-                sig_id_2_val_tmp.SigVal.t_str = SetSignalValue;
-                break;
-            case SIG_TYPE_BOOLEAN:
-                sscanf(SetSignalValue, "%d", &(sig_id_2_val_tmp.SigVal.t_bool));
-                break;
-            default:
-                err = -1;
-                printf("* Unknown signal type: %d\n", SignalType);
-                break;
+        BP_SigId2Val * sig_id_2_val_tmp = BP_NULL;
+        if(0 <= SetSignalId && SetSignalId < SYSTEM_SIGNAL_ID_START) {
+            // TODO
+        } else if(SetSignalId >= SYSTEM_SIGNAL_ID_START) {
+            for(i = 0; i < g_SysSigNum; i++) {
+                if(g_SysSigId2Val[i].SigId == SetSignalId) {
+                    sig_id_2_val_tmp = &g_SysSigId2Val[i];
+                    break;
+                }
+            }
         }
-        if(0 == err) {
-            p_pack_buf = BP_PackReportSigVal(&BPContextEmbeded, &(sig_id_2_val_tmp), 1);
-            printf("* report signal value\n");
-            n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
-            if(n != p_pack_buf->MsgSize) {
-                perror("* Send error");
-                err = -1;
+
+        if(BP_NULL != sig_id_2_val_tmp) {
+
+            sig_id_2_val_tmp->SigId = SetSignalId;
+            switch(SignalType) {
+                case SIG_TYPE_U32:
+                    sscanf(SetSignalValue, "%u", &(sig_id_2_val_tmp->SigVal.t_u32));
+                    break;
+                case SIG_TYPE_U16:
+                    sscanf(SetSignalValue, "%u", &(sig_id_2_val_tmp->SigVal.t_u16));
+                    break;
+                case SIG_TYPE_I32:
+                    sscanf(SetSignalValue, "%d", &(sig_id_2_val_tmp->SigVal.t_i32));
+                    break;
+                case SIG_TYPE_I16:
+                    sscanf(SetSignalValue, "%d", &(sig_id_2_val_tmp->SigVal.t_i16));
+                    break;
+                case SIG_TYPE_ENM:
+                    sscanf(SetSignalValue, "%u", &(sig_id_2_val_tmp->SigVal.t_enm));
+                    break;
+                case SIG_TYPE_FLT:
+                    sscanf(SetSignalValue, "%f", &(sig_id_2_val_tmp->SigVal.t_flt));
+                    break;
+                case SIG_TYPE_STR:
+                    sig_id_2_val_tmp->SigVal.t_str = SetSignalValue;
+                    break;
+                case SIG_TYPE_BOOLEAN:
+                    sscanf(SetSignalValue, "%d", &(sig_id_2_val_tmp->SigVal.t_bool));
+                    break;
+                default:
+                    err = -1;
+                    printf("* Unknown signal type: %d\n", SignalType);
+                    break;
+            }
+            if(0 == err) {
+                p_pack_buf = BP_PackReportSigVal(&BPContextEmbeded, sig_id_2_val_tmp, 1);
+                printf("* report signal value\n");
+                n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+                if(n != p_pack_buf->MsgSize) {
+                    perror("* Send error");
+                    err = -1;
+                }
             }
         }
 
