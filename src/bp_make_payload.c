@@ -268,6 +268,8 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 	BP_UINT8 * p_pack_tmp3;
     BP_SigTable * sig_table_tmp;
     BP_SigType sig_type_tmp;
+    BP_SysCusEnumUnit * sys_custom_enum_unit_tmp;
+    BP_EnumSignalMap * enum_signal_map_tmp;;
 
 	if(vrb_head->u.REPORT.Flags & (BP_VRB_FLAG_SYS_SIG_SET_MSK|BP_VRB_FLAG_SYS_SIG_ATTR_CUSTOM_MSK|BP_VRB_FLAG_CUS_SIG_SET_MSK|BP_VRB_FLAG_SIG_TAB_CHK_MSK)) {
 		/* pack system signal map */
@@ -294,20 +296,25 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 			switch(g_SysCustomUnitTable[i].CustomType) {
 				case SYS_SIG_CUSTOM_TYPE_EN_STATISTICS:
 					*pack++ = *(BP_UINT8 *)(g_SysCustomUnitTable[i].CustomValue);
-					*p_pack_tmp1 |= 0x01;
+					*p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 					break;
 				case SYS_SIG_CUSTOM_TYPE_ENUM_LANG:
 					if(BP_NULL == p_pack_tmp3) {
 						p_pack_tmp3 = pack;
 						*p_pack_tmp3 = 0;
 						pack++;
-						*p_pack_tmp1 |= 0x02;
+                        *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 					}
-					pack = BP_SetBig16(pack, *(BP_UINT16 *)(g_SysCustomUnitTable[i].CustomValue));
-					(*p_pack_tmp3)++;
+                    sys_custom_enum_unit_tmp = g_SysCustomUnitTable[i].CustomValue;
+					*p_pack_tmp3 = sys_custom_enum_unit_tmp->Num;
+                    enum_signal_map_tmp = sys_custom_enum_unit_tmp->EnumSignalMap;
+                    for(j = 0; j < sys_custom_enum_unit_tmp->Num; j++) {
+                        pack = BP_SetBig16(pack, enum_signal_map_tmp[j].Key);
+                        pack = BP_SetBig32(pack, (BP_UINT32)(enum_signal_map_tmp[j].Val));
+                    }
 					break;
 				case SYS_SIG_CUSTOM_TYPE_GROUP_LANG:
-					*p_pack_tmp1 |= 0x04;
+					*p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 					pack = BP_SetBig16(pack, *(BP_UINT16 *)(g_SysCustomUnitTable[i].CustomValue));
 					break;
 				case SYS_SIG_CUSTOM_TYPE_ACCURACY:
@@ -328,12 +335,12 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 						case SIG_TYPE_I32: 
 						case SIG_TYPE_FLT: 
 							pack = BP_SetBig32(pack, *(BP_UINT32 *)(g_SysCustomUnitTable[i].CustomValue));
-							*p_pack_tmp1 |= 0x10;
+                            *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
 						case SIG_TYPE_U16:
 						case SIG_TYPE_I16: 
 							pack = BP_SetBig16(pack, *(BP_UINT16 *)(g_SysCustomUnitTable[i].CustomValue));
-							*p_pack_tmp1 |= 0x10;
+                            *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
 					}
 					break;
@@ -351,12 +358,12 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 						case SIG_TYPE_I32: 
 						case SIG_TYPE_FLT: 
 							pack = BP_SetBig32(pack, *(BP_UINT32 *)(g_SysCustomUnitTable[i].CustomValue));
-							*p_pack_tmp1 |= 0x20;
+                            *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
 						case SIG_TYPE_U16:
 						case SIG_TYPE_I16: 
 							pack = BP_SetBig16(pack, *(BP_UINT16 *)(g_SysCustomUnitTable[i].CustomValue));
-							*p_pack_tmp1 |= 0x20;
+                            *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
 					}
 					break;
@@ -374,40 +381,40 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 						case SIG_TYPE_I32: 
 						case SIG_TYPE_FLT: 
 							pack = BP_SetBig32(pack, *(BP_UINT32 *)(g_SysCustomUnitTable[i].CustomValue));
-							*p_pack_tmp1 |= 0x40;
+                            *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
 						case SIG_TYPE_U16:
 						case SIG_TYPE_I16: 
 						case SIG_TYPE_ENM: 
 							pack = BP_SetBig16(pack, *(BP_UINT16 *)(g_SysCustomUnitTable[i].CustomValue));
-							*p_pack_tmp1 |= 0x40;
+                            *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
 						case SIG_TYPE_STR:
 							lang = (const BP_UINT8 *)(g_SysCustomUnitTable[i].CustomValue);
 							pack = BP_Set1ByteField(pack, lang, strlen_bp(lang));
-							*p_pack_tmp1 |= 0x40;
+                            *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
 						case SIG_TYPE_BOOLEAN:
 							*pack++ = *(BP_UINT8 *)(g_SysCustomUnitTable[i].CustomValue);
-							*p_pack_tmp1 |= 0x40;
+                            *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
 					}
 					break;
 				case SYS_SIG_CUSTOM_TYPE_IS_ALARM:
 					*pack++ = *(BP_UINT8 *)(g_SysCustomUnitTable[i].CustomValue);
-					*p_pack_tmp1 |= 0x80;
+                    *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 					break;
 				case SYS_SIG_CUSTOM_TYPE_ALM_CLASS:
 					*pack++ = *(BP_UINT8 *)(g_SysCustomUnitTable[i].CustomValue);
-					*p_pack_tmp2 |= 0x01;
+                    *p_pack_tmp2 |= (1 <<(g_SysCustomUnitTable[i].CustomType - 8));
 					break;
 				case SYS_SIG_CUSTOM_TYPE_ALM_DLY_BEFORE:
 					*pack++ = *(BP_UINT8 *)(g_SysCustomUnitTable[i].CustomValue);
-					*p_pack_tmp2 |= 0x02;
+                    *p_pack_tmp2 |= (1 <<(g_SysCustomUnitTable[i].CustomType - 8));
 					break;
 				case SYS_SIG_CUSTOM_TYPE_ALM_DLY_AFTER:
 					*pack++ = *(BP_UINT8 *)(g_SysCustomUnitTable[i].CustomValue);
-					*p_pack_tmp2 |= 0x04;
+                    *p_pack_tmp2 |= (1 <<(g_SysCustomUnitTable[i].CustomType - 8));
 					break;
 			}
 		}

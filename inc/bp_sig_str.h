@@ -179,6 +179,16 @@ typedef struct BP_CusLangMap {
     BP_UINT16 LangId;
 } BP_CusLangMap;
 
+typedef struct BP_EnumSignalMap {
+    BP_UINT16 Key;
+    BP_INT32 Val;
+} BP_EnumSignalMap;
+
+typedef struct BP_SysCusEnumUnit {
+    BP_WORD Num;
+    BP_EnumSignalMap * EnumSignalMap;
+} BP_SysCusEnumUnit;
+
 typedef struct BP_CusEnumLangMap {
     BP_UINT16 SigId;
     BP_UINT16 EnumVal;

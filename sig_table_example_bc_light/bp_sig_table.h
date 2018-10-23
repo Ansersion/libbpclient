@@ -30,6 +30,7 @@
 #define SIG_SYS_SERIAL_NUMBER 		0xE000
 #define SIG_SYS_COMM_STATE 			0xE001
 #define SIG_SYS_POWER 				0xE002
+#define SIG_SYS_STRENGTH            0xE005
 
 extern BP_SigId2Val g_SysSigId2Val[];
 extern const BP_SigTable g_SysSigTable[];
