@@ -34,6 +34,6 @@
  * 	@return  string length
  * 	
  */ 
-BP_WORD strlen_bp(const char * str);
+EXPORT_API BP_WORD strlen_bp(const char * str);
 
 #endif

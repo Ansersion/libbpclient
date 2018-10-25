@@ -28,9 +28,9 @@
 #include <bp_public.h>
 
 /* default init: strong performance limit */
-void BP_InitPackBuf(PackBuf * pack_buf, BP_UINT8 * buf, BP_WORD buf_size);
-void BP_InitEmbededContext();
-void BP_Init2Default(BPContext * bp_context);
-void BP_Init(BP_UINT8 clnt_type, BP_UINT8 cipher_type, BP_UINT16 alive_time, BP_UINT8 timeout, BP_UINT16 clnt_id);
+EXPORT_API void BP_InitPackBuf(PackBuf * pack_buf, BP_UINT8 * buf, BP_WORD buf_size);
+EXPORT_API void BP_InitEmbededContext();
+EXPORT_API void BP_Init2Default(BPContext * bp_context);
+EXPORT_API void BP_Init(BP_UINT8 clnt_type, BP_UINT8 cipher_type, BP_UINT16 alive_time, BP_UINT8 timeout, BP_UINT16 clnt_id);
 #endif
 

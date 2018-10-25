@@ -33,7 +33,7 @@
 // extern BP_SigType g_SigTypeArray[MAX_GET_ACK_SIG_NUM];
 // extern BP_SigId2Val g_SigArray[MAX_GET_ACK_SIG_NUM];
 
-PackBuf * BP_PackGetack(const BPContext * bp_context, BP_GetStr * get_str);
+EXPORT_API PackBuf * BP_PackGetack(const BPContext * bp_context, BP_GetStr * get_str);
 
 #endif
 

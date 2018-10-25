@@ -202,7 +202,7 @@ BP_INT8 BP_ParseConnack(BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 l
 BP_INT16 BP_ParseFixHead(BP_UINT8 * msg, BP_UINT8 * type_and_flags, BP_UINT16 * rmn_len)
 {
 	BP_UINT8 i;
-	BP_WORD multiplier;
+	// BP_WORD multiplier;
 	if(BP_NULL == msg) {
 #ifdef DEBUG
         printf("BP_NULL == msg\n");

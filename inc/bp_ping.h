@@ -27,6 +27,6 @@
 
 #include <bp_public.h>
 
-PackBuf * BP_PackPing(const BPContext * bp_connect);
+EXPORT_API PackBuf * BP_PackPing(const BPContext * bp_connect);
 #endif
 

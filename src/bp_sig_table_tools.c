@@ -113,7 +113,7 @@ BP_UINT32 BP_GetSigTabChk()
 
 BP_UINT8 * BP_SetSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val)
 {
-	BP_UINT16 idx_tmp;
+	// BP_UINT16 idx_tmp;
 	if(BP_NULL == buf) {
 		return BP_NULL;
 	}

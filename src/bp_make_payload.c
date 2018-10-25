@@ -122,7 +122,7 @@ BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp
 BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head)
 {
 	BP_UINT8 * oldPack = pack;
-	BP_UINT32 i;
+	// BP_UINT32 i;
 #ifdef DEBUG
 	printf("name=%s, len=%d\n", payload->u.CONNECT.Name, payload->u.CONNECT.NameLen);
 	printf("password=%s, len=%d\n", payload->u.CONNECT.Pwd, payload->u.CONNECT.PwdLen);
@@ -248,7 +248,7 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 {
 	BP_UINT16 i, j, k;
 	BP_UINT16 t4n = 0, t2n = 0, txn = 0;
-	BP_UINT16 idx_tmp;
+	// BP_UINT16 idx_tmp;
     BP_UINT8 byte_tmp = 0;
     BP_UINT16 u16_tmp = 0;
 #if CHECKSUM_TYPE == 0
@@ -256,7 +256,7 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 #else
 	BP_UINT16 sig_map_crc;
 #endif
-	const BP_UINT8 * sig_map;
+	// const BP_UINT8 * sig_map;
 	const BP_UINT8 * lang;
     BP_WORD len;
 	BP_UINT8 * pack_4 = BP_NULL;

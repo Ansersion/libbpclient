@@ -40,7 +40,7 @@
 
 PackBuf * BP_PackConnect(const BPContext * bp_context, BP_UINT8 * name, BP_UINT8 * password)
 {
-	BP_WORD i;
+	// BP_WORD i;
 
 	BP_UINT8 * pbuf, * pbuf_old;
 	BP_WORD rmn_len = 0;

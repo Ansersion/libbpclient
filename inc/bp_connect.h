@@ -27,6 +27,6 @@
 
 #include <bp_public.h>
 
-PackBuf * BP_PackConnect(const BPContext * bp_context, BP_UINT8 * name, BP_UINT8 * password);
+EXPORT_API PackBuf * BP_PackConnect(const BPContext * bp_context, BP_UINT8 * name, BP_UINT8 * password);
 #endif
 

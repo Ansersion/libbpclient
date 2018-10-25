@@ -31,20 +31,28 @@
 #define MAX_SYS_SIG_DIST_NUM 	16
 #define MAX_STRING_SIG_VAL_LEN 	255
 
-extern const BP_UINT8 STRING_NONE[];
-extern const SigTypeU STRING_DEFAULT_VALUE;
+#ifdef WIN32
 
-BP_UINT16 BP_GetSigIdx(const BP_UINT16 sig_id);
-BP_SigId2Val * BP_GetSigId2Val(const BP_UINT16 sig_idx, const BP_UINT16 sig_id);
-BP_UINT16 BP_GetSigType(const BP_UINT16 sig_id);
-BP_INT16 BP_SetSigVal(BP_UINT8 sig_num, BP_SigId2Val * sig_array);
-void BP_SigDump(void);
-BP_UINT32 BP_GetSigTabChk();
-BP_UINT8 * BP_SetSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val);
-BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, SigTypeU sig_val);
+#endif
+	EXPORT_API extern const BP_UINT8 STRING_NONE[];
+	EXPORT_API extern const SigTypeU STRING_DEFAULT_VALUE;
 
-BP_UINT8 whichDist(BP_UINT16 sys_sig_id);
-BP_UINT8 hasMinMax(BP_UINT16 sig_type);
+	EXPORT_API BP_UINT16 BP_GetSigIdx(const BP_UINT16 sig_id);
+
+	EXPORT_API BP_SigId2Val * BP_GetSigId2Val(const BP_UINT16 sig_idx, const BP_UINT16 sig_id);
+	EXPORT_API BP_UINT16 BP_GetSigType(const BP_UINT16 sig_id);
+	EXPORT_API BP_INT16 BP_SetSigVal(BP_UINT8 sig_num, BP_SigId2Val * sig_array);
+	EXPORT_API void BP_SigDump(void);
+	EXPORT_API BP_UINT32 BP_GetSigTabChk();
+	EXPORT_API BP_UINT8 * BP_SetSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val);
+	EXPORT_API BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, SigTypeU sig_val);
+
+	EXPORT_API BP_UINT8 whichDist(BP_UINT16 sys_sig_id);
+	EXPORT_API BP_UINT8 hasMinMax(BP_UINT16 sig_type);
+
+#ifdef WIN32
+
+#endif
 
 #endif
 

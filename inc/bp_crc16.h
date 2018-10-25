@@ -27,7 +27,7 @@
 
 #include <bpclient_config.h>
 
-BP_UINT16 BP_calc_crc16(BP_UINT8 *p, BP_WORD len);
+EXPORT_API BP_UINT16 BP_calc_crc16(BP_UINT8 *p, BP_WORD len);
 
 #endif
 

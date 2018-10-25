@@ -39,7 +39,7 @@
 // PackBuf * BP_PackGetack(BP_UINT16 seq_id, BP_UINT8 ret_code, BP_UINT16 * sig_index_array, BP_UINT16 array_num)
 PackBuf * BP_PackPostack(const BPContext * bp_context, BP_PostStr * post_str)
 {
-	BP_WORD i, j;
+	// BP_WORD i, j;
 
 	BP_UINT8 * pbuf, * pbuf_old;
 	BP_WORD rmn_len = 0;

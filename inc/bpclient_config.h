@@ -28,6 +28,12 @@
 
 #define BP_NULL 	0
 
+#ifdef WIN32
+#define EXPORT_API __declspec(dllexport) 
+#else
+#define EXPORT_API
+#endif
+
 
 // #define BP_CPU64/BP_CPU32/BP_CPU16/BP_CPU8, MUST BE DEFINED BY YOUR OWN
 // #define ENCRYPTION_NONE/ENCRYPTION_BASE64, default ENCRYPTION_NONE

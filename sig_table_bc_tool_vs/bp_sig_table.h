@@ -33,17 +33,17 @@
 #define SIG_SYS_STRENGTH            0xE005
 
 extern BP_SigId2Val g_SysSigId2Val[];
-extern const BP_SigTable g_SysSigTable[];
-extern const BP_WORD g_SysSigNum;
-extern const BP_SysCustomUnit g_SysCustomUnit[];
-extern const BP_WORD g_SysCustomUnitNum;
+extern BP_SigTable g_SysSigTable[];
+extern BP_WORD g_SysSigNum;
+extern BP_SysCustomUnit g_SysCustomUnit[];
+extern BP_WORD g_SysCustomUnitNum;
 
-extern const BP_SysCustomUnit g_SysCustomUnitTable[];
-extern const BP_WORD g_SysCustomUnitNum;
+extern BP_SysCustomUnit g_SysCustomUnitTable[];
+extern BP_WORD g_SysCustomUnitNum;
 
-extern const BP_UINT8 g_SysMapDis_0[];
-extern const BP_SysSigMap g_SysSigMap[];
-extern const BP_WORD g_SysSigMapSize;
+extern BP_UINT8 g_SysMapDis_0[];
+extern BP_SysSigMap g_SysSigMap[];
+extern BP_WORD g_SysSigMapSize;
 
 
 

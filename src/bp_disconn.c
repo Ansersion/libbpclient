@@ -36,7 +36,7 @@
 
 PackBuf * BP_PackDisconn(const BPContext * bp_context)
 {
-	BP_WORD i;
+	// BP_WORD i;
 
 	BP_UINT8 * pbuf, * pbuf_old;
 	BP_WORD rmn_len = 0;

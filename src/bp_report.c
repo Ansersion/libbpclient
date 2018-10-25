@@ -131,7 +131,7 @@ PackBuf * BP_PackReport(const BP_SigId2Val * sig_array, const BP_UINT16 num)
 
 PackBuf * BP_PackReportSigTabChksum(const BPContext * bp_context)
 {
-	BP_WORD i, j;
+	// BP_WORD i, j;
 
 	BP_UINT8 * pbuf, * pbuf_old;
 	BP_WORD rmn_len = 0;
@@ -190,7 +190,7 @@ PackBuf * BP_PackReportSigTabChksum(const BPContext * bp_context)
 
 PackBuf * BP_PackReportSigTable(const BPContext * bp_context)
 {
-    BP_WORD i, j;
+    // BP_WORD i, j;
 
     BP_UINT8 * pbuf, * pbuf_old;
     BP_WORD rmn_len = 0;
@@ -248,7 +248,7 @@ PackBuf * BP_PackReportSigTable(const BPContext * bp_context)
 
 PackBuf * BP_PackReportSigVal(const BPContext *bp_context, const BP_SigId2Val * sig_array, const BP_UINT16 sig_num)
 {
-	BP_WORD i, j;
+	// BP_WORD i, j;
 
 	BP_UINT8 * pbuf, * pbuf_old;
 	BP_WORD rmn_len = 0;

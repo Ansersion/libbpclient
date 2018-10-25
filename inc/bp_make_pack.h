@@ -28,14 +28,14 @@
 #include <bpclient_config.h>
 #include <bp_public.h>
 
-PackBuf * BP_InitPack(PackBuf * pack_buf, BP_UINT8 type_msk, BP_UINT8 * buf, BP_WORD size);
+EXPORT_API PackBuf * BP_InitPack(PackBuf * pack_buf, BP_UINT8 type_msk, BP_UINT8 * buf, BP_WORD size);
 
 #ifdef BP_MEM_MNG
-PackBuf * BP_InitPack2(PackBuf * pack_buf, BP_WORD size);
+EXPORT_API PackBuf * BP_InitPack2(PackBuf * pack_buf, BP_WORD size);
 #endif
-PackBuf * BP_ReinitPack(PackBuf * pack_buf, BP_UINT8 type_msk);
+EXPORT_API PackBuf * BP_ReinitPack(PackBuf * pack_buf, BP_UINT8 type_msk);
 
-BP_UINT8 * BP_ToPack(PackBuf * pack_buf);
+EXPORT_API BP_UINT8 * BP_ToPack(PackBuf * pack_buf);
 
 #endif
 

@@ -1,3 +1,6 @@
+#ifdef WIN32
+#include "stdafx.h"
+#endif
 
 #include <bp_sig_str.h>
 #include <bp_custom_sig_table.h>
@@ -8,62 +11,61 @@ BP_SigId2Val g_CusSigId2Val[] =
 	{SIG_CUS_DEVICE_NAME, 0}, 
 };
 
-const BP_SigTable g_CusSigTable[] = 
+BP_SigTable g_CusSigTable[] = 
 {
 	{SIG_CUS_DEVICE_NAME, SIG_TYPE_STR, DISABLE_STATISTICS, DISABLE_DISPLAY, 0, DISABLE_ALARM, SIG_PERM_RO, ALARM_CLASS_NONE, NO_CUSTOM_INFO, RESERVED_FIELD, (SigTypeU *)&STRING_DEFAULT_VALUE, (SigTypeU *)&STRING_DEFAULT_VALUE, (SigTypeU *)&STRING_DEFAULT_VALUE, 5, 5},
 };
 
-const BP_WORD g_CusSigNum = sizeof(g_CusSigId2Val) / sizeof(BP_SigId2Val);
+BP_WORD g_CusSigNum = sizeof(g_CusSigId2Val) / sizeof(BP_SigId2Val);
 
-const BP_UINT8 * g_CusSigNameLang[] = 
+BP_UINT8 * g_CusSigNameLang[] = 
 {
     STRING_NONE,
     STRING_NONE,
     STRING_NONE,
     STRING_NONE,
     "BC Light",
-    "BC灯",
+    "BC Light",
 };
 
-const BP_UINT8 * g_CusSigUnitLang[] = 
+BP_UINT8 * g_CusSigUnitLang[] = 
 {
+	BP_NULL
 };
 
-const BP_UINT8 * g_CusSigGroupLang[] = 
+BP_UINT8 * g_CusSigGroupLang[] =
 {
+	BP_NULL
 };
 
-const BP_UINT8 * g_CusSigEnumLang[] = 
+BP_UINT8 * g_CusSigEnumLang[] = 
 {
-    /* must be ordered */
+	BP_NULL
 };
 
-const BP_CusLangMap g_CusSigNameLangMap[] = 
+BP_CusLangMap g_CusSigNameLangMap[] = 
 {
     /* 1 mean first language resource, 0 means no language resource */
     {SIG_CUS_DEVICE_NAME, 1},
 };
 
-const BP_WORD g_CusSigNameLangMapNum = sizeof(g_CusSigNameLangMap) / sizeof(BP_CusLangMap);
+BP_WORD g_CusSigNameLangMapNum = sizeof(g_CusSigNameLangMap) / sizeof(BP_CusLangMap);
 
-const BP_CusLangMap g_CusSigUnitLangMap[] = 
+BP_CusLangMap g_CusSigUnitLangMap[] =
 {
-    /* 1 mean first language resource, 0 means no language resource */
-    // {SIG_CUS_DEVICE_NAME, 0},
+	BP_NULL
 };
-const BP_WORD g_CusSigUnitLangMapNum = sizeof(g_CusSigUnitLangMap) / sizeof(BP_CusLangMap);
+BP_WORD g_CusSigUnitLangMapNum = sizeof(g_CusSigUnitLangMap) / sizeof(BP_CusLangMap);
 
-const BP_CusLangMap g_CusSigGroupLangMap[] = 
+BP_CusLangMap g_CusSigGroupLangMap[] =
 {
-    /* 1 mean first language resource, 0 means no language resource */
-    // {SIG_CUS_DEVICE_NAME, 0},
+	BP_NULL
 };
-const BP_WORD g_CusSigGroupLangMapNum = sizeof(g_CusSigGroupLangMap) / sizeof(BP_CusLangMap);
+BP_WORD g_CusSigGroupLangMapNum = sizeof(g_CusSigGroupLangMap) / sizeof(BP_CusLangMap);
 
-const BP_CusEnumLangMap g_CusSigEnumLangMap[] = 
+BP_CusEnumLangMap g_CusSigEnumLangMap[] =
 {
-    /* 1 mean first language resource, 0 means no language resource */
-    // {SIG_CUS_DEVICE_NAME, 0},
+	BP_NULL
 };
-const BP_WORD g_CusSigEnumLangMapNum = sizeof(g_CusSigEnumLangMap) / sizeof(BP_CusEnumLangMap);
+BP_WORD g_CusSigEnumLangMapNum = sizeof(g_CusSigEnumLangMap) / sizeof(BP_CusEnumLangMap);
 

@@ -239,14 +239,14 @@ typedef struct BPPacket {
 } BPPacket;
 
 
-extern BPContext BPContextEmbeded;
+EXPORT_API extern BPContext BPContextEmbeded;
 // extern BP_UINT8 BP_Buf[];
-extern BP_UINT8 BPBufEmbeded[BP_BUF_SIZE_EMBEDED];
-extern BP_UINT8 BPNameEmbeded[BP_NAME_SIZE];
-extern BP_UINT8 BPPasswordEmbeded[BP_PASSWORD_SIZE];
+EXPORT_API extern BP_UINT8 BPBufEmbeded[BP_BUF_SIZE_EMBEDED];
+EXPORT_API extern BP_UINT8 BPNameEmbeded[BP_NAME_SIZE];
+EXPORT_API extern BP_UINT8 BPPasswordEmbeded[BP_PASSWORD_SIZE];
 // extern BP_UINT8 BP_DEV_NAME[];
 // extern PackBuf BP_Pack_Buf;
-extern PackBuf PackBufEmbeded;
+EXPORT_API extern PackBuf PackBufEmbeded;
 // extern BP_UINT16 BP_ClientId;
 
 // typedef struct BP_Param {
@@ -254,35 +254,35 @@ extern PackBuf PackBufEmbeded;
 // 	BP_UINT16 AliveTime;
 // 	BP_UINT8 Timeout;
 // } BP_Param;
-extern BP_UINT8 BP_CrcType;
-extern BP_UINT8 BP_ClientType;
-extern BP_UINT8 BP_CipherType;
-extern BP_UINT16 BP_AliveTime;
-extern BP_UINT8 BP_Timeout;
-extern BP_UINT16 BP_SysSigSetVersion;
+EXPORT_API extern BP_UINT8 BP_CrcType;
+EXPORT_API extern BP_UINT8 BP_ClientType;
+EXPORT_API extern BP_UINT8 BP_CipherType;
+EXPORT_API extern BP_UINT16 BP_AliveTime;
+EXPORT_API extern BP_UINT8 BP_Timeout;
+EXPORT_API extern BP_UINT16 BP_SysSigSetVersion;
 
-extern BP_UINT16 BP_SeqIdCommon;
-extern BP_UINT16 BP_SeqIdGet;
-extern BP_UINT16 BP_SeqIdPost;
-extern BP_UINT16 BP_SeqIdReport;
-extern BP_UINT16 BP_SeqIdPing;
+EXPORT_API extern BP_UINT16 BP_SeqIdCommon;
+EXPORT_API extern BP_UINT16 BP_SeqIdGet;
+EXPORT_API extern BP_UINT16 BP_SeqIdPost;
+EXPORT_API extern BP_UINT16 BP_SeqIdReport;
+EXPORT_API extern BP_UINT16 BP_SeqIdPing;
 
 
 
-BP_UINT8 * BP_SetNet16(BP_UINT8 * dst, BP_UINT16 val);
-BP_UINT8 * BP_SetNet32(BP_UINT8 * dst, BP_UINT32 val);
-BP_UINT8 * BP_SetNBytes(BP_UINT8 * dst, BP_UINT8 * src, BP_WORD num);
+EXPORT_API BP_UINT8 * BP_SetNet16(BP_UINT8 * dst, BP_UINT16 val);
+EXPORT_API BP_UINT8 * BP_SetNet32(BP_UINT8 * dst, BP_UINT32 val);
+EXPORT_API BP_UINT8 * BP_SetNBytes(BP_UINT8 * dst, BP_UINT8 * src, BP_WORD num);
 
-BP_UINT8 * BP_Set2ByteField(BP_UINT8 * pack, BP_UINT8 * field, BP_UINT16 field_len);
-BP_UINT8 * BP_Set1ByteField(BP_UINT8 * pack, const BP_UINT8 * field, BP_UINT8 field_len);
+EXPORT_API BP_UINT8 * BP_Set2ByteField(BP_UINT8 * pack, BP_UINT8 * field, BP_UINT16 field_len);
+EXPORT_API BP_UINT8 * BP_Set1ByteField(BP_UINT8 * pack, const BP_UINT8 * field, BP_UINT8 field_len);
 
-BP_UINT8 * BP_GetNet16(BP_UINT8 * src, BP_UINT16 * val);
-BP_UINT8 * BP_GetNet32(BP_UINT8 * src, BP_UINT32 * val);
+EXPORT_API BP_UINT8 * BP_GetNet16(BP_UINT8 * src, BP_UINT16 * val);
+EXPORT_API BP_UINT8 * BP_GetNet32(BP_UINT8 * src, BP_UINT32 * val);
 
-BP_UINT8 * BP_Get2ByteField(BP_UINT8 * pack, BP_UINT8 * field_buf, BP_UINT16 * field_len);
+EXPORT_API BP_UINT8 * BP_Get2ByteField(BP_UINT8 * pack, BP_UINT8 * field_buf, BP_UINT16 * field_len);
 
-BP_WORD sortSig2ValClbk(void * a, void * b);
-void BP_SigvalSort(const BP_SigId2Val * sig_array, BP_WORD num);
+EXPORT_API BP_WORD sortSig2ValClbk(void * a, void * b);
+EXPORT_API void BP_SigvalSort(const BP_SigId2Val * sig_array, BP_WORD num);
 
 #endif
 
