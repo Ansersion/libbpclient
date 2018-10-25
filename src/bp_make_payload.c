@@ -263,9 +263,9 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 	BP_UINT8 * pack_2 = BP_NULL;
 	BP_UINT8 * pack_x = BP_NULL;
 	BP_UINT8 * pack_old = pack;
-    BP_UINT8 * p_pack_tmp1;
-    BP_UINT8 * p_pack_tmp2;
-	BP_UINT8 * p_pack_tmp3;
+    BP_UINT8 * p_pack_tmp1 = BP_NULL;
+    BP_UINT8 * p_pack_tmp2 = BP_NULL;
+	BP_UINT8 * p_pack_tmp3 = BP_NULL;
     BP_SigTable * sig_table_tmp;
     BP_SigType sig_type_tmp;
     BP_SysCusEnumUnit * sys_custom_enum_unit_tmp;
@@ -635,7 +635,9 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
             if(SIG_TYPE_UNKNOWN == sig_type_tmp) {
                 continue;
             }
+#ifdef DEBUG
             printf("report: signal type=%d\n", sig_type_tmp);
+#endif
 			pack = BP_SetBig16(pack, payload->u.REPORT.SigArray[i].SigId);
             pack = BP_SetSigVal2Buf2(pack, sig_type_tmp, payload->u.REPORT.SigArray[i].SigVal);
 		}

@@ -81,7 +81,7 @@ typedef struct PackBuf {
 typedef struct BPContext {
     /* suggest: not change these variables durring time */
     BP_UINT8 Encryption;
-    BP_UINT8 CrcType;;
+    BP_UINT8 CrcType;
     BP_UINT8 BPLevel;
     BP_UINT8 PerformanceLimit;
     BP_UINT8 IsDeviceClient;

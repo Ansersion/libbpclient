@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{DCA14AE1-656D-48BA-9AAA-C79F79AD5D91}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>bplib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;BPLIB_EXPORTS;_WINDOWS;_USRDLL;BP_CPU64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\sig_table;$(ProjectDir);$(ProjectDir)..\..\..\inc</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;BPLIB_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;BPLIB_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;BPLIB_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\inc\bpclient_config.h" />
+    <ClInclude Include="..\..\..\inc\bp_connack.h" />
+    <ClInclude Include="..\..\..\inc\bp_connect.h" />
+    <ClInclude Include="..\..\..\inc\bp_crc16.h" />
+    <ClInclude Include="..\..\..\inc\bp_crc32.h" />
+    <ClInclude Include="..\..\..\inc\bp_disconn.h" />
+    <ClInclude Include="..\..\..\inc\bp_fix_flags.h" />
+    <ClInclude Include="..\..\..\inc\bp_getack.h" />
+    <ClInclude Include="..\..\..\inc\bp_init.h" />
+    <ClInclude Include="..\..\..\inc\bp_make_fix_head.h" />
+    <ClInclude Include="..\..\..\inc\bp_make_pack.h" />
+    <ClInclude Include="..\..\..\inc\bp_make_payload.h" />
+    <ClInclude Include="..\..\..\inc\bp_make_vrb_head.h" />
+    <ClInclude Include="..\..\..\inc\bp_memcpy.h" />
+    <ClInclude Include="..\..\..\inc\bp_memset.h" />
+    <ClInclude Include="..\..\..\inc\bp_pack_type.h" />
+    <ClInclude Include="..\..\..\inc\bp_parse.h" />
+    <ClInclude Include="..\..\..\inc\bp_ping.h" />
+    <ClInclude Include="..\..\..\inc\bp_pingack.h" />
+    <ClInclude Include="..\..\..\inc\bp_post.h" />
+    <ClInclude Include="..\..\..\inc\bp_postack.h" />
+    <ClInclude Include="..\..\..\inc\bp_public.h" />
+    <ClInclude Include="..\..\..\inc\bp_report.h" />
+    <ClInclude Include="..\..\..\inc\bp_rprtack.h" />
+    <ClInclude Include="..\..\..\inc\bp_sig_str.h" />
+    <ClInclude Include="..\..\..\inc\bp_sig_table_tools.h" />
+    <ClInclude Include="..\..\..\inc\bp_strlen.h" />
+    <ClInclude Include="..\..\..\inc\bp_utils.h" />
+    <ClInclude Include="..\..\..\inc\bp_vrb_flags.h" />
+    <ClInclude Include="..\..\..\inc\md5.h" />
+    <ClInclude Include="..\..\..\inc\sha2.h" />
+    <ClInclude Include="..\..\..\sig_table\bp_custom_sig_table.h" />
+    <ClInclude Include="..\..\..\sig_table\bp_sig_table.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\sig_table\bp_custom_sig_table.c" />
+    <ClCompile Include="..\..\..\sig_table\bp_sig_table.c" />
+    <ClCompile Include="..\..\..\src\bp_connect.c" />
+    <ClCompile Include="..\..\..\src\bp_crc16.c" />
+    <ClCompile Include="..\..\..\src\bp_crc32.c" />
+    <ClCompile Include="..\..\..\src\bp_cus_alm_sig.c" />
+    <ClCompile Include="..\..\..\src\bp_cus_sig.c" />
+    <ClCompile Include="..\..\..\src\bp_disconn.c" />
+    <ClCompile Include="..\..\..\src\bp_getack.c" />
+    <ClCompile Include="..\..\..\src\bp_init.c" />
+    <ClCompile Include="..\..\..\src\bp_lang_res.c" />
+    <ClCompile Include="..\..\..\src\bp_make_fix_head.c" />
+    <ClCompile Include="..\..\..\src\bp_make_pack.c" />
+    <ClCompile Include="..\..\..\src\bp_make_payload.c" />
+    <ClCompile Include="..\..\..\src\bp_make_vrb_head.c" />
+    <ClCompile Include="..\..\..\src\bp_memcpy.c" />
+    <ClCompile Include="..\..\..\src\bp_memset.c" />
+    <ClCompile Include="..\..\..\src\bp_parse.c" />
+    <ClCompile Include="..\..\..\src\bp_ping.c" />
+    <ClCompile Include="..\..\..\src\bp_post.c" />
+    <ClCompile Include="..\..\..\src\bp_postack.c" />
+    <ClCompile Include="..\..\..\src\bp_public.c" />
+    <ClCompile Include="..\..\..\src\bp_report.c" />
+    <ClCompile Include="..\..\..\src\bp_sig_table_tools.c" />
+    <ClCompile Include="..\..\..\src\bp_strlen.c" />
+    <ClCompile Include="..\..\..\src\bp_sys_alm_sig.c" />
+    <ClCompile Include="..\..\..\src\bp_utils.c" />
+    <ClCompile Include="..\..\..\src\md5.c" />
+    <ClCompile Include="..\..\..\src\sha2.c" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
