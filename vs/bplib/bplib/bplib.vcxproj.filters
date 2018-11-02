@@ -114,10 +114,10 @@
     <ClInclude Include="..\..\..\inc\sha2.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\sig_table\bp_custom_sig_table.h">
+    <ClInclude Include="..\..\..\sig_table_bc_tool_vs\bp_custom_sig_table.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\sig_table\bp_sig_table.h">
+    <ClInclude Include="..\..\..\sig_table_bc_tool_vs\bp_sig_table.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -209,10 +209,10 @@
     <ClCompile Include="..\..\..\src\sha2.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\sig_table\bp_custom_sig_table.c">
+    <ClCompile Include="..\..\..\sig_table_bc_tool_vs\bp_custom_sig_table.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\sig_table\bp_sig_table.c">
+    <ClCompile Include="..\..\..\sig_table_bc_tool_vs\bp_sig_table.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

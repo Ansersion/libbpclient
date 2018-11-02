@@ -284,5 +284,7 @@ EXPORT_API BP_UINT8 * BP_Get2ByteField(BP_UINT8 * pack, BP_UINT8 * field_buf, BP
 EXPORT_API BP_WORD sortSig2ValClbk(void * a, void * b);
 EXPORT_API void BP_SigvalSort(const BP_SigId2Val * sig_array, BP_WORD num);
 
+EXPORT_API BPContext * getBPContextEmbeded();
+
 #endif
 

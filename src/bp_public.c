@@ -204,3 +204,8 @@ void SwitchTypeDo(BP_UINT8 sig_type, SwitchTypeDoClbk clbk, void * para)
 			break;
 	}
 }
+
+BPContext * getBPContextEmbeded()
+{
+	return &BPContextEmbeded;
+}

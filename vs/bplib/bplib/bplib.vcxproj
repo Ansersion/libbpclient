@@ -88,9 +88,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;BPLIB_EXPORTS;_WINDOWS;_USRDLL;BP_CPU64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;BPLIB_EXPORTS;_WINDOWS;_USRDLL;BP_CPU32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\sig_table;$(ProjectDir);$(ProjectDir)..\..\..\inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\sig_table_bc_tool_vs;$(ProjectDir);$(ProjectDir)..\..\..\inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -180,14 +180,14 @@
     <ClInclude Include="..\..\..\inc\bp_vrb_flags.h" />
     <ClInclude Include="..\..\..\inc\md5.h" />
     <ClInclude Include="..\..\..\inc\sha2.h" />
-    <ClInclude Include="..\..\..\sig_table\bp_custom_sig_table.h" />
-    <ClInclude Include="..\..\..\sig_table\bp_sig_table.h" />
+    <ClInclude Include="..\..\..\sig_table_bc_tool_vs\bp_custom_sig_table.h" />
+    <ClInclude Include="..\..\..\sig_table_bc_tool_vs\bp_sig_table.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\sig_table\bp_custom_sig_table.c" />
-    <ClCompile Include="..\..\..\sig_table\bp_sig_table.c" />
+    <ClCompile Include="..\..\..\sig_table_bc_tool_vs\bp_custom_sig_table.c" />
+    <ClCompile Include="..\..\..\sig_table_bc_tool_vs\bp_sig_table.c" />
     <ClCompile Include="..\..\..\src\bp_connect.c" />
     <ClCompile Include="..\..\..\src\bp_crc16.c" />
     <ClCompile Include="..\..\..\src\bp_crc32.c" />
