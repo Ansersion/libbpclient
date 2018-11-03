@@ -55,8 +55,8 @@
 	#define BP_INT16 	short
 	#define BP_UINT32 	unsigned int
 	#define BP_INT32 	int
-	#define BP_UINT64 	unsigned long
-	#define BP_INT64 	long
+	#define BP_UINT64 	unsigned long long
+	#define BP_INT64 	long long
 	#define BP_FLOAT 	float
 	#define BP_WORD 	BP_UINT64
 
