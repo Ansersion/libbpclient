@@ -36,8 +36,8 @@
  * 		else dev_name & sys_sig_map must be null
 ***************/
 // PackBuf * BP_PackReport(BP_UINT8 * dev_name, const BP_SysSigMap * sys_sig_map, const BP_SigId2Val * sig_array, const BP_UINT16 num);
-EXPORT_API PackBuf * BP_PackReportSigTabChksum(const BPContext * bp_context);
-EXPORT_API PackBuf * BP_PackReportSigTable(const BPContext * bp_context);
-EXPORT_API PackBuf * BP_PackReportSigVal(const BPContext *bp_context, const BP_SigId2Val * sig_array, const BP_UINT16 sig_num);
+EXPORT_API PackBuf * BP_PackReportSigTabChksum(BPContext * bp_context);
+EXPORT_API PackBuf * BP_PackReportSigTable(BPContext * bp_context);
+EXPORT_API PackBuf * BP_PackReportSigVal(BPContext *bp_context, const BP_SigId2Val * sig_array, const BP_UINT16 sig_num);
 #endif
 

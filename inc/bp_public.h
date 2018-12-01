@@ -95,6 +95,11 @@ typedef struct BPContext {
     PackBuf * packBuf;
     BP_UINT8 * name;
     BP_UINT8 * password;
+	
+	/* seq id */
+	BP_UINT16 SeqIDComm;
+	BP_UINT16 SeqIDPing;
+	BP_UINT16 SeqIDReport;
 } BPContext;
 
 // variable struct

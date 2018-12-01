@@ -32,18 +32,18 @@
 #define SIG_SYS_POWER 				0xE002
 #define SIG_SYS_STRENGTH            0xE005
 
-EXPORT_API extern BP_SigId2Val g_SysSigId2Val[];
-EXPORT_API extern BP_SigTable g_SysSigTable[];
-EXPORT_API extern BP_WORD g_SysSigNum;
-EXPORT_API extern BP_SysCustomUnit g_SysCustomUnit[];
-EXPORT_API extern BP_WORD g_SysCustomUnitNum;
+extern BP_SigId2Val g_SysSigId2Val[];
+extern const BP_SigTable g_SysSigTable[];
+extern const BP_WORD g_SysSigNum;
+extern const BP_SysCustomUnit g_SysCustomUnit[];
+extern const BP_WORD g_SysCustomUnitNum;
 
-EXPORT_API extern BP_SysCustomUnit g_SysCustomUnitTable[];
-EXPORT_API extern BP_WORD g_SysCustomUnitNum;
+extern const BP_SysCustomUnit g_SysCustomUnitTable[];
+extern const BP_WORD g_SysCustomUnitNum;
 
-EXPORT_API extern BP_UINT8 g_SysMapDis_0[];
-EXPORT_API extern BP_SysSigMap g_SysSigMap[];
-EXPORT_API extern BP_WORD g_SysSigMapSize;
+extern const BP_UINT8 g_SysMapDis_0[];
+extern const BP_SysSigMap g_SysSigMap[];
+extern const BP_WORD g_SysSigMapSize;
 
 
 

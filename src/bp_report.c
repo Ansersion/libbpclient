@@ -129,7 +129,7 @@ PackBuf * BP_PackReport(const BP_SigId2Val * sig_array, const BP_UINT16 num)
 	return BP_NULL;
 }
 
-PackBuf * BP_PackReportSigTabChksum(const BPContext * bp_context)
+PackBuf * BP_PackReportSigTabChksum(BPContext * bp_context)
 {
 	// BP_WORD i, j;
 
@@ -153,8 +153,10 @@ PackBuf * BP_PackReportSigTabChksum(const BPContext * bp_context)
 	pbuf = bp_context->packBuf->PackStart;
 	pbuf_old = pbuf;
 
-    BP_SeqIdReport = BP_SeqIdCommon++;
-    vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
+    // BP_SeqIdReport = BP_SeqIdCommon++;
+    // vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
+    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
 
 	vrb_head.u.REPORT.Flags = 0;
 	vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_TAB_CHK_MSK;
@@ -188,7 +190,7 @@ PackBuf * BP_PackReportSigTabChksum(const BPContext * bp_context)
 	return bp_context->packBuf;
 }
 
-PackBuf * BP_PackReportSigTable(const BPContext * bp_context)
+PackBuf * BP_PackReportSigTable(BPContext * bp_context)
 {
     // BP_WORD i, j;
 
@@ -214,8 +216,10 @@ PackBuf * BP_PackReportSigTable(const BPContext * bp_context)
     pbuf = bp_context->packBuf->PackStart;
     pbuf_old = pbuf;
 
-    BP_SeqIdReport = BP_SeqIdCommon++;
-    vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
+    //BP_SeqIdReport = BP_SeqIdCommon++;
+    //vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
+    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
     vrb_head.u.REPORT.Flags = 0;
 
     vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SYS_SIG_SET_MSK;
@@ -246,7 +250,7 @@ PackBuf * BP_PackReportSigTable(const BPContext * bp_context)
     return bp_context->packBuf;
 }
 
-PackBuf * BP_PackReportSigVal(const BPContext *bp_context, const BP_SigId2Val * sig_array, const BP_UINT16 sig_num)
+PackBuf * BP_PackReportSigVal(BPContext *bp_context, const BP_SigId2Val * sig_array, const BP_UINT16 sig_num)
 {
 	// BP_WORD i, j;
 
@@ -277,8 +281,10 @@ PackBuf * BP_PackReportSigVal(const BPContext *bp_context, const BP_SigId2Val * 
 	payload.u.REPORT.SigArray =sig_array;
 
 
-	BP_SeqIdReport = BP_SeqIdCommon++;
-	vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
+	// BP_SeqIdReport = BP_SeqIdCommon++;
+	// vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
+    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
 
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_REPORT);
 	// printf("debug:\n");

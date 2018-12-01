@@ -58,6 +58,9 @@ void BP_Init2Default(BPContext * bp_context)
     bp_context->BPAlivePeroid = 60;
     bp_context->BPTimeout = 5;
     bp_context->packBuf = BP_NULL;
+    bp_context->SeqIDComm = 0;
+    bp_context->SeqIDPing = 0;
+    bp_context->SeqIDReport = 0;
 }
 
 void BP_Init(BP_UINT8 clnt_type, BP_UINT8 cipher_type, BP_UINT16 alive_time, BP_UINT8 timeout, BP_UINT16 clnt_id)
