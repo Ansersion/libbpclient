@@ -106,8 +106,8 @@ PackBuf * BP_PackConnect(const BPContext * bp_context, BP_UINT8 * name, BP_UINT8
 	vrb_head.u.CONNECT.Flags |= BP_VRB_FLAG_CLNT_TYPE_MSK;
 
 	// vrb_head.u.CONNECT.ClntId = BP_ClientId;
-	vrb_head.u.CONNECT.AlvTime = BP_AliveTime;
-	vrb_head.u.CONNECT.Timeout = BP_Timeout;
+	vrb_head.u.CONNECT.AlvTime = bp_context->BPAlivePeroid;
+	vrb_head.u.CONNECT.Timeout = bp_context->BPTimeout;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_CONNECT);
 
 	// strcpy(BP_Name, name);
