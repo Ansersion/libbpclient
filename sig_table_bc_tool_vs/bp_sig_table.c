@@ -11,25 +11,13 @@ SigTypeU SIG_SYS_POWER_MIN = {.t_enm = 0}, SIG_SYS_POWER_MAX = {.t_enm = 1}, SIG
 SigTypeU SIG_SYS_STRENGTH_MIN = {.t_enm = 0}, SIG_SYS_STRENGTH_MAX = {.t_enm = 2}, SIG_SYS_STRENGTH_DEF = {.t_enm = 1};
 
 /* system signal id to value array index*/
-BP_SigId2Val g_SysSigId2Val[] = 
-{
-	{SIG_SYS_COMM_STATE, 0}, 
-	{SIG_SYS_SERIAL_NUMBER, 0}, 
-	{SIG_SYS_POWER, 0}, 
-	{SIG_SYS_STRENGTH, 0}, 
-};
+BP_SigId2Val * g_SysSigId2Val;
 
 /* system signal id to signal table */
-BP_SigTable g_SysSigTable[] = 
-{
-	{SIG_SYS_COMM_STATE, SIG_TYPE_ENM, ENABLE_STATISTICS, ENABLE_DISPLAY, 0, ENABLE_ALARM, SIG_PERM_RO, ALARM_CLASS_SERIOUS, NO_CUSTOM_INFO, RESERVED_FIELD, (SigTypeU *)&SIG_SYS_COMM_STATE_MIN, (SigTypeU *)&SIG_SYS_COMM_STATE_MAX, (SigTypeU *)&SIG_SYS_COMM_STATE_DEF, ALARM_DELAY_DEFAULT, ALARM_DELAY_DEFAULT},
-	{SIG_SYS_SERIAL_NUMBER, SIG_TYPE_STR, ENABLE_STATISTICS, DISABLE_DISPLAY, 0, DISABLE_ALARM, SIG_PERM_RO, ALARM_CLASS_NONE, HAS_CUSTOM_INFO, RESERVED_FIELD, (SigTypeU *)&STRING_DEFAULT_VALUE, (SigTypeU *)&STRING_DEFAULT_VALUE, (SigTypeU *)&STRING_DEFAULT_VALUE, ALARM_DELAY_DEFAULT, ALARM_DELAY_DEFAULT},
-	{SIG_SYS_POWER, SIG_TYPE_ENM, ENABLE_STATISTICS, ENABLE_DISPLAY, 0, DISABLE_ALARM, SIG_PERM_RW, ALARM_CLASS_NONE, NO_CUSTOM_INFO, RESERVED_FIELD, (SigTypeU *)&SIG_SYS_POWER_MIN, (SigTypeU *)&SIG_SYS_POWER_MAX, (SigTypeU *)&SIG_SYS_POWER_DEF, ALARM_DELAY_DEFAULT, ALARM_DELAY_DEFAULT},
-	{SIG_SYS_STRENGTH, SIG_TYPE_ENM, ENABLE_STATISTICS, ENABLE_DISPLAY, 0, DISABLE_ALARM, SIG_PERM_RW, ALARM_CLASS_NONE, HAS_CUSTOM_INFO, RESERVED_FIELD, (SigTypeU *)&SIG_SYS_STRENGTH_MIN, (SigTypeU *)&SIG_SYS_STRENGTH_MAX, (SigTypeU *)&SIG_SYS_STRENGTH_DEF, ALARM_DELAY_DEFAULT, ALARM_DELAY_DEFAULT},
-};
+BP_SigTable * g_SysSigTable;
 
 /* system signal number */
-BP_WORD g_SysSigNum = sizeof(g_SysSigId2Val) / sizeof(BP_SigId2Val);
+BP_WORD g_SysSigNum;
 
 /* system signal custom value */
 BP_UINT8 SIG_SYS_SERIAL_NUMBER_CUSTOM_DEF_VAL[] = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1";
@@ -41,24 +29,39 @@ BP_EnumSignalMap SIG_SYS_STRENGTH_CUSTOM_ENUM_MAP[] =
 BP_SysCusEnumUnit SIG_SYS_STRENGTH_CUSTOM_ENUM_LANG = {sizeof(SIG_SYS_STRENGTH_CUSTOM_ENUM_MAP) / sizeof(BP_EnumSignalMap), SIG_SYS_STRENGTH_CUSTOM_ENUM_MAP};
 
 /* system signal custom value unit array */
-BP_SysCustomUnit g_SysCustomUnitTable[] = {
-    /* must be sorted which same signal id get togather */
-    {SIG_SYS_SERIAL_NUMBER, SYS_SIG_CUSTOM_TYPE_DEF_VAL, (void *)SIG_SYS_SERIAL_NUMBER_CUSTOM_DEF_VAL},
-    {SIG_SYS_STRENGTH, SYS_SIG_CUSTOM_TYPE_ENUM_LANG, (void *)(&SIG_SYS_STRENGTH_CUSTOM_ENUM_LANG)},
-};
+BP_SysCustomUnit * g_SysCustomUnitTable;
 
 /* system signal custom unit number */
-BP_WORD g_SysCustomUnitNum = sizeof(g_SysCustomUnitTable) / sizeof(BP_SysCustomUnit);
+BP_WORD g_SysCustomUnitNum;
 
 
 /* system signal enable map */
 BP_UINT8 g_SysMapDis_0[1] = {0x20 | 0x04 | 0x02 | 0x01};
 
-BP_SysSigMap g_SysSigMap[] = 
+BP_SysSigMap * g_SysSigMap;
+
+BP_WORD g_SysSigMapSize;
+
+
+void BP_SetSysSigId2ValTable(BP_SigId2Val * sys_sig_id_2_val, BP_WORD sys_sig_num)
 {
-	{0x0 | DIST_CLASS_1_MSK | DIST_END_FLAG_MSK, sizeof(g_SysMapDis_0) / sizeof(BP_UINT8), g_SysMapDis_0}, 
-};
+	g_SysSigId2Val = sys_sig_id_2_val;
+	g_SysSigNum = sys_sig_num;
+}
 
-BP_WORD g_SysSigMapSize = sizeof(g_SysSigMap) / sizeof(BP_SysSigMap);
+void BP_SetSysSigTable(BP_SigTable * sys_sig_table)
+{
+	g_SysSigTable = sys_sig_table;
+}
 
+void BP_SetSysCustomUnitTable(BP_SysCustomUnit * sys_custom_unit_table, BP_WORD sys_custom_unit_num)
+{
+	g_SysCustomUnitTable = sys_custom_unit_table;
+	g_SysCustomUnitNum = sys_custom_unit_num;
+}
 
+void BP_SetSysSigMap(BP_SysSigMap * sys_sig_map, BP_WORD sys_sig_map_size)
+{
+	g_SysSigMap = sys_sig_map;
+	g_SysSigMapSize = sys_sig_map_size;
+}

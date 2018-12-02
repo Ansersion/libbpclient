@@ -6,66 +6,86 @@
 #include <bp_custom_sig_table.h>
 #include <bp_sig_table_tools.h>
 
-BP_SigId2Val g_CusSigId2Val[] = 
+BP_SigId2Val * g_CusSigId2Val;
+
+BP_SigTable * g_CusSigTable;
+
+BP_WORD g_CusSigNum;
+
+BP_UINT8 ** g_CusSigNameLang;
+
+BP_UINT8 ** g_CusSigUnitLang;
+
+BP_UINT8 ** g_CusSigGroupLang;
+
+BP_UINT8 ** g_CusSigEnumLang;
+
+BP_CusLangMap * g_CusSigNameLangMap;
+
+BP_WORD g_CusSigNameLangMapNum;
+
+BP_CusLangMap * g_CusSigUnitLangMap;
+BP_WORD g_CusSigUnitLangMapNum;
+
+BP_CusLangMap * g_CusSigGroupLangMap;
+BP_WORD g_CusSigGroupLangMapNum;
+
+BP_CusEnumLangMap * g_CusSigEnumLangMap;
+BP_WORD g_CusSigEnumLangMapNum;
+
+/* dynamically set signal table */
+void BP_SetCusSigId2ValTable(BP_SigId2Val * cus_sig_id_2_val, BP_WORD cus_sig_num)
 {
-	{SIG_CUS_DEVICE_NAME, 0}, 
-};
+	g_CusSigId2Val = cus_sig_id_2_val;
+	g_CusSigNum = cus_sig_num;
+}
 
-BP_SigTable g_CusSigTable[] = 
+void BP_SetCusSigTable(BP_SigTable * cus_sig_table)
 {
-	{SIG_CUS_DEVICE_NAME, SIG_TYPE_STR, DISABLE_STATISTICS, DISABLE_DISPLAY, 0, DISABLE_ALARM, SIG_PERM_RO, ALARM_CLASS_NONE, NO_CUSTOM_INFO, RESERVED_FIELD, (SigTypeU *)&STRING_DEFAULT_VALUE, (SigTypeU *)&STRING_DEFAULT_VALUE, (SigTypeU *)&STRING_DEFAULT_VALUE, 5, 5},
-};
+	g_CusSigTable = cus_sig_table;
+}
 
-BP_WORD g_CusSigNum = sizeof(g_CusSigId2Val) / sizeof(BP_SigId2Val);
-
-BP_UINT8 * g_CusSigNameLang[] = 
+void BP_SetCusSigNameLang(BP_UINT8 ** cus_sig_name_lang) 
 {
-    STRING_NONE,
-    STRING_NONE,
-    STRING_NONE,
-    STRING_NONE,
-    "BC Light",
-    "BC Light",
-};
+	g_CusSigNameLang = cus_sig_name_lang;
+}
 
-BP_UINT8 * g_CusSigUnitLang[] = 
+void BP_SetCusSigUnitLang(BP_UINT8 ** cus_sig_unit_lang) 
 {
-	BP_NULL
-};
+	g_CusSigUnitLang = cus_sig_unit_lang;
+}
 
-BP_UINT8 * g_CusSigGroupLang[] =
+void BP_SetCusSigGroupLang(BP_UINT8 ** cus_sig_group_lang) 
 {
-	BP_NULL
-};
+	g_CusSigGroupLang = cus_sig_group_lang;
+}
 
-BP_UINT8 * g_CusSigEnumLang[] = 
+void BP_SetCusSigEnumLang(BP_UINT8 ** cus_sig_enum_lang) 
 {
-	BP_NULL
-};
+	g_CusSigEnumLang = cus_sig_enum_lang;
+}
 
-BP_CusLangMap g_CusSigNameLangMap[] = 
+void BP_SetCusSigNameLangMap(BP_CusLangMap * cus_sig_name_lang_map, BP_WORD cus_sig_name_lang_map_num) 
 {
-    /* 1 mean first language resource, 0 means no language resource */
-    {SIG_CUS_DEVICE_NAME, 1},
-};
+	g_CusSigNameLangMap = cus_sig_name_lang_map;
+	g_CusSigNameLangMapNum = cus_sig_name_lang_map_num;
+}
 
-BP_WORD g_CusSigNameLangMapNum = sizeof(g_CusSigNameLangMap) / sizeof(BP_CusLangMap);
-
-BP_CusLangMap g_CusSigUnitLangMap[] =
+void BP_SetCusSigUnitLangMap(BP_CusLangMap * cus_sig_unit_lang_map, BP_WORD cus_sig_unit_lang_map_num) 
 {
-	BP_NULL
-};
-BP_WORD g_CusSigUnitLangMapNum = sizeof(g_CusSigUnitLangMap) / sizeof(BP_CusLangMap);
+	g_CusSigUnitLangMap = cus_sig_unit_lang_map;
+	g_CusSigUnitLangMapNum = cus_sig_unit_lang_map_num;
+}
 
-BP_CusLangMap g_CusSigGroupLangMap[] =
+void BP_SetCusSigGroupLangMap(BP_CusLangMap * cus_sig_group_lang_map, BP_WORD cus_sig_group_lang_map_num) 
 {
-	BP_NULL
-};
-BP_WORD g_CusSigGroupLangMapNum = sizeof(g_CusSigGroupLangMap) / sizeof(BP_CusLangMap);
+	g_CusSigGroupLangMap = cus_sig_group_lang_map;
+	g_CusSigGroupLangMapNum = cus_sig_group_lang_map_num;
+}
 
-BP_CusEnumLangMap g_CusSigEnumLangMap[] =
+void BP_SetCusSigEnumLangMap(BP_CusLangMap * cus_sig_enum_lang_map, BP_WORD cus_sig_enum_lang_map_num) 
 {
-	BP_NULL
-};
-BP_WORD g_CusSigEnumLangMapNum = sizeof(g_CusSigEnumLangMap) / sizeof(BP_CusEnumLangMap);
+	g_CusSigEnumLangMap = cus_sig_enum_lang_map;
+	g_CusSigEnumLangMapNum = cus_sig_enum_lang_map_num;
+}
 
