@@ -36,7 +36,9 @@
 
 PackBuf * BP_PackPing(BPContext * bp_context)
 {
-	// BP_WORD i;
+#ifdef DEBUG
+	BP_WORD i;
+#endif
 
 	BP_UINT8 * pbuf, * pbuf_old;
 	BP_WORD rmn_len = 0;

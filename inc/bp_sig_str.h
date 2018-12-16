@@ -189,6 +189,12 @@ typedef struct BP_SysCusEnumUnit {
     BP_EnumSignalMap * EnumSignalMap;
 } BP_SysCusEnumUnit;
 
+typedef struct BP_SigId2EnumSignalMap {
+    BP_UINT16 SigId;
+    BP_EnumSignalMap * EnumSignalMap;
+    BP_WORD EnumSignalMapNum;
+} BP_SigId2EnumSignalMap;
+
 typedef struct BP_CusEnumLangMap {
     BP_UINT16 SigId;
     BP_UINT16 EnumVal;

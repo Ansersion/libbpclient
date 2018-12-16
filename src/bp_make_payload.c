@@ -246,8 +246,8 @@ BP_UINT8 * make_pld_postack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbH
 
 BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head)
 {
-	BP_UINT16 i, j, k;
-	BP_UINT16 t4n = 0, t2n = 0, txn = 0;
+	BP_UINT16 i, j, k, l;
+	// BP_UINT16 t4n = 0, t2n = 0, txn = 0;
 	// BP_UINT16 idx_tmp;
     BP_UINT8 byte_tmp = 0;
     BP_UINT16 u16_tmp = 0;
@@ -259,9 +259,9 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 	// const BP_UINT8 * sig_map;
 	const BP_UINT8 * lang;
     BP_WORD len;
-	BP_UINT8 * pack_4 = BP_NULL;
-	BP_UINT8 * pack_2 = BP_NULL;
-	BP_UINT8 * pack_x = BP_NULL;
+	// BP_UINT8 * pack_4 = BP_NULL;
+	// BP_UINT8 * pack_2 = BP_NULL;
+	// BP_UINT8 * pack_x = BP_NULL;
 	BP_UINT8 * pack_old = pack;
     BP_UINT8 * p_pack_tmp1 = BP_NULL;
     BP_UINT8 * p_pack_tmp2 = BP_NULL;
@@ -473,9 +473,6 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 				printf("start pack custom signal unit language\n");
 #endif
 				/* construct signal unit language */
-                if(0 == g_CusSigUnitLangMapNum) {
-                    *pack++ = 0;
-                }
 				for(k = 0; k < g_CusSigUnitLangMapNum; k++) {
 					if(g_CusSigUnitLangMap[k].SigId == sig_table_tmp->SigId) {
 						if(g_CusSigUnitLangMap[k].LangId == 0) {
@@ -487,14 +484,14 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 						break;
 					}
 				}
+				if(k == g_CusSigUnitLangMapNum) {
+                    *pack++ = 0;
+				}
 
 #ifdef DEBUG
 				printf("start pack custom signal group language\n");
 #endif
 				/* construct signal group language */
-                if(0 == g_CusSigGroupLangMapNum) {
-                    *pack++ = 0;
-                }
 				for(k = 0; k < g_CusSigGroupLangMapNum; k++) {
 					if(g_CusSigGroupLangMap[k].SigId == sig_table_tmp->SigId) {
 						if(g_CusSigGroupLangMap[k].LangId == 0) {
@@ -506,25 +503,34 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 						break;
 					}
 				}
+				if(k == g_CusSigGroupLangMapNum) {
+                    *pack++ = 0;
+				}
 
 
-#ifdef DEBUG
-				printf("start pack custom signal enum language\n");
-#endif
+// #ifdef DEBUG
+// 				printf("start pack custom signal enum language\n");
+// #endif
+				BP_LOG("start pack custom signal enum language\n");
 				/* construct enum signal language if any*/
 				if(SIG_TYPE_ENM == sig_table_tmp->SigType) {
 					p_pack_tmp1 = pack;
 					*p_pack_tmp1 = 0;
+					pack++;
 
-					for(k = 0; k < g_CusSigEnumLangMapNum; k++) {
-						if(g_CusSigEnumLangMap[k].SigId == sig_table_tmp->SigId) {
-							if(g_CusSigEnumLangMap[k].LangId == 0) {
+					for(k = 0; k < g_CusSigId2EnumSignalMapNum; k++) {
+						if(g_CusSigId2EnumSigMap[k].SigId == sig_table_tmp->SigId) {
+							if(BP_NULL == g_CusSigId2EnumSigMap[k].EnumSignalMap) {
 								continue;
 							}
-							lang = g_CusSigEnumLang[((g_CusSigEnumLangMap[k].LangId - 1) * STD_LANGUAGE_SUPPORTED_NUM) + j - 2];
-							byte_tmp = (BP_UINT8)strlen_bp(lang);
-							pack = BP_Set1ByteField(pack, lang, byte_tmp);
-							*p_pack_tmp1 += 1;
+							for(l = 0; l < g_CusSigId2EnumSigMap[k].EnumSignalMapNum; l++) {
+								lang = g_CusSigEnumLang[((g_CusSigId2EnumSigMap[k].EnumSignalMap[l].Val - 1) * STD_LANGUAGE_SUPPORTED_NUM) + j - 2];
+								pack = BP_SetBig16(pack, g_CusSigId2EnumSigMap[k].EnumSignalMap[l].Key);
+								byte_tmp = (BP_UINT8)strlen_bp(lang);
+								pack = BP_Set1ByteField(pack, lang, byte_tmp);
+								*p_pack_tmp1 += 1;
+							}
+							break;
 						}
 					}
 				}

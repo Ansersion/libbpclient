@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2018 Ansersion
+/// Copyright 2017-2018 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
 /// See the License for the specific language governing permissions and
 /// limitations under the License.
 ///
-/// @file 	bp_utils.h
-/// @brief 	utility functions
+/// @file 	bp_sig_table.h
+/// @brief 	struct for signal table
 /// 
 /// @version 	0.1
 /// @author 	Ansersion
@@ -22,19 +22,30 @@
 /// 
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef __BP_UTILS_H
-#define __BP_UTILS_H
+#ifndef __BP_SIG_TABLE_H
+#define __BP_SIG_TABLE_H
 
-#include <bpclient_config.h>
+#include <bp_sig_str.h>
 
-#ifdef DEBUG
-#define BP_LOG(s) printf(s)
-#else 
-#define BP_LOG(s)
+#define SIG_SYS_SERIAL_NUMBER 		0xE000
+#define SIG_SYS_COMM_STATE 			0xE001
+#define SIG_SYS_POWER 				0xE002
+#define SIG_SYS_STRENGTH            0xE005
+
+extern BP_SigId2Val g_SysSigId2Val[];
+extern BP_SigTable g_SysSigTable[];
+extern BP_WORD g_SysSigNum;
+extern BP_SysCustomUnit g_SysCustomUnit[];
+extern BP_WORD g_SysCustomUnitNum;
+
+extern BP_SysCustomUnit g_SysCustomUnitTable[];
+extern BP_WORD g_SysCustomUnitNum;
+
+extern BP_UINT8 g_SysMapDis_0[];
+extern BP_SysSigMap g_SysSigMap[];
+extern BP_WORD g_SysSigMapSize;
+
+
+
 #endif
 
-typedef BP_WORD (*CompClbkP)(void * a,void * b); 
-void SwapP(void * A[], BP_WORD i, BP_WORD j);
-void BubbleSortP(void * A[], BP_WORD n, CompClbkP clbk);
-
-#endif
