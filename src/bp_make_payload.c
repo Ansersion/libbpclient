@@ -562,6 +562,7 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 					pack = BP_SetBig16(pack, sig_table_tmp->DefVal->t_i16);
 					break;
 				case SIG_TYPE_ENM:
+					pack = BP_SetBig16(pack, sig_table_tmp->DefVal->t_enm);
 					break;
 				case SIG_TYPE_FLT:
 					*pack++ = sig_table_tmp->Accuracy;
