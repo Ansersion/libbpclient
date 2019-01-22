@@ -60,7 +60,8 @@ PackBuf * BP_PackGetack(const BPContext * bp_context, BP_GetStr * get_str)
 		return BP_NULL;
 	}
 
-	BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_GETACK_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE);
+	// BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_GETACK_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE);
+	BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_GETACK_MSK);
 	pbuf = bp_context->packBuf->PackStart;
 	pbuf_old = pbuf;
 

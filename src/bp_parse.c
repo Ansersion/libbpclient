@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -23,13 +23,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <bp_parse.h>
-#include <bp_crc32.h>
-#include <bp_crc16.h>
 #include <bp_fix_flags.h>
 #include <bp_vrb_flags.h>
 #include <bp_sig_table.h>
 #include <bp_make_payload.h>
 #include <bp_sig_table_tools.h>
+
+#ifdef CHECKSUM_CRC32
+    #include <bp_crc32.h>
+#else
+    #include <bp_crc16.h>
+#endif
 
 // BP_INT8 BP_ParseRprtack(BP_RprtackStr * str_rprtack, BP_UINT8 * msg, BP_UINT16 len)
 // {
@@ -224,13 +228,13 @@ BP_INT16 BP_ParseFixHead(BP_UINT8 * msg, BP_UINT8 * type_and_flags, BP_UINT16 * 
 	i = 0;
 	*type_and_flags = msg[i++];
 
-	*rmn_len = 0;
-    *rmn_len = *rmn_len + msg[i++];
+    *rmn_len = msg[i++];
     *rmn_len = (*rmn_len << 8) + msg[i++];
 
 	return 0;
 }
 
+#ifdef CHECKSUM_CRC32
 BP_INT8 BP_CheckCRC32(BP_UINT8 * msg, BP_UINT16 len)
 {
 	BP_UINT32 crc;
@@ -249,6 +253,8 @@ BP_INT8 BP_CheckCRC32(BP_UINT8 * msg, BP_UINT16 len)
 	return 0;
 }
 
+#else
+
 BP_INT8 BP_CheckCRC16(BP_UINT8 * msg, BP_UINT16 len)
 {
 	BP_UINT16 crc;
@@ -266,12 +272,18 @@ BP_INT8 BP_CheckCRC16(BP_UINT8 * msg, BP_UINT16 len)
 
 	return 0;
 }
+#endif
 
 BP_INT8 BP_CheckCRC(BP_UINT8 crc_flags, BP_UINT8 * msg, BP_UINT16 len)
 {
-	if(crc_flags & BP_FIX_FLAG_CRC16_MSK) {
-		return BP_CheckCRC16(msg, len);
-	} else {
-		return BP_CheckCRC32(msg, len);
-	}
+	// if(crc_flags & BP_FIX_FLAG_CRC16_MSK) {
+	// 	return BP_CheckCRC16(msg, len);
+	// } else {
+	// 	return BP_CheckCRC32(msg, len);
+	// }
+#ifdef CHECKSUM_CRC32
+	return BP_CheckCRC32(msg, len);
+#else 
+	return BP_CheckCRC16(msg, len);
+#endif
 }

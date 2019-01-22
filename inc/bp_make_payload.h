@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017-2018 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -32,6 +32,15 @@ extern BP_SigType g_SigTypeArray[];
 extern BP_SigId2Val g_SigArray[];
 extern BP_SigValArrayEntry g_SigValArray[];
 
+/** 
+  * @Brief BP_make_payload construct payload for BP packet
+  * @Param pack       packet buffer
+  * @Param vrb_head   payload info
+  * @Param bp_type    BP packet type
+  * @Param vrb_head   variable head info
+  * @return Success   Pointer to the end of the payload info of parameter "pack"
+  *         Failed      BP_NULL
+ */
 BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp_type, BPPackVrbHead * vrb_head);
 
 

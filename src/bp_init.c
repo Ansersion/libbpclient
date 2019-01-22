@@ -47,27 +47,37 @@ void BP_InitEmbededContext()
 
 void BP_Init2Default(BPContext * bp_context)
 {
+    // if(BP_NULL == bp_context) {
+    //     return;
+    // }
+    // bp_context->Encryption = ENCRYPTION_TYPE;;
+    // bp_context->CrcType = CHECKSUM_TYPE;
+    // bp_context->BPLevel = BP_LEVEL;
+    // bp_context->PerformanceLimit = PERFORMANCE_LIMIT;
+    // bp_context->IsDeviceClient = CLIENT_TYPE;
+    // bp_context->BPAlivePeroid = BP_ALIVE_PERIOD;
+    // bp_context->BPTimeout = BP_TIMEOUT;
+    // bp_context->packBuf = BP_NULL;
+    // bp_context->SeqIDComm = 0;
+    // bp_context->SeqIDPing = 0;
+    // bp_context->SeqIDReport = 0;
+    BP_Init(bp_context, ENCRYPTION_TYPE, CHECKSUM_TYPE, BP_LEVEL, PERFORMANCE_LIMIT, CLIENT_TYPE, BP_ALIVE_PERIOD, BP_TIMEOUT);
+}
+
+void BP_Init(BPContext * bp_context, BP_UINT8 cryp_type, BP_UINT8 crc_type, BP_UINT8 bplvl, BP_UINT8 perm_lmt, BP_UINT8 client_type, BP_UINT16 alive_period, BP_UINT16 timeout)
+{
     if(BP_NULL == bp_context) {
         return;
     }
-    bp_context->Encryption = ENCRYPTION_TYPE;;
-    bp_context->CrcType = CHECKSUM_TYPE;
-    bp_context->BPLevel = BP_LEVEL;
-    bp_context->PerformanceLimit = PERFORMANCE_LIMIT;
-    bp_context->IsDeviceClient = CLIENT_TYPE;
-    bp_context->BPAlivePeroid = 60;
-    bp_context->BPTimeout = 5;
+    bp_context->Encryption = cryp_type;;
+    bp_context->CrcType = crc_type;
+    bp_context->BPLevel = bplvl;
+    bp_context->PerformanceLimit = perm_lmt;
+    bp_context->ClientType = client_type;
+    bp_context->BPAlivePeroid = alive_period;
+    bp_context->BPTimeout = timeout;
     bp_context->packBuf = BP_NULL;
     bp_context->SeqIDComm = 0;
     bp_context->SeqIDPing = 0;
     bp_context->SeqIDReport = 0;
-}
-
-void BP_Init(BP_UINT8 clnt_type, BP_UINT8 cipher_type, BP_UINT16 alive_time, BP_UINT8 timeout, BP_UINT16 clnt_id)
-{
-	BP_ClientType = clnt_type;
-	BP_CipherType = cipher_type;
-	BP_AliveTime = alive_time;
-	BP_Timeout = timeout;
-	// BP_ClientId = clnt_id;
 }

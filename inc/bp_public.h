@@ -71,11 +71,11 @@
 typedef void (*SwitchTypeDoClbk)(void * para);
 
 typedef struct PackBuf {
-	BP_UINT8 * Buf;
-	BP_WORD RmnLen;
-	BP_UINT8 * PackStart;
-	BP_WORD MsgSize;
-	BP_WORD BufSize;
+	BP_UINT8 * Buf; /*!< packet buffer, if set, not changed */
+	BP_WORD BufSize; /*!< packet buffer size, if set, not changed */
+	BP_WORD RmnLen; /*!< remaining length of BPPacket */
+	BP_UINT8 * PackStart; /*!< a moving pointer for constructing BP packet*/
+	BP_WORD MsgSize; /*!< The size of BPPacket in parameter "Buf" */
 } PackBuf;
 
 typedef struct BPContext {
@@ -84,7 +84,7 @@ typedef struct BPContext {
     BP_UINT8 CrcType;
     BP_UINT8 BPLevel;
     BP_UINT8 PerformanceLimit;
-    BP_UINT8 IsDeviceClient;
+    BP_UINT8 ClientType;
     /* suggest end */
 
     /* note: changed and token into effect only after a new CONNECTION */

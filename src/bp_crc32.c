@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
 
 #include <bp_crc32.h>
 
+#ifdef CHECKSUM_CRC32
 BP_UINT32 poly8_lookup[256] =
 {
 	0, 0x77073096, 0xEE0E612C, 0x990951BA,
@@ -99,3 +100,4 @@ BP_UINT32 BP_calc_crc32(BP_UINT8 *p, BP_WORD len)
 	return (crc ^ 0xffffffff);
 }
 
+#endif

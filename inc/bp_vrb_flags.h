@@ -32,7 +32,8 @@
 #define BP_VRB_FLAG_PASSWORD_MSK 	(1 << 6)
 #define BP_VRB_FLAG_USER_CLNT_MSK 	(1 << 2)
 #define BP_VRB_FLAG_DEV_CLNT_MSK 	(1 << 1)
-#define BP_VRB_FLAG_CLNT_TYPE_MSK 	(1 << CLIENT_TYPE)
+// #define BP_VRB_FLAG_CLNT_TYPE_MSK 	(1 << CLIENT_TYPE)
+// #define BP_VRB_FLAG_PERM_LMT_MSK 	(PER)
 
 // for CONNACK 
 #define BP_VRB_FLAG_NEW_CLNT_ID_MSK 	(1 << 7)

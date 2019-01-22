@@ -148,7 +148,8 @@ PackBuf * BP_PackReportSigTabChksum(BPContext * bp_context)
         return BP_NULL;
     }
 
-	if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE)) {
+	// if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE)) {
+	if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK)) {
 		return BP_NULL;
 	}
 		
@@ -211,7 +212,8 @@ PackBuf * BP_PackReportSigTable(BPContext * bp_context)
         return BP_NULL;
     }
 
-    if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, bp_context->packBuf->BufSize)) {
+    // if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, bp_context->packBuf->BufSize)) {
+    if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK)) {
         return BP_NULL;
     }
 #ifdef DEBUG
@@ -277,7 +279,8 @@ PackBuf * BP_PackReportSigVal(BPContext *bp_context, const BP_SigId2Val * sig_ar
 		return bp_context->packBuf;
 	}
 
-	BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE);
+	// BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE);
+	BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK);
 	pbuf = bp_context->packBuf->PackStart;
 	pbuf_old = pbuf;
 	vrb_head.u.REPORT.Flags = 0;

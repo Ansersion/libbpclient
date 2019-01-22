@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017-2018 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -27,6 +27,14 @@
 
 #include <bp_public.h>
 
-EXPORT_API PackBuf * BP_PackConnect(const BPContext * bp_context, BP_UINT8 * name, BP_UINT8 * password);
+/** 
+  * @Brief BP_PackConnect construct BPPacket: CONNECT
+  * @Param bp_context   BP context that to update SN and password
+  * @Param sn   Serial Number of device client, which will be copied into context
+  * @Param password     Password that will be copied into context
+  * @return Success     PackBuf with packet BP CONNECT
+  *         Failed      BP_NULL
+ */
+EXPORT_API PackBuf * BP_PackConnect(const BPContext * bp_context, BP_UINT8 * sn, BP_UINT8 * password);
 #endif
 

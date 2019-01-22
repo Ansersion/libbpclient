@@ -22,8 +22,8 @@ extern const BP_CusLangMap g_CusSigUnitLangMap[];
 extern const BP_WORD g_CusSigUnitLangMapNum;
 extern const BP_CusLangMap g_CusSigGroupLangMap[];
 extern const BP_WORD g_CusSigGroupLangMapNum;
-extern const BP_CusEnumLangMap g_CusSigEnumLangMap[];
-extern const BP_WORD g_CusSigEnumLangMapNum;
+extern const BP_SigId2EnumSignalMap g_CusSigId2EnumSigMap[];
+extern const BP_WORD g_CusSigId2EnumSignalMapNum;
 
 
 

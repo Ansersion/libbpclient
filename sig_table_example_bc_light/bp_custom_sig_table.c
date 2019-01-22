@@ -60,10 +60,10 @@ const BP_CusLangMap g_CusSigGroupLangMap[] =
 };
 const BP_WORD g_CusSigGroupLangMapNum = sizeof(g_CusSigGroupLangMap) / sizeof(BP_CusLangMap);
 
-const BP_CusEnumLangMap g_CusSigEnumLangMap[] = 
+const BP_SigId2EnumSignalMap g_CusSigId2EnumSigMap[] = 
 {
-    /* 1 mean first language resource, 0 means no language resource */
-    // {SIG_CUS_DEVICE_NAME, 0},
 };
-const BP_WORD g_CusSigEnumLangMapNum = sizeof(g_CusSigEnumLangMap) / sizeof(BP_CusEnumLangMap);
+
+const BP_WORD g_CusSigId2EnumSignalMapNum = sizeof(g_CusSigId2EnumSigMap) / sizeof(BP_SigId2EnumSignalMap);
+
 

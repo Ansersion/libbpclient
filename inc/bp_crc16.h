@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -27,7 +27,9 @@
 
 #include <bpclient_config.h>
 
+#ifdef CHECKSUM_CRC16
 EXPORT_API BP_UINT16 BP_calc_crc16(BP_UINT8 *p, BP_WORD len);
+#endif
 
 #endif
 

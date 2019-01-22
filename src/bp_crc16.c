@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 
 #include <bp_crc16.h>
 
+#ifdef CHECKSUM_CRC16
 #define         CRC_16_POLYNOMIALS      0x8005
 
 const BP_UINT8 chCRCHTalbe[] =    
@@ -94,3 +95,4 @@ BP_UINT16 BP_calc_crc16(BP_UINT8 * buf, BP_WORD len)
 	return ((chCRCHi << 8) | chCRCLo) ;
 }
 
+#endif

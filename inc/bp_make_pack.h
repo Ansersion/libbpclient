@@ -28,13 +28,26 @@
 #include <bpclient_config.h>
 #include <bp_public.h>
 
-EXPORT_API PackBuf * BP_InitPack(PackBuf * pack_buf, BP_UINT8 type_msk, BP_UINT8 * buf, BP_WORD size);
+/** 
+  * @Brief BP_InitPack Initialize the PackBuf and set its BP Packet type
+  * @Param pack_buf    The PackBuf of BP context
+  * @Param type_mask   The mask of BPPacket type 
+  * @return Success    Not BP_NULL
+  *         Failed     BP_NULL
+ */
+EXPORT_API PackBuf * BP_InitPack(PackBuf * pack_buf, BP_UINT8 type_msk);
 
 #ifdef BP_MEM_MNG
-EXPORT_API PackBuf * BP_InitPack2(PackBuf * pack_buf, BP_WORD size);
+// EXPORT_API PackBuf * BP_InitPack2(PackBuf * pack_buf, BP_WORD size);
 #endif
 EXPORT_API PackBuf * BP_ReinitPack(PackBuf * pack_buf, BP_UINT8 type_msk);
 
+/** 
+  * @Brief BP_ToPack   Add fixed head and checksum to BP packet
+  * @Param pack_buf    PackBuf which is constructed with variable head and payload
+  * @return Success    The pointer which points the start of the BP packet
+  *         Failed     BP_NULL
+ */
 EXPORT_API BP_UINT8 * BP_ToPack(PackBuf * pack_buf);
 
 #endif

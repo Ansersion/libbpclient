@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -105,6 +105,7 @@
 #elif defined ENCRYPTION_BASE64 
 	#define ENCRYPTION_TYPE 1
 #else 
+    #define ENCRYPTION_NONE
 	#define ENCRYPTION_TYPE 0
 #endif
 
@@ -117,6 +118,7 @@
 #elif defined CHECKSUM_CRC16 
 	#define CHECKSUM_TYPE 1
 #else 
+    #define CHECKSUM_CRC32
 	#define CHECKSUM_TYPE 0
 #endif
 
@@ -131,6 +133,7 @@
 #elif defined PERFORMANCE_LIMIT_STRONG
 	#define PERFORMANCE_LIMIT 2
 #else
+    #define PERFORMANCE_LIMIT_STRONG
 	#define PERFORMANCE_LIMIT 2
 #endif
 
@@ -144,6 +147,7 @@
 #elif defined DEBUG_MODE_DISABLE
 	#define DEBUG_MODE 0
 #else
+    #define DEBUG_MODE_ENABLE
 	#define DEBUG_MODE 0
 #endif
 
@@ -157,9 +161,8 @@
 #elif defined CLIENT_USER
 	#error Only support CLIENT_DEVICE
 #else
+    #define CLIENT_DEVICE
 	#define CLIENT_TYPE 1
-#endif
-
 #endif
 
 /** 
@@ -167,4 +170,22 @@
   * @Note: DEFAULT 0
  */
 #define BP_LEVEL 	0
+
+/** 
+  * @Brief: BP_TIMEOUT determines the timeout of a packet
+  *         In unit of second.
+  * @Note: DEFAULT 5
+ */
+#define BP_TIMEOUT     5
+
+/** 
+  * @Brief: BP_ALIVE_PERIOD determines the alive time which is the interval between two BPPackets.
+  *         The device client will send BPPing if there is no packets send during (BP_ALIVE_PERIOD - BP_TIMEOUT) second.
+  *         In unit of second.
+  * @Note: DEFAULT 60
+ */
+#define BP_ALIVE_PERIOD     60
+
+
+#endif
 

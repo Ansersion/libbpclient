@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -28,6 +28,15 @@
 #include <bpclient_config.h>
 #include <bp_public.h>
 
+
+/** 
+  * @Brief BP_make_vrb_head construct variable head for BP packet
+  * @Param pack       packet buffer
+  * @Param vrb_head   variable head info
+  * @Param bp_type    BP packet type
+  * @return Success     Pointer to the end of the variable head info of parameter "pack"
+  *         Failed      BP_NULL
+ */
 BP_UINT8 * BP_make_vrb_head(BP_UINT8 * pack, BPPackVrbHead * vrb_head, BP_UINT8 bp_type);
 
 

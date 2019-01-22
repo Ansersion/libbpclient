@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -26,15 +26,15 @@
 #include <bp_memset.h>
 #include <bp_crc32.h>
 
-PackBuf * BP_InitPack(PackBuf * pack_buf, BP_UINT8 type_msk, BP_UINT8 * buf, BP_WORD size)
+PackBuf * BP_InitPack(PackBuf * pack_buf, BP_UINT8 type_msk)
 {
 	if(BP_NULL == pack_buf) {
 		return BP_NULL;
 	}
-	if(BP_NULL == buf) {
+	if(BP_NULL == pack_buf->Buf) {
 		return BP_NULL;
 	}
-	if(size < FIX_HEAD_SIZE + CHECKSUM_SIZE) {
+	if(pack_buf->BufSize < FIX_HEAD_SIZE + CHECKSUM_SIZE) {
 		return BP_NULL;
 	}
 #ifdef DEBUG
@@ -42,17 +42,17 @@ PackBuf * BP_InitPack(PackBuf * pack_buf, BP_UINT8 type_msk, BP_UINT8 * buf, BP_
 #endif
 	pack_buf->RmnLen = 0;
 	pack_buf->MsgSize = 0;
-	pack_buf->BufSize = size;
+	// pack_buf->BufSize = size;
 	/* Note: not initialize buffer to accelerate processing */
 	/* memset_bp(buf, 0, size); */
-	pack_buf->Buf = buf;
+	// pack_buf->Buf = buf;
 	pack_buf->Buf[0] = type_msk | ((ENCRYPTION_TYPE << 1) & 0x06) | (CHECKSUM_TYPE & 0x01);
 	pack_buf->PackStart = &(pack_buf->Buf[FIX_HEAD_SIZE]);
 	return pack_buf;
 }
 
 #ifdef BP_MEM_MNG
-PackBuf * BP_InitPack2(PackBuf * pack_buf, BP_WORD size)
+// PackBuf * BP_InitPack2(PackBuf * pack_buf, BP_WORD size)
 {
 	return BP_NULL;
 }
@@ -62,7 +62,7 @@ BP_UINT8 * BP_ToPack(PackBuf * pack_buf)
 {
 	BP_WORD i = 0;
 	BP_UINT8 * pack_start = BP_NULL;
-#if CHECKSUM_TYPE == 0
+#ifdef CHECKSUM_CRC32
 	BP_UINT32 crc = 0;
 #else
 	BP_UINT16 crc = 0;
@@ -78,7 +78,7 @@ BP_UINT8 * BP_ToPack(PackBuf * pack_buf)
 
 	// printf("buf[0]=%x\n", pack_buf->Buf[0]);
 	pack_buf->PackStart = pack_buf->Buf;
-#if CHECKSUM_TYPE == 0
+#ifdef CHECKSUM_CRC32
 	crc = BP_calc_crc32(pack_buf->PackStart, pack_buf->MsgSize - CHECKSUM_SIZE);
 	BP_SetBig32(pack_buf->PackStart + pack_buf->MsgSize - CHECKSUM_SIZE, crc);
 #else 
