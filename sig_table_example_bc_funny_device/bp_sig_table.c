@@ -13,9 +13,9 @@ SigTypeU SIG_SYS_STRENGTH_MIN = {.t_enm = 0}, SIG_SYS_STRENGTH_MAX = {.t_enm = 2
 /* system signal id to value array index*/
 BP_SigId2Val g_SysSigId2Val[] = 
 {
-	{SIG_SYS_COMM_STATE, 0}, 
-	{SIG_SYS_SERIAL_NUMBER, 0}, 
-	{SIG_SYS_POWER, 0}, 
+	{SIG_SYS_COMM_STATE, 0, 0}, 
+	{SIG_SYS_SERIAL_NUMBER, 0, 0}, 
+	{SIG_SYS_POWER, 0, 0}, 
 };
 
 /* system signal id to signal table */

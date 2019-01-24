@@ -61,7 +61,12 @@ PackBuf * BP_PackPing(BPContext * bp_context)
 	// }
 
 	// BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_PING_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE);
-	BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_PING_MSK);
+	if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_PING_MSK)) {
+#ifdef DEBUG
+        printf("BP_InitPack failed\n");
+#endif
+        return BP_NULL;
+    }
 	pbuf = bp_context->packBuf->PackStart;
 	pbuf_old = pbuf;
 

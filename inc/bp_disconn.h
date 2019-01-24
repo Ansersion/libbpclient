@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -27,6 +27,12 @@
 
 #include <bp_public.h>
 
+/** 
+  * @Brief BP_PackDisconn construct BPPacket: DISCONN
+  * @Param bp_context   BP context
+  * @return Success     PackBuf with packet BP PING
+  *         Failed      BP_NULL
+ */
 EXPORT_API PackBuf * BP_PackDisconn(const BPContext * bp_context);
 #endif
 

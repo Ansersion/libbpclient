@@ -97,7 +97,8 @@ BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp
 			// printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_PING: 		
-			pack = make_pld_ping(pack, payload, vrb_head);
+			// pack = make_pld_ping(pack, payload, vrb_head);
+			// No payload
 			break;
 		case BP_PACK_TYPE_PINGACK: 	
 			// No payload
@@ -130,6 +131,7 @@ BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 
 	pack = BP_Set2ByteField(pack, payload->u.CONNECT.Name, payload->u.CONNECT.NameLen);
 	pack = BP_Set2ByteField(pack, payload->u.CONNECT.Pwd, payload->u.CONNECT.PwdLen);
+    pack = BP_SetBig16(pack, payload->u.CONNECT.SysSigTableVersion);
 	// if(pack == BP_NULL) {
 	// 	printf("pack == BP_NULL\n");
 	// }
@@ -268,6 +270,7 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 	BP_UINT8 * p_pack_tmp3 = BP_NULL;
     BP_SigTable * sig_table_tmp;
     BP_SigType sig_type_tmp;
+    BP_UINT8 alarmTriggered = 0;
     BP_SysCusEnumUnit * sys_custom_enum_unit_tmp;
     BP_EnumSignalMap * enum_signal_map_tmp;;
 

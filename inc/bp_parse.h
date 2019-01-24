@@ -66,12 +66,31 @@ typedef struct BP_PingackStr {
 	BP_UINT8 RetCode;
 } BP_PingackStr;
 
-EXPORT_API BP_INT8 BP_ParsePingack(BP_PingackStr * str_pingack, BP_UINT8 * msg, BP_UINT16 len);
+/** 
+  * @Brief BP_ParsePingack parse message recevied into BP_PingackStr
+  * @Param bp_connack   the BP context
+  * @Param [out]str_pingack   struct to record info from the BP PINGACK message
+  * @Param msg  message recevied
+  * @Param len  message length
+  * @return Success     0
+  *         Failed      minus number(such as '-1')
+ */
+EXPORT_API BP_INT8 BP_ParsePingack(BPContext * bp_context, BP_PingackStr * str_pingack, BP_UINT8 * msg, BP_UINT16 len);
 // BP_INT8 BP_ParseRprtack(BP_RprtackStr * str_rprtack, BP_UINT8 * msg, BP_UINT16 len);
 EXPORT_API BP_INT8 BP_ParseRprtack(BPPacket * bp_packet, BP_UINT8 * msg, BP_UINT16 len);
 EXPORT_API BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len);
 EXPORT_API BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len);
-EXPORT_API BP_INT8 BP_ParseConnack(BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 len);
+
+/** 
+  * @Brief BP_ParseConnack parse message recevied into BP_ConnackStr
+  * @Param bp_connack   the BP context
+  * @Param [out]str_connack   struct to record info from the BP CONNACK message
+  * @Param msg  message recevied
+  * @Param len  message length
+  * @return Success     0
+  *         Failed      minus number(such as '-1')
+ */
+EXPORT_API BP_INT8 BP_ParseConnack(BPContext * bp_context, BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 len);
 /** 
   * @Brief BP_ParseFixHead parse fixed head for BP packet
   * @Param msg   pointer to the start of the buffer with fix head

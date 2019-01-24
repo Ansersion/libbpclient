@@ -8,9 +8,9 @@ const SigTypeU SIG_CUS_MODE_MIN = {.t_enm = 0}, SIG_CUS_MODE_MAX = {.t_enm = 2},
 
 BP_SigId2Val g_CusSigId2Val[] = 
 {
-	{SIG_CUS_DEVICE_NAME, 0}, 
-	{SIG_CUS_ENERGY, 0}, 
-	{SIG_CUS_MODE, 0}, 
+	{SIG_CUS_DEVICE_NAME, 0, 0}, 
+	{SIG_CUS_ENERGY, 0, 0}, 
+	{SIG_CUS_MODE, 0, 0}, 
 };
 
 BP_SigTable g_CusSigTable[] = 

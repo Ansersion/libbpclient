@@ -27,6 +27,8 @@
 
 #include <bp_sig_str.h>
 
+#define SYS_SIG_TABLE_VERSION       0x0001
+
 #define SIG_SYS_SERIAL_NUMBER 		0xE000
 #define SIG_SYS_COMM_STATE 			0xE001
 #define SIG_SYS_POWER 				0xE002

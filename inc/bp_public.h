@@ -180,7 +180,7 @@ typedef struct Payload_CONNECT {
 	BP_UINT8 * 	Name;
 	BP_UINT8  	PwdLen;
 	BP_UINT8 * 	Pwd;
-	BP_UINT8  	ClntIdLen;
+	BP_UINT16  	SysSigTableVersion;
 	// BP_UINT16 	ClntId;
 } Payload_CONNECT;
 

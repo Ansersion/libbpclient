@@ -332,7 +332,10 @@ int handleNetMsgReceived()
         perror("Recv error 1\r\n");
         return -2;
     }
-    BP_ParseFixHead(recvBuf, &type_and_flags, &left_len);
+    if(0 != BP_ParseFixHead(recvBuf, &type_and_flags, &left_len)) {
+        perror("Recv error 1\r\n");
+        return -4;
+    }
 
     len = left_len;
     printf("* len=%d\r\n", len);
@@ -357,10 +360,11 @@ int handleNetMsgReceived()
     switch((type_and_flags >> 4) & 0x0F) {
         case BP_PACK_TYPE_CONNACK: {
                 BP_ConnackStr str_connack;
-                BP_ParseConnack(&str_connack, recvBuf, len);
-                printf("* CONNACK:\n");
-                printf("* RetCode = %d\n", str_connack.RetCode);
-                printf("* system signal set version = %d\n", str_connack.SysSigSetVersion);
+                if(0 == BP_ParseConnack(&BPContextEmbeded, &str_connack, recvBuf, len)) {
+                    printf("* CONNACK:\n");
+                    printf("* RetCode = %d\n", str_connack.RetCode);
+                    printf("* system signal set version = %d\n", str_connack.SysSigSetVersion);
+                }
                 break;
             }
         case BP_PACK_TYPE_RPRTACK: {
@@ -373,11 +377,12 @@ int handleNetMsgReceived()
             }
 		case BP_PACK_TYPE_PINGACK: {
 				BP_PingackStr str_pingack;
-				BP_ParsePingack(&str_pingack, recvBuf, len);
-				printf("* PINGACK:\n");
-				printf("* flags = %d\n", str_pingack.Flags);
-				printf("* seq id = %d\n", str_pingack.SeqId);
-				printf("* ret code = %d\n", str_pingack.RetCode);
+                if(0 == BP_ParsePingack(&BPContextEmbeded, &str_pingack, recvBuf, len)) {
+                    printf("* PINGACK:\n");
+                    printf("* flags = %d\n", str_pingack.Flags);
+                    printf("* seq id = %d\n", str_pingack.SeqId);
+                    printf("* ret code = %d\n", str_pingack.RetCode);
+                }
 				break;
 			}
 		case BP_PACK_TYPE_POST: {

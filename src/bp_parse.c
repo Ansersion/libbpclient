@@ -66,7 +66,7 @@ BP_INT8 BP_ParseRprtack(BPPacket * bp_packet, BP_UINT8 * msg, BP_UINT16 len)
 	return 0;
 }
 
-BP_INT8 BP_ParsePingack(BP_PingackStr * str_pingack, BP_UINT8 * msg, BP_UINT16 len)
+BP_INT8 BP_ParsePingack(BPContext * bp_context, BP_PingackStr * str_pingack, BP_UINT8 * msg, BP_UINT16 len)
 {
 	BP_UINT8 * p_msg = BP_NULL;
 	if(BP_NULL == str_pingack) {
@@ -78,6 +78,9 @@ BP_INT8 BP_ParsePingack(BP_PingackStr * str_pingack, BP_UINT8 * msg, BP_UINT16 l
     p_msg = msg + FIX_HEAD_SIZE;
 	str_pingack->Flags = *p_msg++;
 	p_msg = BP_GetBig16(p_msg, &(str_pingack->SeqId));
+    if(bp_context->SeqIDPing != str_pingack->SeqId) {
+        return -0x03;
+    }
 	str_pingack->RetCode = *p_msg++;
 	return 0;
 }
@@ -185,8 +188,11 @@ BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len)
 	return 0;
 }
 
-BP_INT8 BP_ParseConnack(BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 len)
+BP_INT8 BP_ParseConnack(BPContext * bp_context, BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 len)
 {
+    if(BP_NULL == bp_context) {
+        return -0x01;
+    }
 	if(BP_NULL == str_connack) {
 		return -0x01;
 	}
@@ -197,8 +203,8 @@ BP_INT8 BP_ParseConnack(BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 l
 	if(msg[FIX_HEAD_SIZE + 2] != 0) {
 		return -0x11;
 	}
-	BP_GetBig16(msg + FIX_HEAD_SIZE + 3 + 1, &(str_connack->ClientID));
-	BP_GetBig16(msg + FIX_HEAD_SIZE + 3 + 1 + 2, &(str_connack->SysSigSetVersion));
+	// BP_GetBig16(msg + FIX_HEAD_SIZE + 3 + 1, &(str_connack->ClientID));
+	BP_GetBig16(msg + FIX_HEAD_SIZE + 3 + 1, &(str_connack->SysSigSetVersion));
 	// BP_ClientId = str_connack->ClientID;
 	return 0;
 }
@@ -227,6 +233,12 @@ BP_INT16 BP_ParseFixHead(BP_UINT8 * msg, BP_UINT8 * type_and_flags, BP_UINT16 * 
 	}
 	i = 0;
 	*type_and_flags = msg[i++];
+    if(CHECKSUM_TYPE != (*type_and_flags & 0x01)) {
+        return -0x4;
+    }
+    if(ENCRYPTION_TYPE != ((*type_and_flags >> 1) & 0x03)) {
+        return -0x5;
+    }
 
     *rmn_len = msg[i++];
     *rmn_len = (*rmn_len << 8) + msg[i++];

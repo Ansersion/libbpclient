@@ -17,13 +17,13 @@ const SigTypeU SIG_SYS_SETTING_HUMIDITY_MIN = {.t_flt = 0}, SIG_SYS_SETTING_HUMI
 /* system signal id to value array index*/
 BP_SigId2Val g_SysSigId2Val[] = 
 {
-	{SIG_SYS_COMM_STATE, 0}, 
-	{SIG_SYS_SERIAL_NUMBER, 0}, 
-	{SIG_SYS_POWER, 0}, 
-	{SIG_SYS_ENV_TEMP, 0}, 
-	{SIG_SYS_ENV_HUMIDITY, 0}, 
-	{SIG_SYS_SETTING_TEMP, 0}, 
-	{SIG_SYS_SETTING_HUMIDITY, 0}, 
+	{SIG_SYS_COMM_STATE, 0, 0}, 
+	{SIG_SYS_SERIAL_NUMBER, 0, 0}, 
+	{SIG_SYS_POWER, 0, 0}, 
+	{SIG_SYS_ENV_TEMP, 0, 0}, 
+	{SIG_SYS_ENV_HUMIDITY, 0, 0}, 
+	{SIG_SYS_SETTING_TEMP, 0, 0}, 
+	{SIG_SYS_SETTING_HUMIDITY, 0, 0}, 
 };
 
 /* system signal id to signal table */

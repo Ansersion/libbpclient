@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -27,6 +27,12 @@
 
 #include <bp_public.h>
 
-EXPORT_API PackBuf * BP_PackPing(BPContext * bp_connect);
+/** 
+  * @Brief BP_PackPing construct BPPacket: PING
+  * @Param bp_context   BP context that to update sequence ID
+  * @return Success     PackBuf with packet BP PING
+  *         Failed      BP_NULL
+ */
+EXPORT_API PackBuf * BP_PackPing(BPContext * bp_context);
 #endif
 

@@ -29,6 +29,7 @@
 #include <bp_make_pack.h>
 #include <bp_pack_type.h>
 #include <bp_vrb_flags.h>
+#include <bp_sig_table.h>
 
 #include <bp_strlen.h>
 #include <bp_memcpy.h>
@@ -121,8 +122,7 @@ PackBuf * BP_PackConnect(const BPContext * bp_context, BP_UINT8 * sn, BP_UINT8 *
 	memcpy_bp(bp_context->password, password, strlen_bp(password) + 1);
 	payload.u.CONNECT.PwdLen = strlen_bp(bp_context->password);
 	payload.u.CONNECT.Pwd = bp_context->password;
-	// payload.u.CONNECT.ClntIdLen = BP_CLIENT_ID_LEN;
-	// payload.u.CONNECT.ClntId = BP_ClientId;
+	payload.u.CONNECT.SysSigTableVersion = SYS_SIG_TABLE_VERSION;
 	pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_CONNECT, &vrb_head);
 
 	// set remaining length and pack the packet

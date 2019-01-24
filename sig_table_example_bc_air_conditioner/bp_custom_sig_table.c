@@ -5,7 +5,7 @@
 
 BP_SigId2Val g_CusSigId2Val[] = 
 {
-	{SIG_CUS_DEVICE_NAME, 0}, 
+	{SIG_CUS_DEVICE_NAME, 0, 0}, 
 };
 
 const BP_SigTable g_CusSigTable[] = 
