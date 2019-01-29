@@ -14,7 +14,9 @@
 /// limitations under the License.
 ///
 /// @file 	bp_parse.h
-/// @brief 	packet parsing functions header file
+/// @brief 	packet parsing functions header file. 
+///         BP_ParseXXX parses the variable header and payload which is BP CRC checked OK.
+///         And then put the info into the data struct for different BP packet.
 /// 
 /// @version 	0.1
 /// @author 	Ansersion

@@ -104,6 +104,7 @@ typedef union SigTypeU {
 
 typedef struct BP_SigId2Val {
 	BP_UINT16 SigId;
+    /* 0: alarm clear, 1: alarm triggered, other: no alarm info */
     BP_UINT8 AlarmTriggered;
 	SigTypeU SigVal;
 }BP_SigId2Val;

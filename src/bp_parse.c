@@ -200,9 +200,9 @@ BP_INT8 BP_ParseConnack(BPContext * bp_context, BP_ConnackStr * str_connack, BP_
 		return -0x02;
 	}
 	str_connack->RetCode = msg[FIX_HEAD_SIZE+2];
-	if(msg[FIX_HEAD_SIZE + 2] != 0) {
-		return -0x11;
-	}
+	// if(msg[FIX_HEAD_SIZE + 2] != 0) {
+	// 	return -0x11;
+	// }
 	// BP_GetBig16(msg + FIX_HEAD_SIZE + 3 + 1, &(str_connack->ClientID));
 	BP_GetBig16(msg + FIX_HEAD_SIZE + 3 + 1, &(str_connack->SysSigSetVersion));
 	// BP_ClientId = str_connack->ClientID;

@@ -39,6 +39,14 @@
 EXPORT_API PackBuf * BP_PackReportSigTabChksum(BPContext * bp_context);
 EXPORT_API PackBuf * BP_PackReportSigTable(BPContext * bp_context);
 EXPORT_API PackBuf * BP_PackReportSigVal(BPContext *bp_context, const BP_SigId2Val * sig_array, const BP_UINT16 sig_num);
+
+/** 
+  * @Brief BP_PackReport1SigVal construct BPPacket REPORT that report 1 signal value
+  * @Param bp_context   BP context that to update sequence ID
+  * @Param sig_id_2_val   the signal and its value info
+  * @return Success     PackBuf with packet BP REPORT
+  *         Failed      BP_NULL
+ */
 EXPORT_API PackBuf * BP_PackReport1SigVal(BPContext *bp_context, const BP_SigId2Val * sig_id_2_val);
 #endif
 

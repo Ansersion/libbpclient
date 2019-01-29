@@ -359,7 +359,6 @@ PackBuf * BP_PackReport1SigVal(BPContext *bp_context, const BP_SigId2Val * sig_i
     pbuf = bp_context->packBuf->PackStart;
     pbuf_old = pbuf;
     vrb_head.u.REPORT.Flags = 0;
-
     vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_MSK;
     bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
     vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
