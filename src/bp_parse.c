@@ -50,19 +50,29 @@
 // 	return 0;
 // }
 
-BP_INT8 BP_ParseRprtack(BPPacket * bp_packet, BP_UINT8 * msg, BP_UINT16 len)
+BP_INT8 BP_ParseRprtack(BPContext * bp_context, BP_RprtackStr * str_rprtack, BP_UINT8 * msg, BP_UINT16 len)
 {
 	BP_UINT8 * p_msg = BP_NULL;
-	if(BP_NULL == bp_packet) {
-		return -0x01;
-	}
-	if(BP_NULL == msg) {
+    if(BP_NULL == bp_context) {
+        return -0x01;
+    }
+	if(BP_NULL == str_rprtack) {
 		return -0x02;
 	}
+	if(BP_NULL == msg) {
+		return -0x03;
+	}
     p_msg = msg + FIX_HEAD_SIZE;
-	bp_packet->vrb.RPRTACK.Flags = *p_msg++;
-	p_msg = BP_GetBig16(p_msg, &(bp_packet->vrb.RPRTACK.SeqId));
-	bp_packet->vrb.RPRTACK.RetCode = *p_msg++;
+	str_rprtack->Flags = *p_msg++;
+	p_msg = BP_GetBig16(p_msg, &(str_rprtack->SeqId));
+    if(bp_context->SeqIDReport != str_rprtack->SeqId) {
+        return -0x04;
+    }
+	str_rprtack->RetCode = *p_msg++;
+    str_rprtack->SigIdErr = 0;
+    if(str_rprtack->RetCode != 0) {
+        p_msg = BP_GetBig16(p_msg, &(str_rprtack->SigIdErr));
+    }
 	return 0;
 }
 

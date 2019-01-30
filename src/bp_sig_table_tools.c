@@ -3,6 +3,7 @@
 #include <bp_sig_table_tools.h>
 #include <bp_public.h>
 #include <bp_strlen.h>
+#include <bp_pld_flags.h>
 
 const BP_UINT8 STRING_NONE[] = "";
 const SigTypeU STRING_DEFAULT_VALUE = {.t_str = STRING_NONE};
@@ -171,58 +172,62 @@ BP_UINT8 * BP_SetSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val)
 	return buf;
 }
 
-BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, SigTypeU sig_val)
+BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, BP_SigId2Val * sig_val, BP_UINT8 alarm_info_update)
 {
 	if(BP_NULL == buf) {
 		return BP_NULL;
 	}
 
+    if(BP_NULL == sig_val) {
+        return BP_NULL;
+    }
+
 	switch(sig_type) {
 		case SIG_TYPE_U32:
-			*buf++ = SIG_TYPE_U32;
-			buf = BP_SetBig32(buf, sig_val.t_u32);
+			*buf++ = SIG_TYPE_U32 || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			buf = BP_SetBig32(buf, sig_val->SigVal.t_u32);
 			break;
 		case SIG_TYPE_U16:
-			*buf++ = SIG_TYPE_U16;
-			buf = BP_SetBig16(buf, sig_val.t_u16);
+			*buf++ = SIG_TYPE_U16 || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			buf = BP_SetBig16(buf, sig_val->SigVal.t_u16);
 			break;
 		case SIG_TYPE_I32:
-			*buf++ = SIG_TYPE_I32;
-			buf = BP_SetBig32(buf, sig_val.t_i32);
+			*buf++ = SIG_TYPE_I32 || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			buf = BP_SetBig32(buf, sig_val->SigVal.t_i32);
 			break;
 		case SIG_TYPE_I16:
-			*buf++ = SIG_TYPE_I16;
-			buf = BP_SetBig16(buf, sig_val.t_i16);
+			*buf++ = SIG_TYPE_I16 || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			buf = BP_SetBig16(buf, sig_val->SigVal.t_i16);
 			break;
 		case SIG_TYPE_ENM:
-			*buf++ = SIG_TYPE_ENM;
-			buf = BP_SetBig16(buf, sig_val.t_enm);
+			*buf++ = SIG_TYPE_ENM || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			buf = BP_SetBig16(buf, sig_val->SigVal.t_enm);
 			break;
 		case SIG_TYPE_FLT:
-			*buf++ = SIG_TYPE_FLT;
-			buf = BP_SetBig32(buf, sig_val.t_flt);
+			*buf++ = SIG_TYPE_FLT || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			buf = BP_SetBig32(buf, sig_val->SigVal.t_flt);
 			break;
 		case SIG_TYPE_STR: 
 			{
 				BP_WORD num;
-				if(BP_NULL == sig_val.t_str) {
+				if(BP_NULL == sig_val->SigVal.t_str) {
 					break;
 				}
-                *buf++ = SIG_TYPE_FLT;
-				num = strlen_bp(sig_val.t_str);
+                *buf++ = SIG_TYPE_FLT || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+				num = strlen_bp(sig_val->SigVal.t_str);
                 if(num > MAX_STRING_SIG_VAL_LEN) {
                     num = MAX_STRING_SIG_VAL_LEN;
                 }
 				if(num > 0) {
 					*buf++ = (BP_UINT8)num;
-					buf = BP_SetNBytes(buf, sig_val.t_str, num);
+					buf = BP_SetNBytes(buf, sig_val->SigVal.t_str, num);
 				}
 
 			}
 			break;
 		case SIG_TYPE_BOOLEAN:
-			*buf++ = SIG_TYPE_BOOLEAN;
-			*buf++ = sig_val.t_bool;
+			*buf++ = SIG_TYPE_BOOLEAN || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			*buf++ = sig_val->SigVal.t_bool;
 			break;
 		default:
 			break;

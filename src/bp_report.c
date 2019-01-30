@@ -148,22 +148,16 @@ PackBuf * BP_PackReportSigTabChksum(BPContext * bp_context)
         return BP_NULL;
     }
 
-	// if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE)) {
 	if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK)) {
 		return BP_NULL;
 	}
 		
 	pbuf = bp_context->packBuf->PackStart;
 	pbuf_old = pbuf;
-
-    // BP_SeqIdReport = BP_SeqIdCommon++;
-    // vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
-    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
-    vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
-
 	vrb_head.u.REPORT.Flags = 0;
 	vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_TAB_CHK_MSK;
-
+    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_REPORT);
 	// printf("debug:\n");
 	// for(i = 0; i < (BP_WORD)(pbuf-pbuf_old); i++) {
@@ -212,7 +206,6 @@ PackBuf * BP_PackReportSigTable(BPContext * bp_context)
         return BP_NULL;
     }
 
-    // if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK, bp_context->packBuf->Buf, bp_context->packBuf->BufSize)) {
     if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK)) {
         return BP_NULL;
     }
@@ -221,16 +214,12 @@ PackBuf * BP_PackReportSigTable(BPContext * bp_context)
 #endif
     pbuf = bp_context->packBuf->PackStart;
     pbuf_old = pbuf;
-
-    //BP_SeqIdReport = BP_SeqIdCommon++;
-    //vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
-    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
-    vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
     vrb_head.u.REPORT.Flags = 0;
-
     vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SYS_SIG_SET_MSK;
     vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_CUS_SIG_SET_MSK;
     vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SYS_SIG_ATTR_CUSTOM_MSK;
+    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
 #ifdef DEBUG
 	printf("start BP_make_vrb_head\n");
 #endif

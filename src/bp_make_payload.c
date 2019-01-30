@@ -270,6 +270,7 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 	BP_UINT8 * p_pack_tmp3 = BP_NULL;
     BP_SigTable * sig_table_tmp;
     BP_SigType sig_type_tmp;
+    BP_UINT8 update_alarm_info;
     BP_UINT8 alarmTriggered = 0;
     BP_SysCusEnumUnit * sys_custom_enum_unit_tmp;
     BP_EnumSignalMap * enum_signal_map_tmp;;
@@ -321,7 +322,7 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 					pack = BP_SetBig16(pack, *(BP_UINT16 *)(g_SysCustomUnitTable[i].CustomValue));
 					break;
 				case SYS_SIG_CUSTOM_TYPE_ACCURACY:
-					*p_pack_tmp1 |= 0x08;
+					*p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 					*pack++ = *(BP_UINT8 *)(g_SysCustomUnitTable[i].CustomValue);
 					break;
 				case SYS_SIG_CUSTOM_TYPE_MIN_VAL:
@@ -618,6 +619,7 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
             printf("report: signal id=%x\n", payload->u.REPORT.SigArray[i].SigId);
 #endif
             sig_type_tmp = SIG_TYPE_UNKNOWN;
+            update_alarm_info = 0;
             if(payload->u.REPORT.SigArray[i].SigId < SYSTEM_SIGNAL_ID_START) {
                 for(j = 0; j < g_CusSigNum; j++) {
 #ifdef DEBUG
@@ -628,6 +630,9 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 #ifdef DEBUG
                         printf("report: custom signal type=%d\n", sig_type_tmp);
 #endif
+                        if(payload->u.REPORT.SigArray[i].AlarmTriggered != 0xFF && g_CusSigTable[j].EnAlarm == ENABLE_ALARM) {
+                            update_alarm_info = 1;
+                        }
                         break;
                     }
                 }
@@ -638,6 +643,9 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 #endif
                     if(payload->u.REPORT.SigArray[i].SigId == g_SysSigTable[j].SigId) {
                         sig_type_tmp = g_SysSigTable[j].SigType;
+                        if(payload->u.REPORT.SigArray[i].AlarmTriggered != 0xFF && g_CusSigTable[j].EnAlarm == ENABLE_ALARM) {
+                            update_alarm_info = 1;
+                        }
                         break;
                     }
                 }
@@ -649,7 +657,7 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
             printf("report: signal type=%d\n", sig_type_tmp);
 #endif
 			pack = BP_SetBig16(pack, payload->u.REPORT.SigArray[i].SigId);
-            pack = BP_SetSigVal2Buf2(pack, sig_type_tmp, payload->u.REPORT.SigArray[i].SigVal);
+            pack = BP_SetSigVal2Buf2(pack, sig_type_tmp, &(payload->u.REPORT.SigArray[i]), update_alarm_info);
 		}
 
 	}

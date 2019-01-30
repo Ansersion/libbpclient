@@ -45,7 +45,7 @@
 	EXPORT_API void BP_SigDump(void);
 	EXPORT_API BP_UINT32 BP_GetSigTabChk();
 	EXPORT_API BP_UINT8 * BP_SetSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val);
-	EXPORT_API BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, SigTypeU sig_val);
+    EXPORT_API BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, BP_SigId2Val * sig_val, BP_UINT8 alarm_info_update);
 
 	EXPORT_API BP_UINT8 whichDist(BP_UINT16 sys_sig_id);
 	EXPORT_API BP_UINT8 hasMinMax(BP_UINT16 sig_type);

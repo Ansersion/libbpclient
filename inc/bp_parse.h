@@ -55,8 +55,9 @@ typedef struct BP_PostStr {
 } BP_PostStr;
 
 typedef struct BP_RprtackStr {
-	// BP_UINT8 Flags;
+	BP_UINT8 Flags;
 	// BP_UINT16 ClientID;
+	BP_UINT16 SigIdErr;
 	BP_UINT16 SeqId;
 	BP_UINT8 RetCode;
 } BP_RprtackStr;
@@ -78,8 +79,17 @@ typedef struct BP_PingackStr {
   *         Failed      minus number(such as '-1')
  */
 EXPORT_API BP_INT8 BP_ParsePingack(BPContext * bp_context, BP_PingackStr * str_pingack, BP_UINT8 * msg, BP_UINT16 len);
-// BP_INT8 BP_ParseRprtack(BP_RprtackStr * str_rprtack, BP_UINT8 * msg, BP_UINT16 len);
-EXPORT_API BP_INT8 BP_ParseRprtack(BPPacket * bp_packet, BP_UINT8 * msg, BP_UINT16 len);
+
+/** 
+  * @Brief BP_ParseRprtack parse message recevied into BP_RprtackStr
+  * @Param bp_connack   the BP context
+  * @Param [out]str_rprtack   struct to record info from the BP RPRTACK message
+  * @Param msg  message recevied
+  * @Param len  message length
+  * @return Success     0
+  *         Failed      minus number(such as '-1')
+ */
+EXPORT_API BP_INT8 BP_ParseRprtack(BPContext * bp_context, BP_RprtackStr * str_rprtack, BP_UINT8 * msg, BP_UINT16 len);
 EXPORT_API BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len);
 EXPORT_API BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len);
 

@@ -361,18 +361,19 @@ int handleNetMsgReceived()
         case BP_PACK_TYPE_CONNACK: {
                 BP_ConnackStr str_connack;
                 if(0 == BP_ParseConnack(&BPContextEmbeded, &str_connack, recvBuf, len)) {
-                    printf("* CONNACK:\n");
-                    printf("* RetCode = %d\n", str_connack.RetCode);
-                    printf("* system signal set version = %d\n", str_connack.SysSigSetVersion);
+                    printf("* CONNACK OK:\n");
                 }
+                printf("* RetCode = %d\n", str_connack.RetCode);
+                printf("* system signal set version = %d\n", str_connack.SysSigSetVersion);
                 break;
             }
         case BP_PACK_TYPE_RPRTACK: {
                 BP_RprtackStr str_rprtack;
-                BP_ParseRprtack(&bp_packet, recvBuf, len);
-                printf("* RPRTACK:\n");
-                printf("* RetCode = %d\n", bp_packet.vrb.RPRTACK.RetCode);
-                printf("* SeqId = %d\n", bp_packet.vrb.RPRTACK.SeqId);
+                if(BP_ParseRprtack(&BPContextEmbeded, &str_rprtack, recvBuf, len) == 0) {
+                    printf("* RPRTACK OK:\n");
+                }
+                printf("* RetCode = %d\n", str_rprtack.RetCode);
+                printf("* SeqId = %d\n", str_rprtack.SeqId);
                 break;
             }
 		case BP_PACK_TYPE_PINGACK: {
@@ -466,7 +467,8 @@ int bpDo() {
                     break;
             }
             if(0 == err) {
-                p_pack_buf = BP_PackReportSigVal(&BPContextEmbeded, sig_id_2_val_tmp, 1);
+                // p_pack_buf = BP_PackReportSigVal(&BPContextEmbeded, sig_id_2_val_tmp, 1);
+                p_pack_buf = BP_PackReport1SigVal(&BPContextEmbeded, sig_id_2_val_tmp);
                 printf("* report signal value\n");
                 n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
                 if(n != p_pack_buf->MsgSize) {
