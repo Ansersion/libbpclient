@@ -37,7 +37,7 @@
 #define NO_CUSTOM_INFO          0
 #define RESERVED_FIELD          0
 
-#define ALARM_CLASS_NONE            0x7F
+#define ALARM_CLASS_NONE            7
 #define ALARM_CLASS_INFO            4    
 #define ALARM_CLASS_ATTENTION       3
 #define ALARM_CLASS_WARNING         2
@@ -188,7 +188,7 @@ typedef struct BP_EnumSignalMap {
 
 typedef struct BP_SysCusEnumUnit {
     BP_WORD Num;
-    BP_EnumSignalMap * EnumSignalMap;
+    const BP_EnumSignalMap * EnumSignalMap;
 } BP_SysCusEnumUnit;
 
 typedef struct BP_SigId2EnumSignalMap {

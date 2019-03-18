@@ -27,6 +27,11 @@
 
 #include <bpclient_config.h>
 
+#ifndef BP_USE_STD
 void * memset_bp(void * s, BP_UINT8 c, BP_WORD n);
+#else
+    #include <string.h>
+    #define memset_bp memset
+#endif
 
 #endif

@@ -27,6 +27,7 @@
 
 #include <bpclient_config.h>
 
+#ifndef BP_USE_STD
 /** string length function
  *  
  * 	get the string length
@@ -35,5 +36,9 @@
  * 	
  */ 
 EXPORT_API BP_WORD strlen_bp(const char * str);
+#else
+    #include <string.h>
+    #define strlen_bp strlen
+#endif
 
 #endif

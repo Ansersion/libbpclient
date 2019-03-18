@@ -25,6 +25,7 @@
 #include <bp_memcpy.h>
 // #include <stdio.h>
 
+#ifndef BP_USE_STD
 void * memcpy_bp(void * dst, const void * src, BP_WORD count)
 {
 	BP_WORD nword, npad;
@@ -66,3 +67,4 @@ void * memcpy_bp(void * dst, const void * src, BP_WORD count)
 
 	return dst;  
 }
+#endif

@@ -25,6 +25,7 @@
 #include <bp_strlen.h>
 // #include <stdio.h>
 
+#ifndef BP_USE_STD
 BP_WORD strlen_bp(const char * str)
 {
     BP_WORD i = 0;
@@ -35,3 +36,4 @@ BP_WORD strlen_bp(const char * str)
 
 	return i;  
 }
+#endif

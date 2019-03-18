@@ -26,6 +26,7 @@
 
 #include <bp_memset.h>
 
+#ifndef BP_USE_STD
 void * memset_bp(void *s, BP_UINT8 c, BP_WORD n)  
 {  
 	if (BP_NULL == s)
@@ -35,3 +36,4 @@ void * memset_bp(void *s, BP_UINT8 c, BP_WORD n)
 		*tmpS++ = c;  
 	return s;   
 }  
+#endif

@@ -27,6 +27,7 @@
 
 #include <bpclient_config.h>
 
+#ifndef BP_USE_STD
 /** memory copy function
  *  
  * 	copy "count" bytes from "src" to "dst"  
@@ -38,5 +39,9 @@
  * 	
  */ 
 void * memcpy_bp(void * dst, const void * src, BP_WORD count);
+#else
+    #include <string.h>
+    #define memcpy_bp memcpy
+#endif
 
 #endif

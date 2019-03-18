@@ -6,7 +6,7 @@
 #include <bp_pld_flags.h>
 
 const BP_UINT8 STRING_NONE[] = "";
-const SigTypeU STRING_DEFAULT_VALUE = {.t_str = STRING_NONE};
+const SigTypeU STRING_DEFAULT_VALUE = {.t_str = (BP_UINT8 *)STRING_NONE};
 
 
 BP_UINT16 BP_GetSigIdx(const BP_UINT16 sig_id)
@@ -172,7 +172,7 @@ BP_UINT8 * BP_SetSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val)
 	return buf;
 }
 
-BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, BP_SigId2Val * sig_val, BP_UINT8 alarm_info_update)
+BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, const BP_SigId2Val * sig_val, BP_UINT8 alarm_info_update)
 {
 	if(BP_NULL == buf) {
 		return BP_NULL;

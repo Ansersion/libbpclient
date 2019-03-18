@@ -1,4 +1,4 @@
-COMPILE_OPTS =		$(INCLUDES) -I. -c -g
+COMPILE_OPTS =		$(INCLUDES) -I. -c -g -Werror
 # COMPILE_OPTS += -O2
 CC = cc
 
@@ -20,6 +20,7 @@ SIG_TABLE_DIR = sig_table
 
 # BP_CPU64/BP_CPU32/BP_CPU16/BP_CPU8
 MACRO 	+= -DBP_CPU64
+MACRO 	+= -DBP_USE_STD
 # MACRO 	+= -DDEBUG
 
 CFLAGS +=		$(COMPILE_OPTS) 
