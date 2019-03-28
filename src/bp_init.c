@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <bp_init.h>
+#include <bp_sig_table.h>
+#include <bp_server_chain.h>
 
 void BP_InitPackBuf(PackBuf * pack_buf, BP_UINT8 * buf, BP_WORD buf_size)
 {
@@ -43,6 +45,11 @@ void BP_InitEmbededContext()
     BPContextEmbeded.packBuf = &PackBufEmbeded;
     BPContextEmbeded.name = BPNameEmbeded;
     BPContextEmbeded.password = BPPasswordEmbeded;
+    BP_InitEmbededServerChain();
+    BPContextEmbeded.ServerChain = BPServerChainEmbeded;
+    BPContextEmbeded.ServerChainSize = BP_SERVER_CHAIN_SIZE;
+    BPContextEmbeded.CurrentServerNodeIndex = 0;
+    BPContextEmbeded.SysSigTableVersion = SYS_SIG_TABLE_VERSION;
 }
 
 void BP_Init2Default(BPContext * bp_context)

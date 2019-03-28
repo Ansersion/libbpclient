@@ -364,7 +364,12 @@ int handleNetMsgReceived()
                     printf("* CONNACK OK:\n");
                 }
                 printf("* RetCode = %d\n", str_connack.RetCode);
-                printf("* system signal set version = %d\n", str_connack.SysSigSetVersion);
+                printf("* system signal set version = %d\n", str_connack.Level);
+                printf("* current server index = %d\n", BPContextEmbeded.CurrentServerNodeIndex);
+                for(i = 0; i < BPContextEmbeded.ServerChainSize; i++) {
+                    printf("* %d: ", i);
+                    ServerNodeDump(&BPContextEmbeded.ServerChain[i]);
+                }
                 break;
             }
         case BP_PACK_TYPE_RPRTACK: {

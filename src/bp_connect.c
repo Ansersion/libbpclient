@@ -115,12 +115,12 @@ PackBuf * BP_PackConnect(const BPContext * bp_context, BP_UINT8 * sn, BP_UINT8 *
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_CONNECT);
 
 	// strcpy(BP_Name, name);
-	memcpy_bp(bp_context->name, sn, strlen_bp(sn) + 1);
-	payload.u.CONNECT.NameLen = strlen_bp(bp_context->name);
+	memcpy_bp(bp_context->name, sn, strlen_bp((const char *)sn) + 1);
+	payload.u.CONNECT.NameLen = strlen_bp((const char *)(bp_context->name));
 	payload.u.CONNECT.Name = bp_context->name;
 	// strcpy(BP_Password, password);
-	memcpy_bp(bp_context->password, password, strlen_bp(password) + 1);
-	payload.u.CONNECT.PwdLen = strlen_bp(bp_context->password);
+	memcpy_bp(bp_context->password, password, strlen_bp((const char *)password) + 1);
+	payload.u.CONNECT.PwdLen = strlen_bp((const char *)(bp_context->password));
 	payload.u.CONNECT.Pwd = bp_context->password;
 	payload.u.CONNECT.SysSigTableVersion = SYS_SIG_TABLE_VERSION;
 	pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_CONNECT, &vrb_head);

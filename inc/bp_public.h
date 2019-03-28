@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017-2018 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@
 #include <bpclient_config.h>
 #include <bp_sig_str.h>
 #include <bp_utils.h>
+#include <bp_server_chain.h>
 
 // #define BP_CLIENT_ID_LEN 	2
 // #define BP_CLIENT_ID_APPLY 	0
@@ -100,6 +101,13 @@ typedef struct BPContext {
 	BP_UINT16 SeqIDComm;
 	BP_UINT16 SeqIDPing;
 	BP_UINT16 SeqIDReport;
+
+    /* server chain*/
+    BPServerNode * ServerChain;
+    BP_WORD ServerChainSize;
+    BP_UINT8 CurrentServerNodeIndex;
+    BP_UINT16 SysSigTableVersion;
+
 } BPContext;
 
 // variable struct
@@ -249,8 +257,8 @@ EXPORT_API extern BPContext BPContextEmbeded;
 EXPORT_API extern BP_UINT8 BPBufEmbeded[BP_BUF_SIZE_EMBEDED];
 EXPORT_API extern BP_UINT8 BPNameEmbeded[BP_NAME_SIZE];
 EXPORT_API extern BP_UINT8 BPPasswordEmbeded[BP_PASSWORD_SIZE];
-// extern BP_UINT8 BP_DEV_NAME[];
-// extern PackBuf BP_Pack_Buf;
+
+/* 3 temporary server address buffer */
 EXPORT_API extern PackBuf PackBufEmbeded;
 // extern BP_UINT16 BP_ClientId;
 

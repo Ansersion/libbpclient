@@ -31,9 +31,11 @@
 #include <bp_connack.h>
 
 typedef struct BP_ConnackStr {
+	BP_UINT16 	Level;
+	BP_UINT8 	Flags;
+	BP_UINT16 	AlvTime;
+	BP_UINT8 	Timeout;
 	BP_UINT8 	RetCode;
-	BP_UINT16 	ClientID;
-	BP_UINT16 	SysSigSetVersion;
 } BP_ConnackStr;
 
 typedef struct BP_GetStr {
@@ -118,6 +120,8 @@ EXPORT_API BP_INT8 BP_CheckCRC32(BP_UINT8 * msg, BP_UINT16 len);
 EXPORT_API BP_INT8 BP_CheckCRC16(BP_UINT8 * msg, BP_UINT16 len);
 #endif
 EXPORT_API BP_INT8 BP_CheckCRC(BP_UINT8 crc_flags, BP_UINT8 * msg, BP_UINT16 len);
+
+EXPORT_API BP_UINT8 * ParseServerNode(BPServerNode * server_node, BP_UINT8 * msg);
 
 #endif
 

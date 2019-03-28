@@ -28,6 +28,8 @@
 #include <bp_sig_table.h>
 #include <bp_make_payload.h>
 #include <bp_sig_table_tools.h>
+#include <bp_server_chain.h>
+#include <bp_memcpy.h>
 
 #ifdef CHECKSUM_CRC32
     #include <bp_crc32.h>
@@ -200,6 +202,9 @@ BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len)
 
 BP_INT8 BP_ParseConnack(BPContext * bp_context, BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 len)
 {
+    BPServerNode bp_server_node;
+    BP_WORD tmp;
+
     if(BP_NULL == bp_context) {
         return -0x01;
     }
@@ -209,13 +214,41 @@ BP_INT8 BP_ParseConnack(BPContext * bp_context, BP_ConnackStr * str_connack, BP_
 	if(BP_NULL == msg) {
 		return -0x02;
 	}
-	str_connack->RetCode = msg[FIX_HEAD_SIZE+2];
-	// if(msg[FIX_HEAD_SIZE + 2] != 0) {
-	// 	return -0x11;
-	// }
-	// BP_GetBig16(msg + FIX_HEAD_SIZE + 3 + 1, &(str_connack->ClientID));
-	BP_GetBig16(msg + FIX_HEAD_SIZE + 3 + 1, &(str_connack->SysSigSetVersion));
-	// BP_ClientId = str_connack->ClientID;
+    msg += FIX_HEAD_SIZE;
+	str_connack->Level = *msg++;
+	str_connack->Flags = *msg++;
+	msg = BP_GetBig16(msg, &(str_connack->AlvTime));
+	str_connack->Timeout = *msg++;
+	str_connack->RetCode = *msg++;
+
+    msg = BP_GetBig16(msg, &(bp_context->SysSigTableVersion));
+    msg = ParseServerNode(&bp_server_node, msg);
+    if(BP_NULL == msg) {
+        return -3;
+    }
+
+    tmp = UpdateUpperServerNode(bp_context->ServerChain, bp_context->ServerChainSize, bp_context->CurrentServerNodeIndex, &bp_server_node);
+
+#ifdef DEBUG
+    printf("GetCurSrvIndex UpdateUpperServer=%d\n", tmp);
+#endif
+    if(tmp >= 0) {
+        bp_context->CurrentServerNodeIndex = tmp;
+    }
+
+    msg = ParseServerNode(&bp_server_node, msg);
+    if(BP_NULL == msg) {
+        return -4;
+    }
+    tmp = UpdateLowerServerNode(bp_context->ServerChain, bp_context->ServerChainSize, bp_context->CurrentServerNodeIndex, &bp_server_node);
+#ifdef DEBUG
+    printf("GetCurSrvIndex UpdateLowerServer=%d\n", tmp);
+#endif
+    if(tmp >= 0) {
+        bp_context->CurrentServerNodeIndex = tmp;
+    }
+
+
 	return 0;
 }
 
@@ -308,4 +341,44 @@ BP_INT8 BP_CheckCRC(BP_UINT8 crc_flags, BP_UINT8 * msg, BP_UINT16 len)
 #else 
 	return BP_CheckCRC16(msg, len);
 #endif
+}
+
+BP_UINT8 * ParseServerNode(BPServerNode * server_node, BP_UINT8 * msg) 
+{
+    if(BP_NULL == server_node || BP_NULL == msg) {
+        return msg;
+    }
+    server_node->Type = *msg++;
+    switch(server_node->Type) {
+        case BP_SERVER_TYPE_IPV4: 
+            {
+                memcpy_bp(server_node->Address, msg, 4);
+                msg += 4;
+                break;
+            }
+        case BP_SERVER_TYPE_IPV6: 
+            {
+                memcpy_bp(server_node->Address, msg, 16);
+                msg += 16;
+                break;
+            }
+        case BP_SERVER_TYPE_DOMAIN:
+            {
+                BP_UINT8 len = *msg++;
+                if(len > BP_SERVER_ADDRESS_SIZE - 1) {
+                    /* TODO: domain is too long */
+                    return BP_NULL;
+                }
+                memcpy_bp(server_node->Address, msg, len);
+                server_node->Address[len] = '\0';
+                msg += len;
+                break;
+            }
+        default:
+            {
+                /* default server node */
+            }
+    }
+
+    return msg;
 }
