@@ -638,10 +638,10 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
                 }
             } else {
                 for(j = 0; j < g_SysSigNum; j++) {
-#ifdef DEBUG
-                    printf("report: system signal id:%x->%x\n", payload->u.REPORT.SigArray[i].SigId, g_SysSigTable[j].SigId);
-#endif
                     if(payload->u.REPORT.SigArray[i].SigId == g_SysSigTable[j].SigId) {
+#ifdef DEBUG
+                        printf("report: system signal id:%x->%x\n", payload->u.REPORT.SigArray[i].SigId, g_SysSigTable[j].SigId);
+#endif
                         sig_type_tmp = g_SysSigTable[j].SigType;
                         if(payload->u.REPORT.SigArray[i].AlarmTriggered != 0xFF && g_CusSigTable[j].EnAlarm == ENABLE_ALARM) {
                             update_alarm_info = 1;

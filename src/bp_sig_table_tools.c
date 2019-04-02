@@ -184,27 +184,30 @@ BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, const BP_SigId
 
 	switch(sig_type) {
 		case SIG_TYPE_U32:
-			*buf++ = SIG_TYPE_U32 || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			*buf++ = SIG_TYPE_U32 | (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
 			buf = BP_SetBig32(buf, sig_val->SigVal.t_u32);
 			break;
 		case SIG_TYPE_U16:
-			*buf++ = SIG_TYPE_U16 || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			*buf++ = SIG_TYPE_U16 | (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
 			buf = BP_SetBig16(buf, sig_val->SigVal.t_u16);
 			break;
 		case SIG_TYPE_I32:
-			*buf++ = SIG_TYPE_I32 || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			*buf++ = SIG_TYPE_I32 | (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
 			buf = BP_SetBig32(buf, sig_val->SigVal.t_i32);
 			break;
 		case SIG_TYPE_I16:
-			*buf++ = SIG_TYPE_I16 || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			*buf++ = SIG_TYPE_I16 | (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
 			buf = BP_SetBig16(buf, sig_val->SigVal.t_i16);
 			break;
 		case SIG_TYPE_ENM:
-			*buf++ = SIG_TYPE_ENM || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			*buf++ = SIG_TYPE_ENM | (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+#ifdef DEBUG
+            printf("SIG_TYPE_ENM = %d\r\n", *(buf-1));
+#endif
 			buf = BP_SetBig16(buf, sig_val->SigVal.t_enm);
 			break;
 		case SIG_TYPE_FLT:
-			*buf++ = SIG_TYPE_FLT || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			*buf++ = SIG_TYPE_FLT | (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
 			buf = BP_SetBig32(buf, sig_val->SigVal.t_flt);
 			break;
 		case SIG_TYPE_STR: 
@@ -213,7 +216,7 @@ BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, const BP_SigId
 				if(BP_NULL == sig_val->SigVal.t_str) {
 					break;
 				}
-                *buf++ = SIG_TYPE_FLT || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+                *buf++ = SIG_TYPE_FLT | (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
 				num = strlen_bp(sig_val->SigVal.t_str);
                 if(num > MAX_STRING_SIG_VAL_LEN) {
                     num = MAX_STRING_SIG_VAL_LEN;
@@ -226,7 +229,7 @@ BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, const BP_SigId
 			}
 			break;
 		case SIG_TYPE_BOOLEAN:
-			*buf++ = SIG_TYPE_BOOLEAN || (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			*buf++ = SIG_TYPE_BOOLEAN | (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
 			*buf++ = sig_val->SigVal.t_bool;
 			break;
 		default:
