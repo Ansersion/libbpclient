@@ -31,6 +31,8 @@
 #define PORT 8025
 #define REPORT_FLAG_SIG_MAP 1
 #define REPORT_FLAG_SIG_MAP_CHECKSUM 2
+#define REPORT_FLAG_CUS_SIG_VALUE 3
+#define REPORT_FLAG_SYS_SIG_VALUE 4
 
 void printNote();
 int handleUserInput();
@@ -204,7 +206,7 @@ int handleUserInput()
 		printf("* connect <SN> <Password> --- connect to the BcServer with device SN and password, such as 'connect abc abc_password'\r\n");
 		printf("* get <SignalId> <SignalType> --- get the signal value, such as 'get 4 E002'\r\n");
 		printf("* set <SignalId> <SignalType> <SignalValue> --- set the signal value, such as 'set E002 4 0'\r\n");
-		printf("* report map/checksum --- report signal map or signal map checksum, such as 'report map'\r\n");
+		printf("* report map/checksum/sysvals/cusvals --- report signal map or signal map checksum or all system signal values or all custom signal values, such as 'report map'\r\n");
 		printf("* ping <option> <para> --- tell the server I'm still alive,(<option>:'auto',<para> int(in unit of second)), such as 'ping', 'ping auto 10'\r\n");
 		printf("* bye --- quit\r\n");
 		printf("* Note: <SignalType>: 0-u32, 1-u16, 2-i32, 3-i16, 4-enum, 5-float, 6-string, 7-boolean\r\n");
@@ -296,6 +298,12 @@ int handleUserInput()
 		} 
 		if(0 == strncmp(paras[0], "map", strlen("map"))) {
             ReportFlag = REPORT_FLAG_SIG_MAP;
+		}
+		if(0 == strncmp(paras[0], "cusvals", strlen("map"))) {
+            ReportFlag = REPORT_FLAG_CUS_SIG_VALUE;
+		}
+		if(0 == strncmp(paras[0], "sysvals", strlen("map"))) {
+            ReportFlag = REPORT_FLAG_SYS_SIG_VALUE;
 		}
 		if(0 == strncmp(paras[0], "checksum", strlen("checksum"))) {
             ReportFlag = REPORT_FLAG_SIG_MAP_CHECKSUM;
@@ -524,6 +532,24 @@ int bpDo() {
             case REPORT_FLAG_SIG_MAP_CHECKSUM:
                 printf("* report checksum\n");
                 p_pack_buf = BP_PackReportSigTabChksum(&BPContextEmbeded);
+                n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+                if(n != p_pack_buf->MsgSize) {
+                    perror("* Send error");
+                    err = -1;
+                }
+                break;
+            case REPORT_FLAG_CUS_SIG_VALUE:
+                printf("* report custom signal values\n");
+                p_pack_buf = BP_PackReportAllCusSigVal(&BPContextEmbeded);
+                n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+                if(n != p_pack_buf->MsgSize) {
+                    perror("* Send error");
+                    err = -1;
+                }
+                break;
+            case REPORT_FLAG_SYS_SIG_VALUE:
+                printf("* report system signal values\n");
+                p_pack_buf = BP_PackReportAllSysSigVal(&BPContextEmbeded);
                 n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
                 if(n != p_pack_buf->MsgSize) {
                     perror("* Send error");

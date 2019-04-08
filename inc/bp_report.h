@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -61,5 +61,21 @@ EXPORT_API PackBuf * BP_PackReportSigVal(BPContext *bp_context, const BP_SigId2V
   *         Failed      BP_NULL
  */
 EXPORT_API PackBuf * BP_PackReport1SigVal(BPContext *bp_context, const BP_SigId2Val * sig_id_2_val);
+
+/** 
+  * @Brief BP_PackReportAllCusSigVal construct BPPacket REPORT that report all custom signal values
+  * @Param bp_context   BP context that to update sequence ID
+  * @return Success     PackBuf with packet BP REPORT
+  *         Failed      BP_NULL
+ */
+EXPORT_API PackBuf * BP_PackReportAllCusSigVal(BPContext *bp_context);
+
+/** 
+  * @Brief BP_PackReportAllSysSigVal construct BPPacket REPORT that report all system signal values
+  * @Param bp_context   BP context that to update sequence ID
+  * @return Success     PackBuf with packet BP REPORT
+  *         Failed      BP_NULL
+ */
+EXPORT_API PackBuf * BP_PackReportAllSysSigVal(BPContext *bp_context);
 #endif
 

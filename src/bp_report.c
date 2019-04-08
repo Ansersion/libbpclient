@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017-2018 Ansersion
+/// Copyright 2017-2019 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -388,3 +388,140 @@ PackBuf * BP_PackReport1SigVal(BPContext *bp_context, const BP_SigId2Val * sig_i
     return bp_context->packBuf;
 }
 
+PackBuf * BP_PackReportAllCusSigVal(BPContext *bp_context)
+{
+#ifdef DEBUG
+    BP_WORD i, j;
+#endif
+
+    BP_UINT8 * pbuf, * pbuf_old;
+    BP_WORD rmn_len = 0;
+
+    BPPackVrbHead vrb_head;
+    BPPackPayload payload;
+
+    if(BP_NULL == bp_context) {
+        return BP_NULL;
+    }
+    if(BP_NULL == bp_context->packBuf) {
+        return BP_NULL;
+    }
+
+    if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK)) {
+#ifdef DEBUG
+        printf("BP_InitPack failed\n");
+#endif
+        return BP_NULL;
+    }
+    pbuf = bp_context->packBuf->PackStart;
+    pbuf_old = pbuf;
+    vrb_head.u.REPORT.Flags = 0;
+    vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_MSK;
+    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
+    pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_REPORT);
+
+	/* Note: not report the device name */
+    payload.u.REPORT.SigValEleNum = g_CusSigNum - 1;
+    payload.u.REPORT.SigArray = (g_CusSigId2Val + 1);
+
+    // BP_SeqIdReport = BP_SeqIdCommon++;
+    // vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
+
+    // printf("debug:\n");
+    // for(i = 0; i < (BP_WORD)(pbuf-pbuf_old); i++) {
+    // 	printf("%02x ", pbuf_old[i]);
+    // }
+    // printf("\n");
+
+    pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_REPORT, &vrb_head);
+    // printf("debug2:\n");
+    // for(i = 0; i < (BP_WORD)(pbuf-pbuf_old); i++) {
+    // 	printf("%02x ", pbuf_old[i]);
+    // }
+    // printf("\n");
+
+    // set remaining length and pack the packet
+    rmn_len = (BP_WORD)(pbuf-pbuf_old);
+    bp_context->packBuf->RmnLen = rmn_len;
+    pbuf = BP_ToPack(bp_context->packBuf);
+
+#ifdef DEBUG
+    printf("REPORT: ");
+    for(i = 0; i < bp_context->packBuf->MsgSize; i++) {
+        printf("%02x ", pbuf[i]);
+    }
+    printf("\n");
+#endif
+
+    return bp_context->packBuf;
+}
+
+PackBuf * BP_PackReportAllSysSigVal(BPContext *bp_context)
+{
+#ifdef DEBUG
+    BP_WORD i, j;
+#endif
+
+    BP_UINT8 * pbuf, * pbuf_old;
+    BP_WORD rmn_len = 0;
+
+    BPPackVrbHead vrb_head;
+    BPPackPayload payload;
+
+    if(BP_NULL == bp_context) {
+        return BP_NULL;
+    }
+    if(BP_NULL == bp_context->packBuf) {
+        return BP_NULL;
+    }
+
+    if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_REPORT_MSK)) {
+#ifdef DEBUG
+        printf("BP_InitPack failed\n");
+#endif
+        return BP_NULL;
+    }
+    pbuf = bp_context->packBuf->PackStart;
+    pbuf_old = pbuf;
+    vrb_head.u.REPORT.Flags = 0;
+    vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_MSK;
+    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
+    pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_REPORT);
+
+	/* Note: not report the serial number */
+    payload.u.REPORT.SigValEleNum = g_SysSigNum - 1;
+    payload.u.REPORT.SigArray = (g_SysSigId2Val + 1);
+
+    // BP_SeqIdReport = BP_SeqIdCommon++;
+    // vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
+
+    // printf("debug:\n");
+    // for(i = 0; i < (BP_WORD)(pbuf-pbuf_old); i++) {
+    // 	printf("%02x ", pbuf_old[i]);
+    // }
+    // printf("\n");
+
+    pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_REPORT, &vrb_head);
+    // printf("debug2:\n");
+    // for(i = 0; i < (BP_WORD)(pbuf-pbuf_old); i++) {
+    // 	printf("%02x ", pbuf_old[i]);
+    // }
+    // printf("\n");
+
+    // set remaining length and pack the packet
+    rmn_len = (BP_WORD)(pbuf-pbuf_old);
+    bp_context->packBuf->RmnLen = rmn_len;
+    pbuf = BP_ToPack(bp_context->packBuf);
+
+#ifdef DEBUG
+    printf("REPORT: ");
+    for(i = 0; i < bp_context->packBuf->MsgSize; i++) {
+        printf("%02x ", pbuf[i]);
+    }
+    printf("\n");
+#endif
+
+    return bp_context->packBuf;
+}
