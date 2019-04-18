@@ -87,4 +87,6 @@ void BP_Init(BPContext * bp_context, BP_UINT8 cryp_type, BP_UINT8 crc_type, BP_U
     bp_context->SeqIDComm = 0;
     bp_context->SeqIDPing = 0;
     bp_context->SeqIDReport = 0;
+    bp_context->AdminNameLen = 0;
+    bp_context->AdminName = BP_NULL;
 }

@@ -48,13 +48,17 @@ typedef struct BP_GetStr {
 
 typedef struct BP_PostStr {
 	BP_UINT8 Flags;
-	BP_UINT16 ClientID;
 	BP_UINT16 SeqId;
-	// BP_UINT8 SigTabNum;
 	BP_UINT8 SigNum;
-	// BP_SigId2Val * SigArray;
 	BP_SigValArrayEntry * SigValArray;
 } BP_PostStr;
+
+typedef struct BP_PostackStr {
+	BP_UINT8 Flags;
+	BP_UINT16 SeqId;
+	BP_UINT8 RetCode;
+	BP_UINT16 ErrSigId;
+} BP_PostackStr;
 
 typedef struct BP_RprtackStr {
 	BP_UINT8 Flags;

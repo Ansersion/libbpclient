@@ -123,6 +123,8 @@ PackBuf * BP_PackConnect(const BPContext * bp_context, BP_UINT8 * sn, BP_UINT8 *
 	payload.u.CONNECT.PwdLen = strlen_bp((const char *)(bp_context->password));
 	payload.u.CONNECT.Pwd = bp_context->password;
 	payload.u.CONNECT.SysSigTableVersion = SYS_SIG_TABLE_VERSION;
+	payload.u.CONNECT.AdminNameLen = bp_context->AdminNameLen;
+	payload.u.CONNECT.AdminName = bp_context->AdminName;
 	pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_CONNECT, &vrb_head);
 
 	// set remaining length and pack the packet

@@ -132,6 +132,7 @@ BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 	pack = BP_Set2ByteField(pack, payload->u.CONNECT.Name, payload->u.CONNECT.NameLen);
 	pack = BP_Set2ByteField(pack, payload->u.CONNECT.Pwd, payload->u.CONNECT.PwdLen);
     pack = BP_SetBig16(pack, payload->u.CONNECT.SysSigTableVersion);
+	pack = BP_Set2ByteField(pack, payload->u.CONNECT.AdminName, payload->u.CONNECT.AdminNameLen);
 	// if(pack == BP_NULL) {
 	// 	printf("pack == BP_NULL\n");
 	// }

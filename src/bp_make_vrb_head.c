@@ -109,7 +109,6 @@ BP_UINT8 * make_vrb_cnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 BP_UINT8 * make_vrb_postack(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 {
 	*pack++ = vrb_head->u.POSTACK.Flags;
-	// pack = BP_SetBig16(pack, vrb_head->u.POSTACK.ClntId);
 	pack = BP_SetBig16(pack, vrb_head->u.POSTACK.SeqId);
 	*pack++ = vrb_head->u.POSTACK.RetCode;
 	return pack;

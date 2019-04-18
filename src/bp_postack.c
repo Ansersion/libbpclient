@@ -37,13 +37,14 @@
 // #include <string.h>
 
 // PackBuf * BP_PackGetack(BP_UINT16 seq_id, BP_UINT8 ret_code, BP_UINT16 * sig_index_array, BP_UINT16 array_num)
-PackBuf * BP_PackPostack(const BPContext * bp_context, BP_PostStr * post_str)
+PackBuf * BP_PackPostack(const BPContext * bp_context, BP_PostackStr * postack_str)
 {
-	// BP_WORD i, j;
+#ifdef DEBUG
+	BP_WORD i;
+#endif
 
 	BP_UINT8 * pbuf, * pbuf_old;
 	BP_WORD rmn_len = 0;
-	BP_UINT8 ret_code = 0;
 
 	BPPackVrbHead vrb_head;
 	BPPackPayload payload;
@@ -55,67 +56,37 @@ PackBuf * BP_PackPostack(const BPContext * bp_context, BP_PostStr * post_str)
         return BP_NULL;
     }
 
-	if(BP_NULL == post_str) {
+	if(BP_NULL == postack_str) {
 		return BP_NULL;
 	}
 
-	// BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_POSTACK_MSK, bp_context->packBuf->Buf, BP_BUF_SIZE);
 	BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_POSTACK_MSK);
 	pbuf = bp_context->packBuf->PackStart;
 	pbuf_old = pbuf;
 
-	vrb_head.u.POSTACK.Flags = 0;
-	// vrb_head.u.POSTACK.ClntId = post_str->ClientID;
-	vrb_head.u.POSTACK.SeqId = post_str->SeqId;
-	// TODO: judge the ret_code
+	vrb_head.u.POSTACK.Flags = postack_str->Flags;
+	vrb_head.u.POSTACK.SeqId = postack_str->SeqId;
+	vrb_head.u.POSTACK.RetCode = postack_str->RetCode;
 
-	if(0 == ret_code) {
-		// payload.u.POST.SigNum = get_str->SigNum;
-		// for(i = 0; i < get_str->SigNum; i++) {
-		// 	for(j = 0; j < g_SysSigNum; j++) {
-		// 		if(g_SysSigTable[j].SigId == get_str->SigTabArray[i].SigId) {
-		// 			g_SigTypeArray[i] = g_SysSigTable[j].SigType;
-		// 			g_SigArray[i] = g_SysSigId2Val[j];
-		// 			break;
-		// 		}
-		// 	}
-		// 	// TODO: unknown signals: get_str->SigTabArray[i]
-		// 	if(g_SysSigNum == j) {
-		// 		vrb_head.u.GETACK.RetCode = 0x01;
-		// 		break;
-		// 	}
-		// }
-	}
+	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_POSTACK);
 
-	vrb_head.u.GETACK.RetCode = ret_code;
-	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_GETACK);
-	// printf("debug:\n");
-	// for(i = 0; i < (BP_WORD)(pbuf-pbuf_old); i++) {
-	// 	printf("%02x ", pbuf_old[i]);
-	// }
-	// printf("\n");
-
-	if(0 == ret_code) {
-		// payload.u.GETACK.SigTypeArray = g_SigTypeArray;
-		// payload.u.GETACK.SigArray = g_SigArray;
-
-		pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_POSTACK, &vrb_head);
-		// printf("debug2:\n");
-		// for(i = 0; i < (BP_WORD)(pbuf-pbuf_old); i++) {
-		// 	printf("%02x ", pbuf_old[i]);
-		// }
-		// printf("\n");
-	}
+    /* TODO: set signal id when ret_code != 0*/
+    // payload.u.GETACK.SigTypeArray = g_SigTypeArray;
+    // payload.u.GETACK.SigArray = g_SigArray;
+    pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_POSTACK, &vrb_head);
 
 	// set remaining length and pack the packet
 	rmn_len = (BP_WORD)(pbuf-pbuf_old);
 	bp_context->packBuf->RmnLen = rmn_len;
 	pbuf = BP_ToPack(bp_context->packBuf);
 
-	// for(i = 0; i < BP_Pack_Buf.MsgSize; i++) {
-	// 	printf("%02x ", pbuf[i]);
-	// }
-	// printf("\n");
+#ifdef DEBUG
+    printf("postack debug:\n");
+	for(i = 0; i < bp_context->packBuf->MsgSize; i++) {
+		printf("%02x ", pbuf[i]);
+	}
+	printf("\n");
+#endif
 
 	return bp_context->packBuf;
 }

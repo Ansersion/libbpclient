@@ -115,6 +115,9 @@ BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len)
     p_msg = msg + FIX_HEAD_SIZE;
 	str_post->Flags = *p_msg++;
 	p_msg = BP_GetBig16(p_msg, &(str_post->SeqId));
+#ifdef DEBUG
+    printf("ParsePost: seqId=%d\n", str_post->SeqId);
+#endif
 	str_post->SigNum = 0;
     p_msg+=4; // skip the device id
 	if(str_post->Flags & BP_VRB_FLAG_SIG_VAL_MSK) {
@@ -366,7 +369,7 @@ BP_UINT8 * ParseServerNode(BPServerNode * server_node, BP_UINT8 * msg)
             {
                 BP_UINT8 len = *msg++;
                 if(len > BP_SERVER_ADDRESS_SIZE - 1) {
-                    /* TODO: domain is too long */
+                    // NOTE: domain is too long
                     return BP_NULL;
                 }
                 memcpy_bp(server_node->Address, msg, len);

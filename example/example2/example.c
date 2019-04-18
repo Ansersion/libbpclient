@@ -51,6 +51,7 @@ BP_UINT16 SetSignalId;
 void * SetSignalValue;
 void * Sn;
 void * Password;
+BP_PostackStr str_postack;
 int PostFlag = 0;
 int ByeFlag = 0;
 int PingFlag = 0;
@@ -400,13 +401,23 @@ int handleNetMsgReceived()
 				break;
 			}
 		case BP_PACK_TYPE_POST: {
-                BP_PostStr str_post;
                 int x;
+                BP_PostStr str_post;
 				printf("* POST:%d\n", len);
                 x = BP_ParsePost(&str_post, recvBuf, len);
+                str_postack.Flags = str_post.Flags;
+                str_postack.SeqId = str_post.SeqId;
+                printf("* ParsePost Flags: %x\n", str_post.Flags);
+                printf("* ParsePost seqId: %x\n", str_post.SeqId);
 				if(0 != x) {
                     printf("* ParsePost err: %x\n", x);
+                    /* 0x06 -> device error */
+                    str_postack.RetCode = 0x06;
+                } else {
+                    /* 0 -> OK */
+                    str_postack.RetCode = 0;
                 }
+                PostFlag = 1;
 				break;
 			}
         default: {
@@ -511,11 +522,15 @@ int bpDo() {
             perror("* Send error");
         }
         printf("* disconn\n");
-        err = 0xFF;
         ByeFlag = 0;
     }
     if(PostFlag) {
-		/* TODO: */
+        p_pack_buf = BP_PackPostack(&BPContextEmbeded, &str_postack);
+        n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+        if(n != p_pack_buf->MsgSize) {
+            perror("* Send error");
+        }
+        printf("* postack\n");
         PostFlag = 0;
     }
     if(ReportFlag) {

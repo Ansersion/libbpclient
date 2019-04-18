@@ -108,6 +108,10 @@ typedef struct BPContext {
     BP_UINT8 CurrentServerNodeIndex;
     BP_UINT16 SysSigTableVersion;
 
+    /* admin user */
+    BP_UINT16 AdminNameLen;
+    BP_UINT8 * AdminName;
+
 } BPContext;
 
 // variable struct
@@ -189,7 +193,8 @@ typedef struct Payload_CONNECT {
 	BP_UINT8  	PwdLen;
 	BP_UINT8 * 	Pwd;
 	BP_UINT16  	SysSigTableVersion;
-	// BP_UINT16 	ClntId;
+	BP_UINT16 	AdminNameLen;
+	BP_UINT8 *	AdminName;
 } Payload_CONNECT;
 
 typedef struct Payload_GETACK {
