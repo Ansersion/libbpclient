@@ -75,9 +75,24 @@ typedef struct BP_PingackStr {
 	BP_UINT8 RetCode;
 } BP_PingackStr;
 
+typedef struct BP_SpecsetStr {
+	BP_UINT16 Type;
+    BP_UINT8 SsidLen;
+    BP_UINT8 * Ssid;
+    BP_UINT8 PasswordLen;
+    BP_UINT8 * Password;
+    BP_UINT8 UserNameLen;
+    BP_UINT8 * UserName;
+} BP_SpecsetStr;
+
+typedef struct BP_SpecackStr {
+	BP_UINT16 Type;
+	BP_UINT8 RetCode;
+} BP_SpecackStr;
+
 /** 
   * @Brief BP_ParsePingack parse message recevied into BP_PingackStr
-  * @Param bp_connack   the BP context
+  * @Param bp_context   the BP context
   * @Param [out]str_pingack   struct to record info from the BP PINGACK message
   * @Param msg  message recevied
   * @Param len  message length
@@ -88,7 +103,7 @@ EXPORT_API BP_INT8 BP_ParsePingack(BPContext * bp_context, BP_PingackStr * str_p
 
 /** 
   * @Brief BP_ParseRprtack parse message recevied into BP_RprtackStr
-  * @Param bp_connack   the BP context
+  * @Param bp_context   the BP context
   * @Param [out]str_rprtack   struct to record info from the BP RPRTACK message
   * @Param msg  message recevied
   * @Param len  message length
@@ -101,7 +116,7 @@ EXPORT_API BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 le
 
 /** 
   * @Brief BP_ParseConnack parse message recevied into BP_ConnackStr
-  * @Param bp_connack   the BP context
+  * @Param bp_context   the BP context
   * @Param [out]str_connack   struct to record info from the BP CONNACK message
   * @Param msg  message recevied
   * @Param len  message length
@@ -109,6 +124,18 @@ EXPORT_API BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 le
   *         Failed      minus number(such as '-1')
  */
 EXPORT_API BP_INT8 BP_ParseConnack(BPContext * bp_context, BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 len);
+
+/** 
+  * @Brief BP_ParseSpecset parse message recevied into BP_SpecsetStr
+  * @Param bp_context   the BP context
+  * @Param [out]str_specset   struct to record info from the BP SPECSET message
+  * @Param msg  message recevied
+  * @Param len  message length
+  * @return Success     0
+  *         Failed      minus number(such as '-1')
+ */
+EXPORT_API BP_INT8 BP_ParseSpecset(BPContext * bp_context, BP_SpecsetStr * str_specset, BP_UINT8 * msg, BP_UINT16 len);
+
 /** 
   * @Brief BP_ParseFixHead parse fixed head for BP packet
   * @Param msg   pointer to the start of the buffer with fix head

@@ -36,6 +36,8 @@ BP_UINT8 * make_vrb_rprt(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_ping(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_pingack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_discnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
+BP_UINT8 * make_vrb_specset(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
+BP_UINT8 * make_vrb_specack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 
 BP_UINT8 * BP_make_vrb_head(BP_UINT8 * pack, BPPackVrbHead * vrb_head, BP_UINT8 bp_type)
 {
@@ -87,6 +89,12 @@ BP_UINT8 * BP_make_vrb_head(BP_UINT8 * pack, BPPackVrbHead * vrb_head, BP_UINT8 
 			break;
 		case BP_PACK_TYPE_DISCONN:
 			pack = make_vrb_discnct(pack, vrb_head);
+			break;
+		case BP_PACK_TYPE_SPECSET:
+			pack = make_vrb_specset(pack, vrb_head);
+			break;
+		case BP_PACK_TYPE_SPECACK:
+			pack = make_vrb_specack(pack, vrb_head);
 			break;
 		default:
 			// printf("Err: unsupported BP type: %d\n", bp_type);
@@ -155,3 +163,16 @@ BP_UINT8 * make_vrb_discnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 	return pack;
 }
 
+BP_UINT8 * make_vrb_specset(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
+{
+	pack = BP_SetBig16(pack, vrb_head->u.SPECSET.Type);
+	// printf("make_vrb_discnct: %p\n", pack);
+	return pack;
+}
+
+BP_UINT8 * make_vrb_specack(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
+{
+	pack = BP_SetBig16(pack, vrb_head->u.SPECACK.Type);
+	*pack++ = vrb_head->u.SPECACK.RetCode;
+	return pack;
+}

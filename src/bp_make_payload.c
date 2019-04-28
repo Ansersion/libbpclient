@@ -56,6 +56,7 @@ BP_UINT8 * make_pld_postack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbH
 BP_UINT8 * make_pld_getack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_pld_ping(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
+BP_UINT8 * make_pld_specack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
 
 BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp_type, BPPackVrbHead * vrb_head)
 {
@@ -111,6 +112,9 @@ BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp
 			break;
 		case BP_PACK_TYPE_DISCONN:
 			// No payload
+			break;
+        case BP_PACK_TYPE_SPECACK:
+			pack = make_pld_specack(pack, payload, vrb_head);
 			break;
 		default:
 			// printf("Err: unsupported BP type: %d\n", bp_type);
@@ -671,4 +675,9 @@ BP_UINT8 * make_pld_ping(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 	return pack;
 }
 
+BP_UINT8 * make_pld_specack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head)
+{
+    /* no payload */
+	return pack;
+}
 

@@ -170,6 +170,15 @@ typedef struct VrbHead_DISCONN {
 	BP_UINT8 	Flags;
 } VrbHead_DISCONN;
 
+typedef struct VrbHead_SPECACK {
+	BP_UINT16 	Type;
+	BP_UINT8 	RetCode;
+} VrbHead_SPECACK;
+
+typedef struct VrbHead_SPECSET {
+	BP_UINT16 	Type;
+} VrbHead_SPECSET;
+
 typedef union vrbU {
 	VrbHead_CONNECT 	CONNECT;
 	VrbHead_GETACK 		GETACK;
@@ -180,6 +189,8 @@ typedef union vrbU {
 	VrbHead_DISCONN 	DISCONN;
 	VrbHead_POST 		POST;
 	VrbHead_POSTACK 	POSTACK;
+	VrbHead_SPECSET 	SPECSET;
+	VrbHead_SPECACK 	SPECACK;
 }vrbU; 
 
 typedef struct BPPackVrbHead {

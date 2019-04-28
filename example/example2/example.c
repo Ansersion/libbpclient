@@ -29,6 +29,7 @@
 
 #define VERSION "v0.1"
 #define PORT 8025
+#define SINGLE_DEVICE_SERVER_PORT 8024
 #define REPORT_FLAG_SIG_MAP 1
 #define REPORT_FLAG_SIG_MAP_CHECKSUM 2
 #define REPORT_FLAG_CUS_SIG_VALUE 3
@@ -36,10 +37,12 @@
 
 void printNote();
 int handleUserInput();
-int handleNetMsgReceived();
+int handleNetMsgReceived(int fd);
 int bpDo();
 
 int conndfd;
+int singleDeviceFd;
+int client_sock_fd;
 BP_UINT8 recvBuf[2048+1];
 char input[256];
 
@@ -52,10 +55,12 @@ void * SetSignalValue;
 void * Sn;
 void * Password;
 BP_PostackStr str_postack;
+BP_SpecackStr str_specack;;
 int PostFlag = 0;
 int ByeFlag = 0;
 int PingFlag = 0;
 int PingAutoTime = 0;
+int SpecsetFlag = 0;
 
 int main()
 {
@@ -63,6 +68,7 @@ int main()
     const int timeout = 1;
     int loop;
 	struct sockaddr_in serverAddr;
+	struct sockaddr_in singleServerAddr;
     int err = 0;
     int retval;
 	fd_set rfds;
@@ -95,6 +101,30 @@ int main()
 		return -1;
 	}
 
+    /* initialize the signal device server */
+	memset(&singleServerAddr,0,sizeof(singleServerAddr));
+    singleServerAddr.sin_family= AF_INET;    //IPV4
+    singleServerAddr.sin_port = htons(SINGLE_DEVICE_SERVER_PORT);
+    singleServerAddr.sin_addr.s_addr = INADDR_ANY;  //指定的是所有地址
+        //creat socket
+    if( (singleDeviceFd = socket(AF_INET,SOCK_STREAM,0)) < 0 ) {
+        perror("creat failure");
+        return -1;
+    }
+
+    //bind soucket
+    if(bind(singleDeviceFd, (const struct sockaddr *)&singleServerAddr,sizeof(singleServerAddr)) < 0) {
+        perror("bind failure");
+        return -1;
+    }
+
+    //listen
+    if(listen(singleDeviceFd, 1) < 0) {
+        perror("listen failure");
+        return -1;
+    }
+
+
     /* initialize BP embeded context */
     /* you could also define your own BPContext */
     BP_InitEmbededContext();
@@ -106,9 +136,8 @@ int main()
         FD_ZERO(&rfds);
         FD_SET(stdinfd, &rfds);
         FD_SET(conndfd, &rfds);
-        // FD_SET(stdinfd, &efds);
-        // FD_SET(conndfd, &efds);
-        retval = select(conndfd+1, &rfds, NULL, NULL, &tv);
+        FD_SET(singleDeviceFd, &rfds);
+        retval = select(singleDeviceFd+1, &rfds, NULL, NULL, &tv);
         if(-1 == retval) {
             /* error occurred, terminate the program */
             perror("* select() error");
@@ -127,10 +156,44 @@ int main()
             timeoutCount = 0;
         } else if(FD_ISSET(conndfd, &rfds)) {
 			FD_CLR(conndfd, &rfds);
-            if(0 != (err = handleNetMsgReceived())) {
+            if(0 != (err = handleNetMsgReceived(conndfd))) {
                 loop = 0;
             }
             timeoutCount = 0;
+        } else if(FD_ISSET(singleDeviceFd, &rfds)) {
+            struct sockaddr_in client_address;
+            socklen_t address_len;
+            FD_CLR(singleDeviceFd, &rfds);
+            client_sock_fd = accept(singleDeviceFd,(struct sockaddr *)&client_address, &address_len);
+            if(client_sock_fd > 0) {
+                int n;
+                int i = 0;
+                PackBuf * p_pack_buf;
+                err = handleNetMsgReceived(client_sock_fd);
+                if(err == -100) {
+                }
+                printf("* accepted\r\n");
+                char full_message[]="the client is full!can't join!\n";
+                // bzero(input_message,BUFF_SIZE);
+                // strncpy(input_message, full_message,100);
+                // send(client_sock_fd, full_message, strlen(full_message), 0);
+                // close(client_sock_fd);
+                p_pack_buf = BP_PackSpecack(&BPContextEmbeded, &str_specack);
+                printf("main debug: %d\n", p_pack_buf->MsgSize);
+                for(i = 0; i < p_pack_buf->MsgSize; i++) {
+                    printf("%02x ", p_pack_buf->PackStart[i]);
+                }
+                printf("\n");
+                n=send(client_sock_fd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+                if(n != p_pack_buf->MsgSize) {
+                    perror("* Send error");
+                }
+                printf("* specack\n");
+                close(client_sock_fd);
+
+            }
+            timeoutCount = 0;
+
         }
         if(PingAutoTime > 0) {
             if(timeoutCount > PingAutoTime) {
@@ -145,6 +208,7 @@ int main()
     }
 
     close(conndfd);
+    close(singleDeviceFd);
 	free(SetSignalValue);
 	free(Sn);
 	free(Password);
@@ -326,7 +390,7 @@ int handleUserInput()
     return 0;
 }
 
-int handleNetMsgReceived()
+int handleNetMsgReceived(int fd)
 {
     int n;
 	BP_UINT16 left_len;
@@ -336,7 +400,7 @@ int handleNetMsgReceived()
     int len;
 	BPPacket bp_packet;
 
-    n=recv(conndfd,recvBuf,FIX_HEAD_SIZE, MSG_WAITALL);
+    n=recv(fd,recvBuf,FIX_HEAD_SIZE, MSG_WAITALL);
     if(FIX_HEAD_SIZE != n) {
         perror("Recv error 1\r\n");
         return -2;
@@ -346,10 +410,15 @@ int handleNetMsgReceived()
         return -4;
     }
 
+    if((type_and_flags & 0x01) != CHECKSUM_TYPE) {
+        printf("* crc unmatched\r\n");
+        return -100;
+    }
+
     len = left_len;
     printf("* len=%d\r\n", len);
 
-    n += recv(conndfd,recvBuf+FIX_HEAD_SIZE,len, MSG_WAITALL);
+    n += recv(fd,recvBuf+FIX_HEAD_SIZE,len, MSG_WAITALL);
     len += FIX_HEAD_SIZE;
 
     if(n != len) {
@@ -366,6 +435,7 @@ int handleNetMsgReceived()
         printf("* CRC Check error\n");
         return -3;
     }
+    printf("flags: %02x\n", type_and_flags);
     switch((type_and_flags >> 4) & 0x0F) {
         case BP_PACK_TYPE_CONNACK: {
                 BP_ConnackStr str_connack;
@@ -418,6 +488,34 @@ int handleNetMsgReceived()
                     str_postack.RetCode = 0;
                 }
                 PostFlag = 1;
+				break;
+			}
+		case BP_PACK_TYPE_SPECSET: {
+                int x;
+                BP_SpecsetStr str_specset;
+                BP_UINT8 ssid[64];
+                BP_UINT8 ssidPass[64];
+                BP_UINT8 userName[64];
+                str_specset.Ssid = ssid;
+                str_specset.Password = ssidPass;
+                str_specset.UserName = userName;
+
+                x = BP_ParseSpecset(&BPContextEmbeded, &str_specset, recvBuf, len);
+				if(0 != x) {
+                    printf("* ParseSpecset err: %x\n", x);
+                    /* 0x06 -> device error */
+                    str_specack.Type = str_specset.Type;
+                    str_specack.RetCode = 0x06;
+                } else {
+                    /* 0 -> OK */
+                    str_specack.Type = str_specset.Type;
+                    str_specack.RetCode = 0;
+                    ssid[str_specset.SsidLen] = '\0';
+                    ssidPass[str_specset.PasswordLen] = '\0';
+                    userName[str_specset.UserNameLen] = '\0';
+                    printf("* :%s,%s,%s: \n", ssid, ssidPass, userName);
+                }
+                SpecsetFlag = 1;
 				break;
 			}
         default: {
@@ -574,5 +672,18 @@ int bpDo() {
         }
         ReportFlag = 0;
     }
+    /*
+    if(SpecsetFlag) {
+        p_pack_buf = BP_PackSpecack(&BPContextEmbeded, &str_specack);
+        printf("* specack %d\n", client_sock_fd);
+        n=send(client_sock_fd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+        if(n != p_pack_buf->MsgSize) {
+            perror("* Send error");
+        }
+        printf("* specack\n");
+        close(client_sock_fd);
+        SpecsetFlag = 0;
+    }
+    */
     return err;
 }

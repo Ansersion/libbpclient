@@ -30,6 +30,7 @@
 #include <bp_sig_table_tools.h>
 #include <bp_server_chain.h>
 #include <bp_memcpy.h>
+#include <bp_spectype.h>
 
 #ifdef CHECKSUM_CRC32
     #include <bp_crc32.h>
@@ -251,6 +252,38 @@ BP_INT8 BP_ParseConnack(BPContext * bp_context, BP_ConnackStr * str_connack, BP_
         bp_context->CurrentServerNodeIndex = tmp;
     }
 
+
+	return 0;
+}
+
+BP_INT8 BP_ParseSpecset(BPContext * bp_context, BP_SpecsetStr * str_specset, BP_UINT8 * msg, BP_UINT16 len)
+{
+    if(BP_NULL == bp_context) {
+        return -0x01;
+    }
+	if(BP_NULL == str_specset) {
+		return -0x01;
+	}
+	if(BP_NULL == msg) {
+		return -0x02;
+	}
+    msg += FIX_HEAD_SIZE;
+	msg = BP_GetBig16(msg, &(str_specset->Type));
+    switch(str_specset->Type) {
+        case BP_SPECTYPE_SET_SSID_AND_ADMIN:
+            str_specset->SsidLen = *msg++;
+            memcpy_bp(str_specset->Ssid, msg, str_specset->SsidLen);
+            msg += str_specset->SsidLen;
+
+            str_specset->PasswordLen = *msg++;
+            memcpy_bp(str_specset->Password, msg, str_specset->PasswordLen);
+            msg += str_specset->PasswordLen;
+
+            str_specset->UserNameLen = *msg++;
+            memcpy_bp(str_specset->UserName, msg, str_specset->UserNameLen);
+            msg += str_specset->UserNameLen;
+            break;
+    }
 
 	return 0;
 }
