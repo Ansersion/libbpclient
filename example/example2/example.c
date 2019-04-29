@@ -21,6 +21,7 @@
 #include <bp_parse.h>
 #include <bp_report.h>
 #include <bp_getack.h>
+#include <bp_specack.h>
 #include <bp_postack.h>
 #include <bp_ping.h>
 #include <bp_sig_table.h>
@@ -76,6 +77,7 @@ int main()
 	struct timeval tv;
 	char serverIp[64];
     int timeoutCount = 0;
+    int val = 1;
 
 	SetSignalValue = malloc(256);
 	Sn = malloc(256);
@@ -110,6 +112,12 @@ int main()
     if( (singleDeviceFd = socket(AF_INET,SOCK_STREAM,0)) < 0 ) {
         perror("creat failure");
         return -1;
+    }
+    err = setsockopt(singleDeviceFd,SOL_SOCKET,SO_REUSEADDR,(void *)&val,sizeof(int));
+    if(err == -1)
+    {
+        printf("setsockopt");
+        exit(1);
     }
 
     //bind soucket
@@ -166,30 +174,33 @@ int main()
             FD_CLR(singleDeviceFd, &rfds);
             client_sock_fd = accept(singleDeviceFd,(struct sockaddr *)&client_address, &address_len);
             if(client_sock_fd > 0) {
-                int n;
-                int i = 0;
-                PackBuf * p_pack_buf;
+                // int n;
+                // int i = 0;
+                // PackBuf * p_pack_buf = BP_NULL;
                 err = handleNetMsgReceived(client_sock_fd);
                 if(err == -100) {
                 }
                 printf("* accepted\r\n");
-                char full_message[]="the client is full!can't join!\n";
+                // char full_message[]="the client is full!can't join!\n";
                 // bzero(input_message,BUFF_SIZE);
                 // strncpy(input_message, full_message,100);
                 // send(client_sock_fd, full_message, strlen(full_message), 0);
                 // close(client_sock_fd);
-                p_pack_buf = BP_PackSpecack(&BPContextEmbeded, &str_specack);
-                printf("main debug: %d\n", p_pack_buf->MsgSize);
-                for(i = 0; i < p_pack_buf->MsgSize; i++) {
-                    printf("%02x ", p_pack_buf->PackStart[i]);
-                }
-                printf("\n");
-                n=send(client_sock_fd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
-                if(n != p_pack_buf->MsgSize) {
-                    perror("* Send error");
-                }
-                printf("* specack\n");
-                close(client_sock_fd);
+                // p_pack_buf = BP_PackSpecack(&BPContextEmbeded, &str_specack);
+                // printf("packBuf addr out: %p\n", p_pack_buf);
+                // p_pack_buf = BPContextEmbeded.packBuf;
+                // printf("packBuf addr out: %p\n", p_pack_buf);
+                // printf("main debug: %d\n", p_pack_buf->MsgSize);
+                // for(i = 0; i < p_pack_buf->MsgSize; i++) {
+                //     printf("%02x ", p_pack_buf->PackStart[i]);
+                // }
+                // printf("\n");
+                // n=send(client_sock_fd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+                // if(n != p_pack_buf->MsgSize) {
+                //     perror("* Send error");
+                // }
+                // printf("* specack\n");
+                // close(client_sock_fd);
 
             }
             timeoutCount = 0;
@@ -672,10 +683,8 @@ int bpDo() {
         }
         ReportFlag = 0;
     }
-    /*
     if(SpecsetFlag) {
         p_pack_buf = BP_PackSpecack(&BPContextEmbeded, &str_specack);
-        printf("* specack %d\n", client_sock_fd);
         n=send(client_sock_fd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
         if(n != p_pack_buf->MsgSize) {
             perror("* Send error");
@@ -684,6 +693,5 @@ int bpDo() {
         close(client_sock_fd);
         SpecsetFlag = 0;
     }
-    */
     return err;
 }

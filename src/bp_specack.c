@@ -36,7 +36,6 @@
 // #include <stdio.h>
 // #include <string.h>
 
-// PackBuf * BP_PackGetack(BP_UINT16 seq_id, BP_UINT8 ret_code, BP_UINT16 * sig_index_array, BP_UINT16 array_num)
 PackBuf * BP_PackSpecack(const BPContext * bp_context, BP_SpecackStr * specack_str)
 {
 #ifdef DEBUG
@@ -74,9 +73,6 @@ PackBuf * BP_PackSpecack(const BPContext * bp_context, BP_SpecackStr * specack_s
 
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_SPECACK);
 
-    /* TODO: set signal id when ret_code != 0*/
-    // payload.u.GETACK.SigTypeArray = g_SigTypeArray;
-    // payload.u.GETACK.SigArray = g_SigArray;
     pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_SPECACK, &vrb_head);
 
 	// set remaining length and pack the packet
@@ -85,12 +81,13 @@ PackBuf * BP_PackSpecack(const BPContext * bp_context, BP_SpecackStr * specack_s
 	pbuf = BP_ToPack(bp_context->packBuf);
 
 #ifdef DEBUG
-    printf("specack_str debug:\n");
+    printf("specack_str debug2:\n");
 	for(i = 0; i < bp_context->packBuf->MsgSize; i++) {
-		printf("%02x ", pbuf[i]);
+		printf("%02x ", bp_context->packBuf->PackStart[i]);
 	}
 	printf("\n");
 #endif
+    printf("packBuf addr: %p\n", bp_context->packBuf);
 
 	return bp_context->packBuf;
 }
