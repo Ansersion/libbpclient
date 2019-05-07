@@ -38,6 +38,10 @@
     #include <bp_crc16.h>
 #endif
 
+#ifdef DEBUG
+    #include <stdio.h>
+#endif
+
 // BP_INT8 BP_ParseRprtack(BP_RprtackStr * str_rprtack, BP_UINT8 * msg, BP_UINT16 len)
 // {
 // 	BP_UINT8 * p_msg = BP_NULL;

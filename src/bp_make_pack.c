@@ -26,6 +26,10 @@
 #include <bp_memset.h>
 #include <bp_crc32.h>
 
+#ifdef DEBUG
+#include <stdio.h>
+#endif
+
 PackBuf * BP_InitPack(PackBuf * pack_buf, BP_UINT8 type_msk)
 {
 	if(BP_NULL == pack_buf) {

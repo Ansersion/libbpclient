@@ -5,6 +5,10 @@
 #include <bp_strlen.h>
 #include <bp_pld_flags.h>
 
+#ifdef DEBUG
+    #include <stdio.h>
+#endif
+
 const BP_UINT8 STRING_NONE[] = "";
 const SigTypeU STRING_DEFAULT_VALUE = {.t_str = (BP_UINT8 *)STRING_NONE};
 

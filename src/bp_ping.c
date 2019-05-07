@@ -31,7 +31,9 @@
 #include <bp_vrb_flags.h>
 #include <bp_crc32.h>
 
-// #include <stdio.h>
+#ifdef DEBUG
+    #include <stdio.h>
+#endif
 // #include <string.h>
 
 PackBuf * BP_PackPing(BPContext * bp_context)

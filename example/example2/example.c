@@ -63,6 +63,8 @@ int PingFlag = 0;
 int PingAutoTime = 0;
 int SpecsetFlag = 0;
 
+BP_UINT8 * adminUser = "Ansersion3";
+
 int main()
 {
     const int stdinfd = 0;
@@ -136,6 +138,8 @@ int main()
     /* initialize BP embeded context */
     /* you could also define your own BPContext */
     BP_InitEmbededContext();
+    BPContextEmbeded.AdminName = adminUser;
+    BPContextEmbeded.AdminNameLen = strlen(adminUser);
 
     tv.tv_sec = timeout;
     tv.tv_usec = 0;

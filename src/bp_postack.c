@@ -33,7 +33,9 @@
 #include <bp_postack.h>
 #include <bp_sig_table.h>
 
-// #include <stdio.h>
+#ifdef DEBUG
+    #include <stdio.h>
+#endif
 // #include <string.h>
 
 // PackBuf * BP_PackGetack(BP_UINT16 seq_id, BP_UINT8 ret_code, BP_UINT16 * sig_index_array, BP_UINT16 array_num)

@@ -33,7 +33,9 @@
 #include <bp_specack.h>
 #include <bp_sig_table.h>
 
-// #include <stdio.h>
+#ifdef DEBUG
+    #include <stdio.h>
+#endif
 // #include <string.h>
 
 PackBuf * BP_PackSpecack(const BPContext * bp_context, BP_SpecackStr * specack_str)
@@ -86,8 +88,8 @@ PackBuf * BP_PackSpecack(const BPContext * bp_context, BP_SpecackStr * specack_s
 		printf("%02x ", bp_context->packBuf->PackStart[i]);
 	}
 	printf("\n");
-#endif
     printf("packBuf addr: %p\n", bp_context->packBuf);
+#endif
 
 	return bp_context->packBuf;
 }
