@@ -38,7 +38,7 @@
 #endif
 // #include <string.h>
 
-PackBuf * BP_PackSpecack(const BPContext * bp_context, BP_SpecackStr * specack_str)
+PackBuf * BP_PackSpecack(BPContext * bp_context, BP_SpecackStr * specack_str)
 {
 #ifdef DEBUG
 	BP_WORD i;
@@ -72,6 +72,7 @@ PackBuf * BP_PackSpecack(const BPContext * bp_context, BP_SpecackStr * specack_s
 
 	vrb_head.u.SPECACK.Type = specack_str->Type;
 	vrb_head.u.SPECACK.RetCode = specack_str->RetCode;
+	vrb_head.u.SPECACK.SeqId = (bp_context->SeqIDComm)++;
 
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_SPECACK);
 

@@ -273,6 +273,7 @@ BP_INT8 BP_ParseSpecset(BPContext * bp_context, BP_SpecsetStr * str_specset, BP_
 	}
     msg += FIX_HEAD_SIZE;
 	msg = BP_GetBig16(msg, &(str_specset->Type));
+	msg = BP_GetBig16(msg, &(str_specset->SeqId));
     switch(str_specset->Type) {
         case BP_SPECTYPE_SET_SSID_AND_ADMIN:
             str_specset->SsidLen = *msg++;

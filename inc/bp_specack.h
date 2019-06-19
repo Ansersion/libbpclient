@@ -28,6 +28,6 @@
 #include <bp_public.h>
 #include <bp_parse.h>
 
-EXPORT_API PackBuf * BP_PackSpecack(const BPContext * bp_context, BP_SpecackStr * specack_str);
+EXPORT_API PackBuf * BP_PackSpecack(BPContext * bp_context, BP_SpecackStr * specack_str);
 #endif
 

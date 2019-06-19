@@ -77,6 +77,7 @@ typedef struct BP_PingackStr {
 
 typedef struct BP_SpecsetStr {
 	BP_UINT16 Type;
+	BP_UINT16 SeqId;
     BP_UINT8 SsidLen;
     BP_UINT8 * Ssid;
     BP_UINT8 PasswordLen;

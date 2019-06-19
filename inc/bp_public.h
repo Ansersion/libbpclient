@@ -173,6 +173,7 @@ typedef struct VrbHead_DISCONN {
 typedef struct VrbHead_SPECACK {
 	BP_UINT16 	Type;
 	BP_UINT8 	RetCode;
+    BP_UINT16   SeqId;
 } VrbHead_SPECACK;
 
 typedef struct VrbHead_SPECSET {

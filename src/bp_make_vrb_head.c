@@ -173,6 +173,7 @@ BP_UINT8 * make_vrb_specset(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 BP_UINT8 * make_vrb_specack(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 {
 	pack = BP_SetBig16(pack, vrb_head->u.SPECACK.Type);
+	pack = BP_SetBig16(pack, vrb_head->u.SPECACK.SeqId);
 	*pack++ = vrb_head->u.SPECACK.RetCode;
 	return pack;
 }
