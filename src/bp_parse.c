@@ -167,6 +167,14 @@ BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len)
 					for(k = 0; k < sig_str_size; k++) {
 						bpSigId2ValTmp->SigVal.t_str[k] = *p_msg++;
 					}
+				case SIG_TYPE_BOOLEAN:
+                    bpSigId2ValTmp->SigVal.t_bool = *p_msg++;
+					break;
+				case SIG_TYPE_TIME:
+					p_msg = BP_GetBig32(p_msg, (BP_UINT32 *)&(bpSigId2ValTmp->SigVal.t_time));
+					break;
+				case SIG_TYPE_DATE:
+					p_msg = BP_GetBig32(p_msg, (BP_UINT32 *)&(bpSigId2ValTmp->SigVal.t_date));
 					break;
 				default:
 					return -0x12;

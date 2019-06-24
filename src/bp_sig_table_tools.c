@@ -106,6 +106,15 @@ void BP_SigDump(void)
 			case SIG_TYPE_STR:
 				// printf("str: %04x=>%s\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_str);
 				break;
+			case SIG_TYPE_BOOLEAN:
+				// printf("str: %04x=>%d\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_bool);
+				break;
+			case SIG_TYPE_TIME:
+				// printf("str: %04x=>%d\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_time);
+				break;
+			case SIG_TYPE_DATE:
+				// printf("str: %04x=>%d\n", g_SysSigId2Val[i].SigId, g_SysSigId2Val[i].SigVal.t_date);
+				break;
 		}
 	}
 }
@@ -168,6 +177,18 @@ BP_UINT8 * BP_SetSigVal2Buf(BP_UINT8 * buf, const BP_SigId2Val * sig_id_2_val)
 				}
 
 			}
+			break;
+		case SIG_TYPE_BOOLEAN:
+			*buf++ = SIG_TYPE_BOOLEAN;
+            *buf++ = sig_id_2_val->SigVal.t_bool;
+			break;
+		case SIG_TYPE_TIME:
+			*buf++ = SIG_TYPE_TIME;
+			buf = BP_SetBig32(buf, sig_id_2_val->SigVal.t_time);
+			break;
+		case SIG_TYPE_DATE:
+			*buf++ = SIG_TYPE_DATE;
+			buf = BP_SetBig32(buf, sig_id_2_val->SigVal.t_date);
 			break;
 		default:
 			break;
@@ -235,6 +256,14 @@ BP_UINT8 * BP_SetSigVal2Buf2(BP_UINT8 * buf, BP_SigType sig_type, const BP_SigId
 		case SIG_TYPE_BOOLEAN:
 			*buf++ = SIG_TYPE_BOOLEAN | (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
 			*buf++ = sig_val->SigVal.t_bool;
+			break;
+		case SIG_TYPE_TIME:
+			*buf++ = SIG_TYPE_TIME | (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			buf = BP_SetBig32(buf, sig_val->SigVal.t_time);
+			break;
+		case SIG_TYPE_DATE:
+			*buf++ = SIG_TYPE_DATE | (alarm_info_update ? ((sig_val->AlarmTriggered & 0x01) << BP_PLD_FLAG_ALARM_INFO_OFFSET) : 0);
+			buf = BP_SetBig32(buf, sig_val->SigVal.t_date);
 			break;
 		default:
 			break;

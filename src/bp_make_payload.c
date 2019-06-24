@@ -167,6 +167,8 @@ BP_UINT8 * make_pld_getack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHe
 			case SIG_TYPE_U32:
 			case SIG_TYPE_I32:
 			case SIG_TYPE_FLT:
+			case SIG_TYPE_TIME:
+			case SIG_TYPE_DATE:
 				t4n++;
 				break;
 			case SIG_TYPE_U16:
@@ -238,7 +240,15 @@ BP_UINT8 * make_pld_getack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHe
 				break;
 			case SIG_TYPE_BOOLEAN:
 				pack_2 = BP_SetBig16(pack_2, payload->u.GETACK.SigArray[i].SigId);
-				pack_2 = BP_SetBig16(pack_2, payload->u.GETACK.SigArray[i].SigVal.t_bool);
+                *pack_2++ = payload->u.GETACK.SigArray[i].SigVal.t_bool;
+				break;
+			case SIG_TYPE_TIME:
+				pack_4 = BP_SetBig16(pack_4, payload->u.GETACK.SigArray[i].SigId);
+				pack_4 = BP_SetBig32(pack_4, payload->u.GETACK.SigArray[i].SigVal.t_time);
+				break;
+			case SIG_TYPE_DATE:
+				pack_4 = BP_SetBig16(pack_4, payload->u.GETACK.SigArray[i].SigId);
+				pack_4 = BP_SetBig32(pack_4, payload->u.GETACK.SigArray[i].SigVal.t_date);
 				break;
 		}
 	}
@@ -343,6 +353,8 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 						case SIG_TYPE_U32:
 						case SIG_TYPE_I32: 
 						case SIG_TYPE_FLT: 
+                        case SIG_TYPE_TIME:
+                        case SIG_TYPE_DATE:
 							pack = BP_SetBig32(pack, *(BP_UINT32 *)(g_SysCustomUnitTable[i].CustomValue));
                             *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
@@ -366,6 +378,8 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 						case SIG_TYPE_U32:
 						case SIG_TYPE_I32: 
 						case SIG_TYPE_FLT: 
+                        case SIG_TYPE_TIME:
+                        case SIG_TYPE_DATE:
 							pack = BP_SetBig32(pack, *(BP_UINT32 *)(g_SysCustomUnitTable[i].CustomValue));
                             *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
@@ -389,6 +403,8 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 						case SIG_TYPE_U32:
 						case SIG_TYPE_I32: 
 						case SIG_TYPE_FLT: 
+                        case SIG_TYPE_TIME:
+                        case SIG_TYPE_DATE:
 							pack = BP_SetBig32(pack, *(BP_UINT32 *)(g_SysCustomUnitTable[i].CustomValue));
                             *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
@@ -585,6 +601,16 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 					break;
 				case SIG_TYPE_BOOLEAN:
 					*pack++ = sig_table_tmp->DefVal->t_bool;
+					break;
+                case SIG_TYPE_TIME:
+					pack = BP_SetBig32(pack, sig_table_tmp->MinVal->t_u32);
+					pack = BP_SetBig32(pack, sig_table_tmp->MaxVal->t_u32);
+					pack = BP_SetBig32(pack, sig_table_tmp->DefVal->t_u32);
+					break;
+                case SIG_TYPE_DATE:
+					pack = BP_SetBig32(pack, sig_table_tmp->MinVal->t_u32);
+					pack = BP_SetBig32(pack, sig_table_tmp->MaxVal->t_u32);
+					pack = BP_SetBig32(pack, sig_table_tmp->DefVal->t_u32);
 					break;
 			}
 

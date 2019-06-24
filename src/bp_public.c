@@ -202,6 +202,15 @@ void SwitchTypeDo(BP_UINT8 sig_type, SwitchTypeDoClbk clbk, void * para)
 		case SIG_TYPE_STR:
 			clbk(para);
 			break;
+		case SIG_TYPE_BOOLEAN:
+			clbk(para);
+			break;
+		case SIG_TYPE_TIME:
+			clbk(para);
+			break;
+		case SIG_TYPE_DATE:
+			clbk(para);
+			break;
 	}
 }
 

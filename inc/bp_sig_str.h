@@ -83,6 +83,8 @@ typedef enum BP_SigType {
 	SIG_TYPE_FLT, 
 	SIG_TYPE_STR, 
 	SIG_TYPE_BOOLEAN, 
+	SIG_TYPE_TIME, 
+	SIG_TYPE_DATE, 
 	SIG_TYPE_UNKNOWN = 15,
 } BP_SigType;
 
@@ -100,6 +102,8 @@ typedef union SigTypeU {
 	BP_FLOAT 	t_flt;
 	BP_UINT8* 	t_str;
 	BP_UINT8 	t_bool;
+	BP_UINT8 	t_time;
+	BP_UINT8 	t_date;
 } SigTypeU;
 
 typedef struct BP_SigId2Val {
