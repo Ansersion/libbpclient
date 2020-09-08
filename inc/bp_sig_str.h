@@ -104,6 +104,8 @@ typedef union SigTypeU {
 	BP_UINT8 	t_bool;
 	BP_UINT8 	t_time;
 	BP_UINT8 	t_date;
+
+    BP_UINT8    t_u8;
 } SigTypeU;
 
 typedef struct BP_SigId2Val {

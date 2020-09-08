@@ -30,6 +30,7 @@
 // #include <stdio.h>
 
 BP_UINT8 * make_vrb_cnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
+BP_UINT8 * make_vrb_post(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_postack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_getack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_rprt(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
@@ -55,16 +56,20 @@ BP_UINT8 * BP_make_vrb_head(BP_UINT8 * pack, BPPackVrbHead * vrb_head, BP_UINT8 
 			pack = make_vrb_cnct(pack, vrb_head);
 			break;
 		case BP_PACK_TYPE_CONNACK: 	
-			// printf("Err: unsupported BP type\n");
+#ifdef DEBUG
+			printf("Err: unsupported BP type--CONNACK\n");
+#endif
 			break;
 		case BP_PACK_TYPE_GET: 		
-			// printf("Err: unsupported BP type\n");
+#ifdef DEBUG
+			printf("Err: unsupported BP type--GET\n");
+#endif
 			break;
 		case BP_PACK_TYPE_GETACK: 	
 			pack = make_vrb_getack(pack, vrb_head);
 			break;
 		case BP_PACK_TYPE_POST: 		
-			// printf("Err: unsupported BP type\n");
+			pack = make_vrb_post(pack, vrb_head);
 			break;
 		case BP_PACK_TYPE_POSTACK: 	
 			pack = make_vrb_postack(pack, vrb_head);
@@ -111,6 +116,13 @@ BP_UINT8 * make_vrb_cnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 	// pack = BP_SetBig16(pack, vrb_head->u.CONNECT.ClntId);
 	pack = BP_SetBig16(pack, vrb_head->u.CONNECT.AlvTime);
 	*pack++ = vrb_head->u.CONNECT.Timeout;
+	return pack;
+}
+
+BP_UINT8 * make_vrb_post(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
+{
+	*pack++ = vrb_head->u.POST.Flags;
+	pack = BP_SetBig16(pack, vrb_head->u.POST.SeqId);
 	return pack;
 }
 

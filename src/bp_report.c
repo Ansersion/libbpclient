@@ -156,7 +156,8 @@ PackBuf * BP_PackReportSigTabChksum(BPContext * bp_context)
 	pbuf_old = pbuf;
 	vrb_head.u.REPORT.Flags = 0;
 	vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_TAB_CHK_MSK;
-    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    // bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    SET_PACK_SEQ(bp_context->SeqIDReport, bp_context->SeqIDComm);
     vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_REPORT);
 	// printf("debug:\n");
@@ -218,7 +219,8 @@ PackBuf * BP_PackReportSigTable(BPContext * bp_context)
     vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SYS_SIG_SET_MSK;
     vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_CUS_SIG_SET_MSK;
     vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SYS_SIG_ATTR_CUSTOM_MSK;
-    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    // bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    SET_PACK_SEQ(bp_context->SeqIDReport, bp_context->SeqIDComm);
     vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
 #ifdef DEBUG
 	printf("start BP_make_vrb_head\n");
@@ -281,7 +283,8 @@ PackBuf * BP_PackReportSigVal(BPContext *bp_context, const BP_SigId2Val * sig_ar
 
 	// BP_SeqIdReport = BP_SeqIdCommon++;
 	// vrb_head.u.REPORT.SeqId = BP_SeqIdReport;
-    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    // bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    SET_PACK_SEQ(bp_context->SeqIDReport, bp_context->SeqIDComm);
     vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
 
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_REPORT);
@@ -349,7 +352,8 @@ PackBuf * BP_PackReport1SigVal(BPContext *bp_context, const BP_SigId2Val * sig_i
     pbuf_old = pbuf;
     vrb_head.u.REPORT.Flags = 0;
     vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_MSK;
-    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    // bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    SET_PACK_SEQ(bp_context->SeqIDReport, bp_context->SeqIDComm);
     vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
     pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_REPORT);
 
@@ -417,7 +421,8 @@ PackBuf * BP_PackReportAllCusSigVal(BPContext *bp_context)
     pbuf_old = pbuf;
     vrb_head.u.REPORT.Flags = 0;
     vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_MSK;
-    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    // bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    SET_PACK_SEQ(bp_context->SeqIDReport, bp_context->SeqIDComm);
     vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
     pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_REPORT);
 
@@ -486,7 +491,8 @@ PackBuf * BP_PackReportAllSysSigVal(BPContext *bp_context)
     pbuf_old = pbuf;
     vrb_head.u.REPORT.Flags = 0;
     vrb_head.u.REPORT.Flags |= BP_VRB_FLAG_SIG_VAL_MSK;
-    bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    // bp_context->SeqIDReport = (bp_context->SeqIDComm)++;
+    SET_PACK_SEQ(bp_context->SeqIDReport, bp_context->SeqIDComm);
     vrb_head.u.REPORT.SeqId = bp_context->SeqIDReport;
     pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_REPORT);
 

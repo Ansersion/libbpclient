@@ -51,6 +51,7 @@
 
 // for POST
 // #define BP_VRB_FLAG_DEV_CLNT_MSK (1 << 1): the same usage as CONNECT
+#define BP_VRB_FLAG_POST_SIG_MSK 	(1 << 0):
 #define BP_VRB_FLAG_RPRT_SIG_SET_MSK 	(1 << 0):
 
 // for REPORT

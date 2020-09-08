@@ -69,6 +69,14 @@
 	#error CHECKSUM_TYPE unconfigured(refer to bpclient_config.h)
 #endif
 
+#define PACK_SEQ_MIN  1
+#define PACK_SEQ_MAX  0xFFFF
+
+#define SET_PACK_SEQ(x, y) if(!(x = y++)) { \
+    y = PACK_SEQ_MIN; \
+    x = PACK_SEQ_MIN; \
+}
+
 typedef void (*SwitchTypeDoClbk)(void * para);
 
 typedef struct PackBuf {
@@ -111,6 +119,9 @@ typedef struct BPContext {
     /* admin user */
     BP_UINT16 AdminNameLen;
     BP_UINT8 * AdminName;
+
+    /* Device info */
+    BP_UINT32 devId;
 
 } BPContext;
 
@@ -226,6 +237,7 @@ typedef struct Payload_GETACK {
 // } BP_SysSigMap;
 
 typedef struct Payload_POST {
+	BP_UINT32 	DevId;
 	BP_UINT8 	SigNum;
 	BP_SigType 	* SigTypeArray;
 	BP_SigId2Val * SigArray;

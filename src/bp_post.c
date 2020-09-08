@@ -90,3 +90,75 @@
 // 	return &BP_Pack_Buf;
 // }
 
+PackBuf * BP_PackPost1SigVal(BPContext *bp_context, const BP_SigType * sig_type, const BP_SigId2Val * sig_id_2_val)
+{
+#ifdef DEBUG
+    BP_WORD i, j;
+#endif
+
+    BP_UINT8 * pbuf, * pbuf_old;
+    BP_WORD rmn_len = 0;
+
+    BPPackVrbHead vrb_head;
+    BPPackPayload payload;
+
+    if(BP_NULL == bp_context) {
+        return BP_NULL;
+    }
+    if(BP_NULL == bp_context->packBuf) {
+        return BP_NULL;
+    }
+
+    if(BP_NULL == sig_id_2_val) {
+        return bp_context->packBuf;
+    }
+
+    if(BP_NULL == BP_InitPack(bp_context->packBuf, BP_PACK_TYPE_POST_MSK)) {
+#ifdef DEBUG
+        printf("BP_InitPack failed\n");
+#endif
+        return BP_NULL;
+    }
+    pbuf = bp_context->packBuf->PackStart;
+    pbuf_old = pbuf;
+    vrb_head.u.POST.Flags = 0;
+    vrb_head.u.POST.Flags |= BP_VRB_FLAG_SIG_VAL_MSK;
+    // vrb_head.u.POST.SeqId = (bp_context->SeqIDComm)++;
+    SET_PACK_SEQ(vrb_head.u.POST.SeqId, bp_context->SeqIDComm);
+#ifdef DEBUG
+    printf("post: make vrb header\n");
+#endif
+    pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_POST);
+
+    payload.u.POST.DevId = bp_context->devId;
+    payload.u.POST.SigNum = 1;
+    payload.u.POST.SigTypeArray = sig_type;
+    payload.u.POST.SigArray = sig_id_2_val;
+
+#ifdef DEBUG
+    printf("post: make payload\n");
+#endif
+    pbuf = BP_make_payload(pbuf, &payload, BP_PACK_TYPE_POST, &vrb_head);
+#ifdef DEBUG
+    printf("debug2:\n");
+    for(i = 0; i < (BP_WORD)(pbuf-pbuf_old); i++) {
+    	printf("%02x ", pbuf_old[i]);
+    }
+    printf("\n");
+#endif
+
+    // set remaining length and pack the packet
+    rmn_len = (BP_WORD)(pbuf-pbuf_old);
+    bp_context->packBuf->RmnLen = rmn_len;
+    pbuf = BP_ToPack(bp_context->packBuf);
+
+#ifdef DEBUG
+    printf("POST: ");
+    for(i = 0; i < bp_context->packBuf->MsgSize; i++) {
+        printf("%02x ", pbuf[i]);
+    }
+    printf("\n");
+#endif
+
+    return bp_context->packBuf;
+}

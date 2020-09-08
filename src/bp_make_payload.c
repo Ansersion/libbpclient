@@ -52,6 +52,7 @@ BP_SigValArrayEntry g_SigValArray[MAX_GET_ACK_SIG_NUM];
 
 
 BP_UINT8 * make_pld_cnct(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
+BP_UINT8 * make_pld_post(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_pld_postack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_pld_getack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head);
@@ -76,26 +77,34 @@ BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp
 			pack = make_pld_cnct(pack, payload, vrb_head);
 			break;
 		case BP_PACK_TYPE_CONNACK: 	
-			// printf("Err: unsupported BP type\n");
+#ifdef DEBUG
+			printf("Err: unsupported BP type--CONNACK\n");
+#endif
 			break;
 		case BP_PACK_TYPE_GET: 		
-			// printf("Err: unsupported BP type\n");
+#ifdef DEBUG
+			printf("Err: unsupported BP type--GET\n");
+#endif
 			break;
 		case BP_PACK_TYPE_GETACK: 	
 			pack = make_pld_getack(pack, payload, vrb_head);
 			break;
 		case BP_PACK_TYPE_POST: 		
-			// printf("Err: unsupported BP type\n");
+#ifdef DEBUG
+			printf("BP_make_payload: POST\n");
+#endif
+			pack = make_pld_post(pack, payload, vrb_head);
 			break;
 		case BP_PACK_TYPE_POSTACK: 	
 			pack = make_pld_postack(pack, payload, vrb_head);
-			// printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_REPORT: 	
 			pack = make_pld_rprt(pack, payload, vrb_head);
 			break;
 		case BP_PACK_TYPE_RPRTACK: 	
-			// printf("Err: unsupported BP type\n");
+#ifdef DEBUG
+			printf("Err: unsupported BP type--RPRTACK\n");
+#endif
 			break;
 		case BP_PACK_TYPE_PING: 		
 			// pack = make_pld_ping(pack, payload, vrb_head);
@@ -105,10 +114,14 @@ BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp
 			// No payload
 			break;
 		case BP_PACK_TYPE_PUSH:
-			// printf("Err: unsupported BP type\n");
+#ifdef DEBUG
+			printf("Err: unsupported BP type--PUSH\n");
+#endif
 			break;
 		case BP_PACK_TYPE_PUSHACK:
-			// printf("Err: unsupported BP type\n");
+#ifdef DEBUG
+			printf("Err: unsupported BP type--PUSHACK\n");
+#endif
 			break;
 		case BP_PACK_TYPE_DISCONN:
 			// No payload
@@ -117,7 +130,9 @@ BP_UINT8 * BP_make_payload(BP_UINT8 * pack, BPPackPayload * payload, BP_UINT8 bp
 			pack = make_pld_specack(pack, payload, vrb_head);
 			break;
 		default:
-			// printf("Err: unsupported BP type: %d\n", bp_type);
+#ifdef DEBUG
+			printf("Err: unsupported BP type: %d\n", bp_type);
+#endif
 			break;
 	}
 
@@ -250,9 +265,48 @@ BP_UINT8 * make_pld_getack(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHe
 				pack_4 = BP_SetBig16(pack_4, payload->u.GETACK.SigArray[i].SigId);
 				pack_4 = BP_SetBig32(pack_4, payload->u.GETACK.SigArray[i].SigVal.t_date);
 				break;
+            default:
+                break;
 		}
 	}
 	(pack = pack_x) || (pack = pack_2) || (pack = pack_4);
+	return pack;
+}
+
+BP_UINT8 * make_pld_post(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead * vrb_head)
+{
+	BP_UINT16 i, j;
+    pack = BP_SetBig32(pack, payload->u.POST.DevId);
+    // printf("pack signum: %d\r\n", payload->u.POST.SigNum);
+    *pack++ = payload->u.POST.SigNum;
+    for(i = 0; i < payload->u.POST.SigNum; i++) {
+        // printf("pack sig id: %d\r\n", i);
+        pack = BP_SetBig16(pack, payload->u.POST.SigArray[i].SigId);
+        // printf("pack sig: %d\r\n", i);
+        *pack++ = payload->u.POST.SigTypeArray[i];
+        switch(payload->u.POST.SigTypeArray[i]) {
+			case SIG_TYPE_U32:
+			case SIG_TYPE_I32:
+			case SIG_TYPE_FLT:
+			case SIG_TYPE_TIME:
+			case SIG_TYPE_DATE:
+                printf("pack sig32\r\n");
+                pack = BP_SetBig32(pack, payload->u.POST.SigArray[i].SigVal.t_u32);
+				break;
+			case SIG_TYPE_U16:
+			case SIG_TYPE_I16:
+			case SIG_TYPE_ENM:
+                printf("pack sig16\r\n");
+                pack = BP_SetBig16(pack, payload->u.POST.SigArray[i].SigVal.t_u16);
+				break;
+			case SIG_TYPE_BOOLEAN:
+                printf("pack sig bool\r\n");
+                *pack++ = payload->u.POST.SigArray[i].SigVal.t_bool;
+				break;
+			default:
+				return BP_NULL;
+        }
+    }
 	return pack;
 }
 
@@ -363,6 +417,8 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 							pack = BP_SetBig16(pack, *(BP_UINT16 *)(g_SysCustomUnitTable[i].CustomValue));
                             *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
+                        default:
+                            break;
 					}
 					break;
 				case SYS_SIG_CUSTOM_TYPE_MAX_VAL:
@@ -388,6 +444,8 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 							pack = BP_SetBig16(pack, *(BP_UINT16 *)(g_SysCustomUnitTable[i].CustomValue));
                             *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
+                        default: 
+                            break;
 					}
 					break;
 				case SYS_SIG_CUSTOM_TYPE_DEF_VAL:
@@ -423,6 +481,8 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 							*pack++ = *(BP_UINT8 *)(g_SysCustomUnitTable[i].CustomValue);
                             *p_pack_tmp1 |= (1 <<g_SysCustomUnitTable[i].CustomType);
 							break;
+                        default: 
+                            break;
 					}
 					break;
 				case SYS_SIG_CUSTOM_TYPE_IS_ALARM:
@@ -441,6 +501,8 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 					*pack++ = *(BP_UINT8 *)(g_SysCustomUnitTable[i].CustomValue);
                     *p_pack_tmp2 |= (1 <<(g_SysCustomUnitTable[i].CustomType - 8));
 					break;
+                default: 
+                    break;
 			}
 		}
 #ifdef DEBUG
@@ -612,6 +674,8 @@ BP_UINT8 * make_pld_rprt(BP_UINT8 * pack, BPPackPayload * payload, BPPackVrbHead
 					pack = BP_SetBig32(pack, sig_table_tmp->MaxVal->t_u32);
 					pack = BP_SetBig32(pack, sig_table_tmp->DefVal->t_u32);
 					break;
+                default: 
+                    break;
 			}
 
 			if(sig_table_tmp->EnAlarm) {

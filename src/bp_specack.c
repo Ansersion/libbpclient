@@ -72,7 +72,8 @@ PackBuf * BP_PackSpecack(BPContext * bp_context, BP_SpecackStr * specack_str)
 
 	vrb_head.u.SPECACK.Type = specack_str->Type;
 	vrb_head.u.SPECACK.RetCode = specack_str->RetCode;
-	vrb_head.u.SPECACK.SeqId = (bp_context->SeqIDComm)++;
+	// vrb_head.u.SPECACK.SeqId = (bp_context->SeqIDComm)++;
+    SET_PACK_SEQ(vrb_head.u.SPECACK.SeqId, bp_context->SeqIDComm);
 
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_SPECACK);
 

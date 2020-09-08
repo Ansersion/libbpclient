@@ -84,9 +84,9 @@ void BP_Init(BPContext * bp_context, BP_UINT8 cryp_type, BP_UINT8 crc_type, BP_U
     bp_context->BPAlivePeroid = alive_period;
     bp_context->BPTimeout = timeout;
     bp_context->packBuf = BP_NULL;
-    bp_context->SeqIDComm = 0;
-    bp_context->SeqIDPing = 0;
-    bp_context->SeqIDReport = 0;
-    bp_context->AdminNameLen = 0;
+    bp_context->SeqIDComm = PACK_SEQ_MIN;
+    bp_context->SeqIDPing = PACK_SEQ_MIN;
+    bp_context->SeqIDReport = PACK_SEQ_MIN;
+    bp_context->AdminNameLen = PACK_SEQ_MIN;
     bp_context->AdminName = BP_NULL;
 }

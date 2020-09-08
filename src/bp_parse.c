@@ -186,6 +186,29 @@ BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len)
 	return 0;
 }
 
+BP_INT8 BP_ParsePostack(BPContext * bp_context, BP_PostackStr * str_postack, BP_UINT8 * msg, BP_UINT16 len)
+{
+	BP_UINT8 * p_msg = BP_NULL;
+    if(BP_NULL == bp_context) {
+        return -0x01;
+    }
+	if(BP_NULL == str_postack) {
+		return -0x02;
+	}
+	if(BP_NULL == msg) {
+		return -0x03;
+	}
+    p_msg = msg + FIX_HEAD_SIZE;
+	str_postack->Flags = *p_msg++;
+	p_msg = BP_GetBig16(p_msg, &(str_postack->SeqId));
+	str_postack->RetCode = *p_msg++;
+    str_postack->SigIdErr = 0;
+    // if(str_postack->RetCode != 0) {
+    //     p_msg = BP_GetBig16(p_msg, &(str_postack->SigIdErr));
+    // }
+	return 0;
+}
+
 BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len)
 {
 	BP_UINT8 * p_msg;

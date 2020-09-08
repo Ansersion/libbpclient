@@ -1,7 +1,9 @@
-INCLUDES = -I../../inc
+INCLUDES =
+INCLUDES += -I../../inc
+INCLUDES += -I../../sig_table
 
 CC = cc
-COMPILE_OPTS =		$(INCLUDES) -I. -O2 -c -g
+COMPILE_OPTS =		$(INCLUDES) -I. -O0 -c -g
 
 MACRO 	=
 MACRO 	= -DBP_CPU64
@@ -14,7 +16,7 @@ OBJ =
 SRC 	+= ${wildcard *.c}
 OBJ 	+= ${patsubst %.c, %.o, $(SRC)}
 
-TARGET = example1
+TARGET = example
 all: $(TARGET)
 
 $(TARGET): $(OBJ)

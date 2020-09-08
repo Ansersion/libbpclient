@@ -28,5 +28,6 @@
 #include <bp_public.h>
 
 PackBuf * BP_PackPost();
+PackBuf * BP_PackPost1SigVal(BPContext *bp_context, const BP_SigType * sig_type, const BP_SigId2Val * sig_id_2_val);
 #endif
 

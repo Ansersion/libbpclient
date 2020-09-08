@@ -75,7 +75,8 @@ PackBuf * BP_PackPing(BPContext * bp_context)
 	vrb_head.u.PING.Flags = 0;
 	// vrb_head.u.PING.ClntId = BP_ClientId;
 	// BP_SeqIdPing = BP_SeqIdCommon++;
-	bp_context->SeqIDPing = (bp_context->SeqIDComm)++;
+	// bp_context->SeqIDPing = (bp_context->SeqIDComm)++;
+    SET_PACK_SEQ(bp_context->SeqIDPing, bp_context->SeqIDComm);
 	// vrb_head.u.PING.SeqId = BP_SeqIdPing;
 	vrb_head.u.PING.SeqId = bp_context->SeqIDPing;
 	pbuf = BP_make_vrb_head(pbuf, &vrb_head, BP_PACK_TYPE_PING);

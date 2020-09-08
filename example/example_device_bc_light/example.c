@@ -30,7 +30,6 @@
 
 #define VERSION "v0.1"
 #define PORT 8025
-#define SINGLE_DEVICE_SERVER_PORT 8024
 #define REPORT_FLAG_SIG_MAP 1
 #define REPORT_FLAG_SIG_MAP_CHECKSUM 2
 #define REPORT_FLAG_CUS_SIG_VALUE 3
@@ -42,7 +41,6 @@ int handleNetMsgReceived(int fd);
 int bpDo();
 
 int conndfd;
-int singleDeviceFd;
 int client_sock_fd;
 BP_UINT8 recvBuf[2048+1];
 char input[256];
@@ -50,6 +48,7 @@ char input[256];
 int SetFlag = 0;
 int ConnectFlag = 0;
 int ReportFlag = 0;
+int ReportChecksum = 0;
 int SignalType = 0xFF;
 BP_UINT16 SetSignalId;
 void * SetSignalValue;
@@ -63,15 +62,14 @@ int PingFlag = 0;
 int PingAutoTime = 0;
 int SpecsetFlag = 0;
 
-BP_UINT8 * adminUser = "Ansersion3";
+BP_UINT8 * adminUser = "";
 
-int main()
+int main(int argc, char * argv[])
 {
     const int stdinfd = 0;
     const int timeout = 1;
     int loop;
 	struct sockaddr_in serverAddr;
-	struct sockaddr_in singleServerAddr;
     int err = 0;
     int retval;
 	fd_set rfds;
@@ -81,16 +79,36 @@ int main()
     int timeoutCount = 0;
     int val = 1;
 
+    if(argc < 5) {
+        printf("argc: %d\r\n", argc);
+        printf("Usage: %s <BcServerIP> <SN> <Password> <PingInterval>\r\n", argv[0]);
+        return -1;
+    }
+
+    strcpy(serverIp, argv[1]);
+
 	SetSignalValue = malloc(256);
 	Sn = malloc(256);
 	Password = malloc(256);
 
     printNote();
-	printf("* Please Input BcServer Ip: ");
-	scanf("%s", serverIp);
+	// printf("* Please Input BcServer Ip: ");
+    // fgets(input, sizeof(input), stdin);
+
+    // sprintf(input, "connect %s %s\r\n", argv[2], argv[3]);
+    // fwrite(input, sizeof(input), 1, stdin);
+    // handleUserInput();
+    memcpy(Sn, argv[2], strlen(argv[2]) + 1);
+    memcpy(Password, argv[3], strlen(argv[3]) + 1);
+    ConnectFlag = 1;
+
+    // sprintf(input, "ping auto %d\r\n", argv[4]);
+    // fwrite(input, sizeof(input), 1, stdin);
+    PingAutoTime = atoi(argv[4]);
+    // handleUserInput();
 
     printf("* Input \"help\" for help\r\n");
-    fgets(input, sizeof(input), stdin);
+    // fgets(input, sizeof(input), stdin);
 
     /* connect to BcServer */
 	if(-1==(conndfd=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP))) {
@@ -105,36 +123,6 @@ int main()
 		return -1;
 	}
 
-    /* initialize the signal device server */
-	memset(&singleServerAddr,0,sizeof(singleServerAddr));
-    singleServerAddr.sin_family= AF_INET;    //IPV4
-    singleServerAddr.sin_port = htons(SINGLE_DEVICE_SERVER_PORT);
-    singleServerAddr.sin_addr.s_addr = INADDR_ANY;  //指定的是所有地址
-        //creat socket
-    if( (singleDeviceFd = socket(AF_INET,SOCK_STREAM,0)) < 0 ) {
-        perror("creat failure");
-        return -1;
-    }
-    err = setsockopt(singleDeviceFd,SOL_SOCKET,SO_REUSEADDR,(void *)&val,sizeof(int));
-    if(err == -1)
-    {
-        printf("setsockopt");
-        exit(1);
-    }
-
-    //bind soucket
-    if(bind(singleDeviceFd, (const struct sockaddr *)&singleServerAddr,sizeof(singleServerAddr)) < 0) {
-        perror("bind failure");
-        return -1;
-    }
-
-    //listen
-    if(listen(singleDeviceFd, 1) < 0) {
-        perror("listen failure");
-        return -1;
-    }
-
-
     /* initialize BP embeded context */
     /* you could also define your own BPContext */
     BP_InitEmbededContext();
@@ -148,8 +136,7 @@ int main()
         FD_ZERO(&rfds);
         FD_SET(stdinfd, &rfds);
         FD_SET(conndfd, &rfds);
-        FD_SET(singleDeviceFd, &rfds);
-        retval = select(singleDeviceFd+1, &rfds, NULL, NULL, &tv);
+        retval = select(conndfd+1, &rfds, NULL, NULL, &tv);
         if(-1 == retval) {
             /* error occurred, terminate the program */
             perror("* select() error");
@@ -172,43 +159,6 @@ int main()
                 loop = 0;
             }
             timeoutCount = 0;
-        } else if(FD_ISSET(singleDeviceFd, &rfds)) {
-            struct sockaddr_in client_address;
-            socklen_t address_len;
-            FD_CLR(singleDeviceFd, &rfds);
-            client_sock_fd = accept(singleDeviceFd,(struct sockaddr *)&client_address, &address_len);
-            if(client_sock_fd > 0) {
-                // int n;
-                // int i = 0;
-                // PackBuf * p_pack_buf = BP_NULL;
-                err = handleNetMsgReceived(client_sock_fd);
-                if(err == -100) {
-                }
-                printf("* accepted\r\n");
-                // char full_message[]="the client is full!can't join!\n";
-                // bzero(input_message,BUFF_SIZE);
-                // strncpy(input_message, full_message,100);
-                // send(client_sock_fd, full_message, strlen(full_message), 0);
-                // close(client_sock_fd);
-                // p_pack_buf = BP_PackSpecack(&BPContextEmbeded, &str_specack);
-                // printf("packBuf addr out: %p\n", p_pack_buf);
-                // p_pack_buf = BPContextEmbeded.packBuf;
-                // printf("packBuf addr out: %p\n", p_pack_buf);
-                // printf("main debug: %d\n", p_pack_buf->MsgSize);
-                // for(i = 0; i < p_pack_buf->MsgSize; i++) {
-                //     printf("%02x ", p_pack_buf->PackStart[i]);
-                // }
-                // printf("\n");
-                // n=send(client_sock_fd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
-                // if(n != p_pack_buf->MsgSize) {
-                //     perror("* Send error");
-                // }
-                // printf("* specack\n");
-                // close(client_sock_fd);
-
-            }
-            timeoutCount = 0;
-
         }
         if(PingAutoTime > 0) {
             if(timeoutCount > PingAutoTime) {
@@ -223,7 +173,6 @@ int main()
     }
 
     close(conndfd);
-    close(singleDeviceFd);
 	free(SetSignalValue);
 	free(Sn);
 	free(Password);
@@ -248,6 +197,7 @@ int handleUserInput()
     int paraNum = 0;
     int i;
     int tmpInt;
+
         
     if(NULL == fgets(input, sizeof(input), stdin)) {
         perror("fgets() error");
@@ -456,6 +406,8 @@ int handleNetMsgReceived(int fd)
                 BP_ConnackStr str_connack;
                 if(0 == BP_ParseConnack(&BPContextEmbeded, &str_connack, recvBuf, len)) {
                     printf("* CONNACK OK:\n");
+                    ReportFlag = REPORT_FLAG_SIG_MAP_CHECKSUM;
+                    ReportChecksum = 1;
                 }
                 printf("* RetCode = %d\n", str_connack.RetCode);
                 printf("* system signal set version = %d\n", str_connack.Level);
@@ -472,6 +424,12 @@ int handleNetMsgReceived(int fd)
                     printf("* RPRTACK OK:\n");
                 }
                 printf("* RetCode = %d\n", str_rprtack.RetCode);
+                if(1 == ReportChecksum) {
+                    ReportChecksum = 0;
+                    if(str_rprtack.RetCode != 0) {
+                        ReportFlag = REPORT_FLAG_SIG_MAP;
+                    }
+                }
                 printf("* SeqId = %d\n", str_rprtack.SeqId);
                 break;
             }

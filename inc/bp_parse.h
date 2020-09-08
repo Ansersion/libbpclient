@@ -57,7 +57,7 @@ typedef struct BP_PostackStr {
 	BP_UINT8 Flags;
 	BP_UINT16 SeqId;
 	BP_UINT8 RetCode;
-	BP_UINT16 ErrSigId;
+	BP_UINT16 SigIdErr;
 } BP_PostackStr;
 
 typedef struct BP_RprtackStr {
@@ -113,6 +113,7 @@ EXPORT_API BP_INT8 BP_ParsePingack(BPContext * bp_context, BP_PingackStr * str_p
  */
 EXPORT_API BP_INT8 BP_ParseRprtack(BPContext * bp_context, BP_RprtackStr * str_rprtack, BP_UINT8 * msg, BP_UINT16 len);
 EXPORT_API BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len);
+EXPORT_API BP_INT8 BP_ParsePostack(BPContext * bp_context, BP_PostackStr * str_postack, BP_UINT8 * msg, BP_UINT16 len);
 EXPORT_API BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len);
 
 /** 
