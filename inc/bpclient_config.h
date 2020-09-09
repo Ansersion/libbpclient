@@ -27,6 +27,8 @@
 
 
 #define BP_NULL 	0
+#define BP_TRUE 	1
+#define BP_FALSE 	0
 
 #ifdef WIN32
 #define EXPORT_API __declspec(dllexport) 
@@ -49,51 +51,53 @@
  */
 
 #ifdef BP_CPU64
-	#define BP_UINT8 	unsigned char
-	#define BP_INT8 	char
-	#define BP_UINT16 	unsigned short
-	#define BP_INT16 	short
-	#define BP_UINT32 	unsigned int
-	#define BP_INT32 	int
-	#define BP_UINT64 	unsigned long long
-	#define BP_INT64 	long long
-	#define BP_FLOAT 	float
+	typedef unsigned char           BP_UINT8;
+	typedef char                    BP_INT8;
+	typedef unsigned short          BP_UINT16;
+	typedef short                   BP_INT16;
+	typedef unsigned int            BP_UINT32;
+	typedef int                     BP_INT32;
+	typedef unsigned long long      BP_UINT64;
+	typedef long long               BP_INT64;
+	typedef float                   BP_FLOAT;
 	#define BP_WORD 	BP_UINT64
 
 #elif defined BP_CPU32
-	#define BP_UINT8 	unsigned char
-	#define BP_INT8 	char
-	#define BP_UINT16 	unsigned short
-	#define BP_INT16 	short
-	#define BP_UINT32 	unsigned int
-	#define BP_INT32 	int
-	#define BP_FLOAT 	float
-	#define BP_WORD 	BP_UINT32
+	typedef unsigned char       BP_UINT8;
+	typedef char                BP_INT8; 	
+	typedef unsigned short      BP_UINT16;
+	typedef short               BP_INT16;
+	typedef unsigned int        BP_UINT32;
+	typedef int                 BP_INT32;
+	typedef float               BP_FLOAT;
+    #define BP_WORD             BP_UINT32    
 
 #elif defined BP_CPU16
-	#define BP_UINT8 	unsigned char
-	#define BP_INT8 	char
-	#define BP_UINT16 	unsigned short
-	#define BP_INT16 	short
-	#define BP_UINT32 	unsigned long
-	#define BP_INT32 	long
-	#define BP_FLOAT 	float
+	typedef unsigned char       BP_UINT8;
+	typedef char                BP_INT8;	
+	typedef unsigned short      BP_UINT16;
+	typedef short               BP_INT16; 	
+	typedef unsigned long       BP_UINT32; 	
+	typedef long                BP_INT32; 	
+	typedef float               BP_FLOAT; 	
 	#define BP_WORD 	BP_UINT16
 
 #elif defined BP_CPU8
-	#define BP_UINT8 	unsigned char
-	#define BP_INT8 	char
-	#define BP_UINT16 	unsigned short
-	#define BP_INT16 	short
-	#define BP_UINT32 	unsigned long
-	#define BP_INT32 	long
-	#define BP_FLOAT 	float
+	typedef unsigned char       BP_UINT8;
+	typedef char                BP_INT8; 	
+	typedef unsigned short      BP_UINT16; 	
+	typedef short               BP_INT16; 	
+	typedef unsigned long       BP_UINT32;	
+	typedef long                BP_INT32; 	
+	typedef float               BP_FLOAT; 	
 	#define BP_WORD 	BP_UINT8
 
 #else
 #error Please define your cpu macro first: BP_CPU64/BP_CPU32/BP_CPU16/BP_CPU8
 
 #endif
+
+#define BP_BOOL     BP_UINT8
 
 /** 
   * @Brief: ENCRYPTION_TYPE determines the cpu type

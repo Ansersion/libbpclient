@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Copyright 2017-2019 Ansersion
+/// Copyright 2017-2020 Ansersion
 /// 
 /// Licensed under the Apache License, Version 2.0 (the "License");
 /// you may not use this file except in compliance with the License.
@@ -60,6 +60,16 @@ typedef struct BP_PostackStr {
 	BP_UINT16 SigIdErr;
 } BP_PostackStr;
 
+typedef struct BP_PushStr {
+    VrbHead_PUSH vrb;
+    Payload_PUSH pld;
+} BP_PushStr;
+
+typedef struct BP_PushackStr {
+    VrbHead_PUSHACK vrb;
+    Payload_PUSHACK pld;
+} BP_PushackStr;
+
 typedef struct BP_RprtackStr {
 	BP_UINT8 Flags;
 	// BP_UINT16 ClientID;
@@ -115,6 +125,7 @@ EXPORT_API BP_INT8 BP_ParseRprtack(BPContext * bp_context, BP_RprtackStr * str_r
 EXPORT_API BP_INT8 BP_ParsePost(BP_PostStr * str_post, BP_UINT8 * msg, BP_UINT16 len);
 EXPORT_API BP_INT8 BP_ParsePostack(BPContext * bp_context, BP_PostackStr * str_postack, BP_UINT8 * msg, BP_UINT16 len);
 EXPORT_API BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len);
+EXPORT_API BP_INT8 BP_ParsePush(BPContext * bp_context, BP_PushStr * str_push, BP_UINT8 * msg, BP_UINT16 len);
 
 /** 
   * @Brief BP_ParseConnack parse message recevied into BP_ConnackStr

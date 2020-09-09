@@ -239,6 +239,29 @@ BP_INT8 BP_ParseGet(BP_GetStr * str_get, BP_UINT8 * msg, BP_UINT16 len)
 	return 0;
 }
 
+BP_INT8 BP_ParsePush(BPContext * bp_context, BP_PushStr * str_push, BP_UINT8 * msg, BP_UINT16 len)
+{
+	BP_UINT8 * p_msg = BP_NULL;
+    if(BP_NULL == bp_context) {
+        return -0x01;
+    }
+	if(BP_NULL == str_push) {
+		return -0x02;
+	}
+	if(BP_NULL == msg) {
+		return -0x03;
+	}
+    p_msg = msg + FIX_HEAD_SIZE;
+	str_push->vrb.Flags = *p_msg++;
+	p_msg = BP_GetBig16(p_msg, &(str_push->vrb.SeqId));
+
+    if(str_push->vrb.Flags & BP_VRB_FLAG_PUSH_SIGNAL_VALUE) {
+        // TODO:
+    }
+
+	return 0;
+}
+
 BP_INT8 BP_ParseConnack(BPContext * bp_context, BP_ConnackStr * str_connack, BP_UINT8 * msg, BP_UINT16 len)
 {
     BPServerNode bp_server_node;

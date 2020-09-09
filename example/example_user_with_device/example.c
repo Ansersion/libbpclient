@@ -24,6 +24,7 @@
 #include <bp_specack.h>
 #include <bp_postack.h>
 #include <bp_post.h>
+#include <bp_pushack.h>
 #include <bp_ping.h>
 #include <bp_sig_table.h>
 #include <bp_sig_table_tools.h>
@@ -56,8 +57,11 @@ void * Sn;
 void * Password;
 BP_PostStr str_post;
 BP_PostackStr str_postack;
+BP_PushackStr str_pushack;
 BP_SpecackStr str_specack;;
 int PostFlag = 0;
+int PushFlag = 0;
+int PushackFlag = 0;
 int PostackFlag = 0;
 int ByeFlag = 0;
 int PingFlag = 0;
@@ -69,6 +73,7 @@ BP_UINT8 value = 0;
 BP_UINT8 * adminUser = "";
 char * outputFile;
 FILE * file;
+BP_UINT8 mode = 0;
 
 int main(int argc, char * argv[])
 {
@@ -87,7 +92,7 @@ int main(int argc, char * argv[])
 
     if(argc < 7) {
         printf("argc: %d\r\n", argc);
-        printf("Usage: %s <BcServerIP> <UserName> <Password> <PostInterval> <DeviceID> <OutputFile>\r\n", argv[0]);
+        printf("Usage: %s <BcServerIP> <UserName> <Password> <Post/Ping Interval> <DeviceID> <OutputFile> [mode]\r\n", argv[0]);
         return -1;
     }
 
@@ -114,6 +119,9 @@ int main(int argc, char * argv[])
     DevId = (atol(argv[5]) & 0xFFFFFFFF);
     // handleUserInput();
     outputFile = argv[6];
+    if(argc > 7) {
+        mode = atoi(argv[7]);
+    }
 
     file = fopen(outputFile, "w");
     if(file == NULL) {
@@ -177,8 +185,8 @@ int main(int argc, char * argv[])
         if(PingAutoTime > 0) {
             if(timeoutCount > PingAutoTime) {
                 timeoutCount = 0;
-                // PingFlag = 1;
-                PostFlag = 1;
+                if(0 == mode) PostFlag = 1;
+                // else PingFlag = 1;
             }
         }
         if(0 != (err = bpDo())) {
@@ -450,6 +458,33 @@ int handleNetMsgReceived(int fd)
                 }
 				break;
 			}
+		case BP_PACK_TYPE_PUSH: {
+				BP_PushStr str_push;
+                str_pushack.vrb.RetCode = 1;
+
+                int x;
+                char buffTmp[8];
+                fputs("PUSH: ", file);
+
+                for(x = 0; x < len; x++) {
+                    sprintf(buffTmp, "%02x ", recvBuf[x]);
+                    fputs(buffTmp, file);
+                }
+                fputc(':', file);
+                fflush(file);
+
+                if(0 == BP_ParsePush(&BPContextEmbeded, &str_push, recvBuf, len)) {
+                    printf("* PUSH: \n");
+                    printf("* flags: %x\n", str_push.vrb.Flags);
+                    printf("* seq id: %x\n", str_push.vrb.SeqId);
+                    str_pushack.vrb.RetCode = 0;
+                }
+                str_pushack.vrb.Flags = str_push.vrb.Flags;
+                str_pushack.vrb.SeqId = str_push.vrb.SeqId;
+                PushackFlag = 1;
+
+				break;
+			}
 		case BP_PACK_TYPE_POSTACK: {
                 int x;
                 BP_PostackStr str_postack;
@@ -677,6 +712,26 @@ int bpDo() {
                 break;
         }
         ReportFlag = 0;
+    }
+    if(PushackFlag) {
+        int x;
+        char buffTmp[8];
+        p_pack_buf = BP_PackPushack(&BPContextEmbeded, &str_pushack);
+        printf("pushack: pack ok: %x\r\n", p_pack_buf);
+        for(x = 0; x < p_pack_buf->MsgSize; x++) {
+            sprintf(buffTmp, "%02x ", p_pack_buf->PackStart[x]);
+            fputs(buffTmp, file);
+        }
+        fputc('\r', file);
+        fputc('\n', file);
+        fflush(file);
+        printf("pushack: write file ok\r\n");
+        n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
+        if(n != p_pack_buf->MsgSize) {
+            perror("* Send error");
+        }
+        printf("* pushack\n");
+        PushackFlag = 0;
     }
     if(SpecsetFlag) {
         p_pack_buf = BP_PackSpecack(&BPContextEmbeded, &str_specack);

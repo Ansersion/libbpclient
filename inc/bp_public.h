@@ -177,6 +177,17 @@ typedef struct VrbHead_PINGACK {
 	BP_UINT16 	SeqId;
 } VrbHead_PINGACK;
 
+typedef struct VrbHead_PUSH {
+	BP_UINT8 	Flags;
+	BP_UINT16 	SeqId;
+} VrbHead_PUSH;
+
+typedef struct VrbHead_PUSHACK {
+	BP_UINT8 	Flags;
+	BP_UINT16 	SeqId;
+	BP_UINT8 	RetCode;
+} VrbHead_PUSHACK;
+
 typedef struct VrbHead_DISCONN {
 	BP_UINT8 	Flags;
 } VrbHead_DISCONN;
@@ -201,6 +212,8 @@ typedef union vrbU {
 	VrbHead_DISCONN 	DISCONN;
 	VrbHead_POST 		POST;
 	VrbHead_POSTACK 	POSTACK;
+    VrbHead_PUSH        PUSH;
+    VrbHead_PUSHACK     PUSHACK;
 	VrbHead_SPECSET 	SPECSET;
 	VrbHead_SPECACK 	SPECACK;
 }vrbU; 
@@ -261,6 +274,17 @@ typedef struct Payload_REPORT {
 	const BP_SysSigMap * SysSigMap;
 } Payload_REPORT;
 
+typedef struct Payload_PUSH {
+	BP_UINT32 	DevId;
+	BP_UINT8 	SigNum;
+	BP_SigType 	* SigTypeArray;
+	BP_SigId2Val * SigArray;
+} Payload_PUSH;
+
+typedef struct Payload_PUSHACK {
+	BP_UINT16 SigId;
+} Payload_PUSHACK;
+
 typedef union pldU {
 	Payload_CONNECT 	CONNECT;
 	Payload_GETACK 		GETACK;
@@ -268,6 +292,8 @@ typedef union pldU {
 	Payload_POST 		POST;
 	Payload_POSTACK 	POSTACK;
 	Payload_PING 		PING;
+    Payload_PUSH        PUSH;
+    Payload_PUSHACK     PUSHACK;
 	// Payload_DISCONN 	DISCONN;
 }pldU; 
 

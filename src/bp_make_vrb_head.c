@@ -26,6 +26,10 @@
 #include <bp_public.h>
 #include <bp_pack_type.h>
 
+#ifdef DEBUG
+    #include <stdio.h>
+#endif
+
 // std 
 // #include <stdio.h>
 
@@ -36,6 +40,7 @@ BP_UINT8 * make_vrb_getack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_rprt(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_ping(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_pingack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
+BP_UINT8 * make_vrb_pushack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_discnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_specset(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
 BP_UINT8 * make_vrb_specack(BP_UINT8 * pack, BPPackVrbHead * vrb_head);
@@ -90,7 +95,7 @@ BP_UINT8 * BP_make_vrb_head(BP_UINT8 * pack, BPPackVrbHead * vrb_head, BP_UINT8 
 			// printf("Err: unsupported BP type\n");
 			break;
 		case BP_PACK_TYPE_PUSHACK:
-			// printf("Err: unsupported BP type\n");
+			pack = make_vrb_pushack(pack, vrb_head);
 			break;
 		case BP_PACK_TYPE_DISCONN:
 			pack = make_vrb_discnct(pack, vrb_head);
@@ -165,6 +170,15 @@ BP_UINT8 * make_vrb_pingack(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
 	// pack = BP_SetBig16(pack, vrb_head->u.PINGACK.ClntId);
 	pack = BP_SetBig16(pack, vrb_head->u.PINGACK.SeqId);
 	return pack;
+}
+
+BP_UINT8 * make_vrb_pushack(BP_UINT8 * pack, BPPackVrbHead * vrb_head)
+{
+	*pack++ = vrb_head->u.PUSHACK.Flags;
+	pack = BP_SetBig16(pack, vrb_head->u.PUSHACK.SeqId);
+	*pack++ = vrb_head->u.PUSHACK.RetCode;
+
+    return pack;
 }
 
 BP_UINT8 * make_vrb_discnct(BP_UINT8 * pack, BPPackVrbHead * vrb_head)

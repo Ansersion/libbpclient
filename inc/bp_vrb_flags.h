@@ -62,5 +62,8 @@
 #define BP_VRB_FLAG_SYS_SIG_ATTR_CUSTOM_MSK 	(1 << 2)
 #define BP_VRB_FLAG_SIG_TAB_CHK_MSK 	(1 << 1)
 
+// for PUSH
+#define BP_VRB_FLAG_PUSH_SIGNAL_VALUE 	(1 << 4)
+
 #endif
 

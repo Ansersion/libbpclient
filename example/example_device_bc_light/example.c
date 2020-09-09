@@ -52,6 +52,7 @@ int ReportChecksum = 0;
 int SignalType = 0xFF;
 BP_UINT16 SetSignalId;
 void * SetSignalValue;
+BP_UINT8 SetSignalValueU8;
 void * Sn;
 void * Password;
 BP_PostackStr str_postack;
@@ -65,6 +66,8 @@ int SpecsetFlag = 0;
 BP_UINT8 * adminUser = "";
 char * outputFile;
 FILE * file;
+/** mode > 0: report periodly */
+int mode = 0;
 
 int main(int argc, char * argv[])
 {
@@ -83,7 +86,7 @@ int main(int argc, char * argv[])
 
     if(argc < 6) {
         printf("argc: %d\r\n", argc);
-        printf("Usage: %s <BcServerIP> <SN> <Password> <PingInterval> <OutputFile>\r\n", argv[0]);
+        printf("Usage: %s <BcServerIP> <SN> <Password> <PingInterval> <OutputFile> [Mode]\r\n", argv[0]);
         return -1;
     }
 
@@ -108,6 +111,10 @@ int main(int argc, char * argv[])
     // fwrite(input, sizeof(input), 1, stdin);
     PingAutoTime = atoi(argv[4]);
     outputFile = argv[5];
+
+    if(argc > 6) {
+        mode = atoi(argv[6]);
+    }
 
     file = fopen(outputFile, "w");
     if(file == NULL) {
@@ -173,7 +180,8 @@ int main(int argc, char * argv[])
         if(PingAutoTime > 0) {
             if(timeoutCount > PingAutoTime) {
                 timeoutCount = 0;
-                PingFlag = 1;
+                if(mode > 0) SetFlag = 1;
+                else PingFlag = 1;
             }
         }
         if(0 != (err = bpDo())) {
@@ -443,6 +451,17 @@ int handleNetMsgReceived(int fd)
                     }
                 }
                 printf("* SeqId = %d\n", str_rprtack.SeqId);
+
+                int x;
+                char buffTmp[8];
+
+                for(x = 0; x < len; x++) {
+                    sprintf(buffTmp, "%02x ", recvBuf[x]);
+                    fputs(buffTmp, file);
+                }
+                fputc('\r', file);
+                fputc('\n', file);
+                fflush(file);
                 break;
             }
 		case BP_PACK_TYPE_PINGACK: {
@@ -515,7 +534,7 @@ int handleNetMsgReceived(int fd)
 			}
         default: {
 				printf("* recv pack unknown\n");
-				break;
+                break;
 			}
     }
     return 0;
@@ -538,6 +557,10 @@ int bpDo() {
         ConnectFlag = 0;
     }
     if(SetFlag) {
+        SetSignalId = 0xE002;
+        SignalType = SIG_TYPE_BOOLEAN;
+        if(SetSignalValueU8 != 0) SetSignalValueU8 = 0;
+        else SetSignalValueU8 = 1;
         BP_SigId2Val * sig_id_2_val_tmp = BP_NULL;
         if(0 <= SetSignalId && SetSignalId < SYSTEM_SIGNAL_ID_START) {
             // TODO
@@ -576,7 +599,8 @@ int bpDo() {
                     sig_id_2_val_tmp->SigVal.t_str = SetSignalValue;
                     break;
                 case SIG_TYPE_BOOLEAN:
-                    sscanf(SetSignalValue, "%d", &(sig_id_2_val_tmp->SigVal.t_bool));
+                    // sscanf(SetSignalValue, "%d", &(sig_id_2_val_tmp->SigVal.t_bool));
+                    sig_id_2_val_tmp->SigVal.t_bool = SetSignalValueU8;
                     break;
                 default:
                     err = -1;
@@ -587,6 +611,15 @@ int bpDo() {
                 // p_pack_buf = BP_PackReportSigVal(&BPContextEmbeded, sig_id_2_val_tmp, 1);
                 p_pack_buf = BP_PackReport1SigVal(&BPContextEmbeded, sig_id_2_val_tmp);
                 printf("* report signal value\n");
+                int x;
+                char buffTmp[8];
+                fputs("REPORT: ", file);
+                for(x = 0; x < p_pack_buf->MsgSize; x++) {
+                    sprintf(buffTmp, "%02x ", p_pack_buf->PackStart[x]);
+                    fputs(buffTmp, file);
+                }
+                fputc(':', file);
+                fflush(file);
                 n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
                 if(n != p_pack_buf->MsgSize) {
                     perror("* Send error");
