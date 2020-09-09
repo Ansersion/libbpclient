@@ -67,6 +67,8 @@ BP_UINT32 DevId;
 BP_UINT8 value = 0;
 
 BP_UINT8 * adminUser = "";
+char * outputFile;
+FILE * file;
 
 int main(int argc, char * argv[])
 {
@@ -83,9 +85,9 @@ int main(int argc, char * argv[])
     int timeoutCount = 0;
     int val = 1;
 
-    if(argc < 6) {
+    if(argc < 7) {
         printf("argc: %d\r\n", argc);
-        printf("Usage: %s <BcServerIP> <UserName> <Password> <PostInterval> <DeviceID>\r\n", argv[0]);
+        printf("Usage: %s <BcServerIP> <UserName> <Password> <PostInterval> <DeviceID> <OutputFile>\r\n", argv[0]);
         return -1;
     }
 
@@ -111,6 +113,13 @@ int main(int argc, char * argv[])
     PingAutoTime = atoi(argv[4]);
     DevId = (atol(argv[5]) & 0xFFFFFFFF);
     // handleUserInput();
+    outputFile = argv[6];
+
+    file = fopen(outputFile, "w");
+    if(file == NULL) {
+        printf("%s open error!\r\n", outputFile);
+        return -1;
+    }
 
     printf("* Input \"help\" for help\r\n");
     // fgets(input, sizeof(input), stdin);
@@ -445,6 +454,15 @@ int handleNetMsgReceived(int fd)
                 int x;
                 BP_PostackStr str_postack;
 				printf("* POSTACK:%d\n", len);
+                char buffTmp[8];
+
+                for(x = 0; x < len; x++) {
+                    sprintf(buffTmp, "%02x ", recvBuf[x]);
+                    fputs(buffTmp, file);
+                }
+                fputc('\r', file);
+                fputc('\n', file);
+                fflush(file);
                 x = BP_ParsePostack(&BPContextEmbeded, &str_postack, recvBuf, len);
                 printf("* ParsePostack Flags: %x\n", str_postack.Flags);
                 printf("* ParsePostack RetCode: %x\n", str_postack.RetCode);
@@ -600,7 +618,18 @@ int bpDo() {
         }
         BPContextEmbeded.devId = DevId;
         BP_SigType typeTmp[1] = {SIG_TYPE_BOOLEAN};
+
         p_pack_buf = BP_PackPost1SigVal(&BPContextEmbeded, typeTmp, &tmp);
+        int x;
+        char buffTmp[8];
+        fputs("POST: ", file);
+
+        for(x = 0; x < p_pack_buf->MsgSize; x++) {
+            sprintf(buffTmp, "%02x ", p_pack_buf->PackStart[x]);
+            fputs(buffTmp, file);
+        }
+        fputc(':', file);
+        fflush(file);
         n=send(conndfd,p_pack_buf->PackStart,p_pack_buf->MsgSize,0);
         if(n != p_pack_buf->MsgSize) {
             perror("* Send error");
